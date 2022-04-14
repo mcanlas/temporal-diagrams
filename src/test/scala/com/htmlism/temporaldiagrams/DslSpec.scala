@@ -18,7 +18,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val together =
       foo.r |+| bar.r
 
-    inside(together) { case RenderableCons(ConstantRenderable(x), ConstantRenderable(y)) =>
+    inside(together) { case RenderableCons(AnonymousRenderable(x), AnonymousRenderable(y)) =>
       x shouldBe foo
       y shouldBe bar
     }

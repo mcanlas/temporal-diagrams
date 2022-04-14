@@ -28,7 +28,7 @@ object Service {
 
       def encode(r: Renderable[Service]): String = {
         r match {
-          case ConstantRenderable(x) =>
+          case AnonymousRenderable(x) =>
             renderFlat(x, None)
 
           case IdentifiedRenderable(_, x) =>
@@ -41,7 +41,7 @@ object Service {
 
       def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): String = {
         r match {
-          case ConstantRenderable(x) =>
+          case AnonymousRenderable(x) =>
             renderFlat(x, "Dim".some)
 
           case IdentifiedRenderable(id, x) =>

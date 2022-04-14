@@ -13,7 +13,7 @@ sealed trait Renderable[A]
 /**
   * A renderable that can only be dimmed by others
   */
-case class ConstantRenderable[A](x: A) extends Renderable[A]
+case class AnonymousRenderable[A](x: A) extends Renderable[A]
 
 /**
   * A renderable that can be highlighted by name

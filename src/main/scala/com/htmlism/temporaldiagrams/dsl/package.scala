@@ -3,7 +3,7 @@ package com.htmlism.temporaldiagrams
 package object dsl {
   implicit class DslOps[A](x: A) {
     def r: Renderable[A] =
-      ConstantRenderable(x)
+      AnonymousRenderable(x)
 
     def id(id: String): Renderable[A] =
       IdentifiedRenderable(id, x)
