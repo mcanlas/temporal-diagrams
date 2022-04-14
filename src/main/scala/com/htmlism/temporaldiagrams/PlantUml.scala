@@ -8,4 +8,10 @@ object PlantUml {
     }
 }
 
-class PlantUml
+sealed trait PlantUml
+
+case class Component(name: String) extends PlantUml
+
+case class Link(src: String, dest: String) extends PlantUml
+
+case class Queue(name: String) extends PlantUml
