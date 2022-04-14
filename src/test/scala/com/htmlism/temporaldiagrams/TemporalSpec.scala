@@ -101,4 +101,20 @@ class TemporalSpec extends AnyFlatSpec with Inside with Matchers {
       y shouldBe Service("foo2", None).r
     }
   }
+
+  it should "collect keys" in {
+    val leftTemporal =
+      Temporal(
+        1 -> Service("foo1", None).r,
+        3 -> Service("foo3", None).r
+      )
+
+    val rightTemporal =
+      Temporal(
+        2 -> Service("foo2", None).r,
+        4 -> Service("foo4", None).r
+      )
+
+    (leftTemporal |+| rightTemporal).keys should contain theSameElementsAs List(1, 2, 3, 4)
+  }
 }

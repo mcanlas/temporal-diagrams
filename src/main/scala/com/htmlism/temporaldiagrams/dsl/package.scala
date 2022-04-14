@@ -26,5 +26,9 @@ package object dsl {
     def at(k: K): Renderable[A] =
       Temporal
         .resolve(t, k)
+
+    def keys: List[K] =
+      Temporal
+        .keys(t)
   }
 }

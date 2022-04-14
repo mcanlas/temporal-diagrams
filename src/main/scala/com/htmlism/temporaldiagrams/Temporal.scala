@@ -17,6 +17,20 @@ object Temporal {
 
   case class Cons[K, A](x: Temporal[K, A], y: Temporal[K, A]) extends Temporal[K, A]
 
+  def keys[K, A](t: Temporal[K, A])(implicit ord: Ordering[K]): List[K] =
+    t match {
+      case Cons(x, y) =>
+        (keys(x) ::: keys(y)).distinct
+
+      case FixedTemporal(_) =>
+        Nil
+
+      case IndexedTemporal(xs) =>
+        xs.toList
+          .map(_._1)
+          .distinct
+    }
+
   def resolve[K, A](t: Temporal[K, A], k: K)(implicit ord: Ordering[K]): Renderable[A] =
     t match {
       case Cons(x, y) =>
