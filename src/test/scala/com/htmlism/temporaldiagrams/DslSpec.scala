@@ -50,4 +50,14 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
 
     foo.r.renderAs[PlantUml] shouldBe foo.id("foo-id").renderAs[PlantUml]
   }
+
+  "Two cons DSL objects" should "support rendering using dialect cons" in {
+    val foo =
+      Service("foo", None)
+
+    val bar =
+      Service("bar", foo.some)
+
+    (foo.r |+| bar.r).renderAs[PlantUml] shouldBe "component foo\n\ncomponent bar\n\nfoo --> bar"
+  }
 }

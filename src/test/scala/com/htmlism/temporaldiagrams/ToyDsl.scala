@@ -7,19 +7,32 @@ case class Service(name: String, dependency: Option[Service]) extends ToyDsl
 object Service {
   implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
     new DslEncoder[Service, PlantUml] {
-      def encode(r: Renderable[Service]): String =
+      private val joiner =
+        implicitly[Dialect[PlantUml]].joiner
+
+      private def renderFlat(x: Service) = {
+        val component =
+          "component " + x.name
+
+        val dependency =
+          x.dependency.map(y => s"${y.name} --> ${x.name}").toList
+
+        (component :: dependency)
+          .mkString(joiner)
+      }
+
+      def encode(r: Renderable[Service]): String = {
         r match {
           case ConstantRenderable(x) =>
-            s"component ${x.name}"
+            renderFlat(x)
 
-          case IdentifiedRenderable(id, x) =>
-            s"component ${x.name}"
+          case IdentifiedRenderable(_, x) =>
+            renderFlat(x)
 
           case RenderableCons(x, y) =>
-            ???
-          // TODO maybe a canvas-powered plus goes here
-          //          render[B](x) + "\n" + render[B](y)
+            encode(x) + joiner + encode(y)
         }
+      }
 
     }
 }
