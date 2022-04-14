@@ -5,4 +5,6 @@ package com.htmlism.temporaldiagrams
   */
 trait DslEncoder[A, B] {
   def encode(x: Renderable[A]): String
+
+  def encodeWithHighlights(x: Renderable[A], highlights: Set[String]): String
 }
