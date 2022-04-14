@@ -1,0 +1,23 @@
+- multiple output dialects (plantuml is just one)
+- ability to "highlight" areas, and dim others
+  - not just one, could be multiple
+  - if no highlights provided, render everything vibrant
+- component has ordinal index. if < global current index, then render this?
+  - purpose: to produce slides in time
+- dependsOn loops (ease of one to many)
+- dialects
+  - how much of this machinary is abstract from the domain
+  - how far can we go without saying kinesis/microservice
+- what is the fundamental unit? a non empty list of renderables, each a list?
+- the current data structure must be iterated upon/folded into the canvas
+  - declaring singletons and avoiding duplicates (first one wins)
+  - can we avoid having to pre-declare things? does the sum of all relationships satisfy a global registry
+  - what about singletons/islands, things with no relationship?
+- are we just a semigroup of `Renderable[A]`
+- a `Temporal[K : Ord, A]` is not directly renderable and must be reduced into a `Rendrable[A]` given some index `K`
+- highlightable/identified structures, at minimum, must be keyed into (e.g. "highlight this component") and receive some boolean, whether or not they are in the highlight
+  - may extend a base `Renderable[_]`
+  - and two more states `renderHighlight(true/false)`, for ultimately ternary states
+  - although in practice, the default global "no highlights" state would be similar as "all highlighted", all vibrant
+  - caveat: in order for any ONE component to be highlightable, everything must be dimmable
+- temporaral and highlight keys are different, independent axes
