@@ -18,7 +18,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val together =
       foo.r |+| bar.r
 
-    inside(together) { case RenderableCons(AnonymousRenderable(x), AnonymousRenderable(y)) =>
+    inside(together) { case Renderable.Cons(Renderable.Anonymous(x), Renderable.Anonymous(y)) =>
       x shouldBe foo
       y shouldBe bar
     }
@@ -34,7 +34,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val renderable =
       foo.id(id)
 
-    renderable shouldBe IdentifiedRenderable(id, foo)
+    renderable shouldBe Renderable.ById(id, foo)
   }
 
   "A nameless DSL object" should "support simple rendering" in {

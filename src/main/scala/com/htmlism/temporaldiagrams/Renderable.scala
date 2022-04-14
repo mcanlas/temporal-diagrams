@@ -10,22 +10,23 @@ import cats.Semigroup
   */
 sealed trait Renderable[A]
 
-/**
-  * A renderable that can only be dimmed by others
-  */
-case class AnonymousRenderable[A](x: A) extends Renderable[A]
-
-/**
-  * A renderable that can be highlighted by name
-  */
-case class IdentifiedRenderable[A](id: String, x: A) extends Renderable[A]
-
-/**
-  * A renderable that can be highlighted by name
-  */
-case class RenderableCons[A](x: Renderable[A], y: Renderable[A]) extends Renderable[A]
-
 object Renderable {
   implicit def renderableSemigroup[A]: Semigroup[Renderable[A]] =
-    RenderableCons(_, _)
+    Cons(_, _)
+
+  /**
+    * A renderable that can only be dimmed by others
+    */
+  case class Anonymous[A](x: A) extends Renderable[A]
+
+  /**
+    * A renderable that can be highlighted by name
+    */
+  case class ById[A](id: String, x: A) extends Renderable[A]
+
+  /**
+    * A renderable that can be highlighted by name
+    */
+  case class Cons[A](x: Renderable[A], y: Renderable[A]) extends Renderable[A]
+
 }

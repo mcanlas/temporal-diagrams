@@ -1,10 +1,11 @@
 package com.htmlism.temporaldiagrams
 
 import cats.syntax.all._
-import com.htmlism.temporaldiagrams.dsl._
 import org.scalatest.Inside
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should._
+
+import com.htmlism.temporaldiagrams.dsl._
 
 class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
   "Two objects with no highlights" should "render dimly" in {
@@ -26,7 +27,9 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("bar", foo.some)
 
     (foo.id("foo") |+| bar.id("bar"))
-      .renderWithHighlightsOn("foo") shouldBe "component foo << Highlighted >>\n\ncomponent bar << Dim >>\n\nfoo --> bar"
+      .renderWithHighlightsOn(
+        "foo"
+      ) shouldBe "component foo << Highlighted >>\n\ncomponent bar << Dim >>\n\nfoo --> bar"
   }
 
   "Two objects with multiple highlights" should "highlight everything" in {
@@ -37,6 +40,9 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("bar", foo.some)
 
     (foo.id("foo") |+| bar.id("bar"))
-      .renderWithHighlightsOn("foo", "bar") shouldBe "component foo << Highlighted >>\n\ncomponent bar << Highlighted >>\n\nfoo --> bar"
+      .renderWithHighlightsOn(
+        "foo",
+        "bar"
+      ) shouldBe "component foo << Highlighted >>\n\ncomponent bar << Highlighted >>\n\nfoo --> bar"
   }
 }

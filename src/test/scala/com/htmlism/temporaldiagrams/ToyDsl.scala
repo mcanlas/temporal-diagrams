@@ -28,29 +28,29 @@ object Service {
 
       def encode(r: Renderable[Service]): String = {
         r match {
-          case AnonymousRenderable(x) =>
+          case Renderable.Anonymous(x) =>
             renderFlat(x, None)
 
-          case IdentifiedRenderable(_, x) =>
+          case Renderable.ById(_, x) =>
             renderFlat(x, None)
 
-          case RenderableCons(x, y) =>
+          case Renderable.Cons(x, y) =>
             encode(x) + joiner + encode(y)
         }
       }
 
       def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): String = {
         r match {
-          case AnonymousRenderable(x) =>
+          case Renderable.Anonymous(x) =>
             renderFlat(x, "Dim".some)
 
-          case IdentifiedRenderable(id, x) =>
+          case Renderable.ById(id, x) =>
             if (highlights(id))
               renderFlat(x, "Highlighted".some)
             else
               renderFlat(x, "Dim".some)
 
-          case RenderableCons(x, y) =>
+          case Renderable.Cons(x, y) =>
             encodeWithHighlights(x, highlights) + joiner + encodeWithHighlights(y, highlights)
         }
       }

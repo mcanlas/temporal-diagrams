@@ -1,12 +1,17 @@
 package com.htmlism.temporaldiagrams
 
 package object dsl {
-  implicit class DslOps[A](x: A) {
+  implicit class ValueOps[A](x: A) {
     def r: Renderable[A] =
-      AnonymousRenderable(x)
+      Renderable.Anonymous(x)
 
     def id(id: String): Renderable[A] =
-      IdentifiedRenderable(id, x)
+      Renderable.ById(id, x)
+  }
+
+  implicit class ValueOpsTemporal[A](x: Renderable[A]) {
+    def t[K]: Temporal[K, A] =
+      Temporal.FixedTemporal(x)
   }
 
   implicit class RenderableOps[A](r: Renderable[A]) {
@@ -15,5 +20,11 @@ package object dsl {
 
     def renderWithHighlightsOn[B](highlights: String*)(implicit enc: DslEncoder[A, B]): String =
       enc.encodeWithHighlights(r, highlights.toSet)
+  }
+
+  implicit class TemporalOps[K: Ordering, A](t: Temporal[K, A]) {
+    def at(k: K): Renderable[A] =
+      Temporal
+        .resolve(t, k)
   }
 }
