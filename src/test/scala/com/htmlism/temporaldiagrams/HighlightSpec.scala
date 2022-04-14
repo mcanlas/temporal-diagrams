@@ -5,7 +5,7 @@ import org.scalatest.Inside
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should._
 
-import com.htmlism.temporaldiagrams.dsl._
+import com.htmlism.temporaldiagrams.syntax._
 
 class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
   "Two objects with no highlights" should "render dimly" in {

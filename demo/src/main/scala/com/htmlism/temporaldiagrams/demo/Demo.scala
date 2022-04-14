@@ -10,14 +10,15 @@ import com.htmlism.temporaldiagrams.syntax._
 object Demo extends App {
   val producer =
     Temporal(
-      1 -> Service("foo", None).r,
-      2 -> Service("new foo", None).r
+      1 -> Service("foo", None).id("foo"),
+      2 -> Service("new_foo", None).r
     )
 
   val consumer =
     Temporal(
-      1 -> Service("bar", Service("foo", None).some).r,
-      3 -> Service("new bar", Service("foo", None).some).r
+      1 -> Service("bar", Service("foo", None).some).id("bar"),
+      2 -> Service("bar", Service("new_foo", None).some).r,
+      3 -> Service("new_bar", Service("new_foo", None).some).r
     )
 
   val everything =
@@ -25,11 +26,27 @@ object Demo extends App {
 
   for {
     k <- everything.keys
-  } yield {
+  } {
     val str =
-      everything.at(k).renderAs[PlantUml]
+      "@startuml\n" +
+      everything.at(k).renderAs[PlantUml] +
+        "\n@enduml\n"
 
     FilePrinterAlg[IO].print(k + ".puml")(str)
       .unsafeRunSync()
   }
+
+  for {
+    x <- List("foo", "bar")
+  } {
+    val str =
+      "@startuml\n" +
+        everything.at(1).renderWithHighlightsOn[PlantUml](x) +
+        "\n@enduml\n"
+
+    FilePrinterAlg[IO].print( x + ".puml")(str)
+      .unsafeRunSync()
+  }
+
+
 }

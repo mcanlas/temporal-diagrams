@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams
 
-package object dsl {
+package object syntax {
   implicit class ValueOps[A](x: A) {
     def r: Renderable[A] =
       Renderable.Anonymous(x)
