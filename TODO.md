@@ -1,3 +1,4 @@
+- should highlight by component be done with the tagged versions themselves (instead of asking to retype the string key)
 - partially applied dialect to minimize dialect pollution with multiple rendering avenues
 - multiple output dialects (plantuml is just one)
 - ability to "highlight" areas, and dim others
