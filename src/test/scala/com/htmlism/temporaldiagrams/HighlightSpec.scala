@@ -13,7 +13,7 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo", None)
 
     val bar =
-      Service("bar", foo.some)
+      Service("bar", "foo".some)
 
     (foo.id("foo") |+| bar.id("bar"))
       .renderWithHighlightsOn() shouldBe "component foo << Dim >>\n\ncomponent bar << Dim >>\n\nfoo --> bar"
@@ -24,7 +24,7 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo", None)
 
     val bar =
-      Service("bar", foo.some)
+      Service("bar", "foo".some)
 
     (foo.id("foo") |+| bar.id("bar"))
       .renderWithHighlightsOn(
@@ -37,7 +37,7 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo", None)
 
     val bar =
-      Service("bar", foo.some)
+      Service("bar", "foo".some)
 
     (foo.id("foo") |+| bar.id("bar"))
       .renderWithHighlightsOn(

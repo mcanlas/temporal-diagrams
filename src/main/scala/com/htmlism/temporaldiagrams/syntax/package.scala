@@ -15,8 +15,8 @@ package object syntax {
   }
 
   implicit class RenderableOps[A](r: Renderable[A]) {
-    def renderAs[B](implicit enc: DslEncoder[A, B]): String =
-      enc.encode(r)
+    def renderAs[B](implicit B: Dialect[B], enc: DslEncoder[A, B]): String =
+      B.consume(enc.encodeMonoid(r))
 
     def renderWithHighlightsOn[B](highlights: String*)(implicit enc: DslEncoder[A, B]): String =
       enc.encodeWithHighlights(r, highlights.toSet)

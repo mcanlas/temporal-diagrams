@@ -13,7 +13,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo", None)
 
     val bar =
-      Service("bar", foo.some)
+      Service("bar", "foo".some)
 
     val together =
       foo.r |+| bar.r
@@ -56,7 +56,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo", None)
 
     val bar =
-      Service("bar", foo.some)
+      Service("bar", "foo".some)
 
     (foo.r |+| bar.r).renderAs[PlantUml] shouldBe "component foo\n\ncomponent bar\n\nfoo --> bar"
   }

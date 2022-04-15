@@ -21,13 +21,13 @@ object Service {
           tag.fold("")(s => s" << $s >>")
 
         val dependency =
-          x.dependency.map(y => s"${y.name} --> ${x.name}").toList
+          x.dependency.map(y => s"$y --> ${x.name}").toList
 
         ((component + tagStr) :: dependency)
           .mkString(joiner)
       }
 
-      def encode(r: Renderable[Service]): String = {
+      def encode(r: Renderable[Service]): String =
         r match {
           case Renderable.Anonymous(x) =>
             renderFlat(x, None)
@@ -38,7 +38,6 @@ object Service {
           case Renderable.Cons(x, y) =>
             encode(x) + joiner + encode(y)
         }
-      }
 
       def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): String = {
         r match {
@@ -56,5 +55,6 @@ object Service {
         }
       }
 
+      override def encodeMonoid(x: Renderable[Service]): List[PlantUml] = ???
     }
 }

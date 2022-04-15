@@ -4,7 +4,7 @@ import cats.syntax.all._
 
 sealed trait ToyDsl
 
-case class Service(name: String, dependency: Option[Service]) extends ToyDsl
+case class Service(name: String, dependency: Option[String]) extends ToyDsl
 
 object Service {
   implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
@@ -20,7 +20,7 @@ object Service {
           tag.fold("")(s => s" << $s >>")
 
         val dependency =
-          x.dependency.map(y => s"${y.name} --> ${x.name}").toList
+          x.dependency.map(y => s"${y} --> ${x.name}").toList
 
         ((component + tagStr) :: dependency)
           .mkString(joiner)
@@ -55,5 +55,29 @@ object Service {
         }
       }
 
+      def encodeMonoid(x: Renderable[Service]): List[PlantUml] =
+        x match {
+          case Renderable.Anonymous(x) =>
+            renderFlatMonoid(x, None)
+
+          case Renderable.ById(_, x) =>
+            renderFlatMonoid(x, None)
+
+          case Renderable.Cons(x, y) =>
+            encodeMonoid(x) ::: encodeMonoid(y)
+        }
+
+      private def renderFlatMonoid(x: Service, tag: Option[String]) = {
+        val _ =
+          tag
+
+        val component =
+          List(Component(x.name))
+
+        val dependency =
+          x.dependency.toList.map(Link(_, x.name))
+
+        component ::: dependency
+      }
     }
 }

@@ -5,4 +5,6 @@ package com.htmlism.temporaldiagrams
   */
 trait Dialect[A] {
   def joiner: String
+
+  def consume(xs: List[A]): String
 }
