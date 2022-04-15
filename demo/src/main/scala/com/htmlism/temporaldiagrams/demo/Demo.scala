@@ -16,9 +16,9 @@ object Demo extends App {
 
   val consumer =
     Temporal(
-      1 -> Service("bar", Service("foo", None).some).id("bar"),
-      2 -> Service("bar", Service("new_foo", None).some).r,
-      3 -> Service("new_bar", Service("new_foo", None).some).r
+      1 -> Service("bar", "foo".some).id("bar"),
+      2 -> Service("bar", "new_foo".some).r,
+      3 -> Service("new_bar", "new_foo".some).r
     )
 
   val everything =
