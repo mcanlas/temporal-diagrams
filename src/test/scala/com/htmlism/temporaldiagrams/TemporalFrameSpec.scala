@@ -7,7 +7,7 @@ import org.scalatest.matchers.should._
 
 import com.htmlism.temporaldiagrams.syntax._
 
-class TemporalSpec extends AnyFlatSpec with Inside with Matchers {
+class TemporalFrameSpec extends AnyFlatSpec with Inside with Matchers {
   "Temporal DSL" should "not react when fixed" in {
     val temporal =
       Service("foo1", None).r.t[Int]
@@ -23,7 +23,7 @@ class TemporalSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo2", None).r
 
     val temporal =
-      Temporal(
+      TemporalFrame(
         1 -> one,
         2 -> two
       )
@@ -39,7 +39,7 @@ class TemporalSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo2", None).r
 
     val temporal =
-      Temporal(
+      TemporalFrame(
         1 -> one,
         2 -> two
       )
@@ -55,7 +55,7 @@ class TemporalSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo2", None).r
 
     val temporal =
-      Temporal(
+      TemporalFrame(
         1 -> one,
         2 -> two
       )
@@ -71,7 +71,7 @@ class TemporalSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo3", None).r
 
     val temporal =
-      Temporal(
+      TemporalFrame(
         1 -> one,
         3 -> three
       )
@@ -81,13 +81,13 @@ class TemporalSpec extends AnyFlatSpec with Inside with Matchers {
 
   it should "support cons" in {
     val leftTemporal =
-      Temporal(
+      TemporalFrame(
         1 -> Service("foo1", None).r,
         3 -> Service("foo3", None).r
       )
 
     val rightTemporal =
-      Temporal(
+      TemporalFrame(
         2 -> Service("foo2", None).r,
         4 -> Service("foo4", None).r
       )
@@ -104,13 +104,13 @@ class TemporalSpec extends AnyFlatSpec with Inside with Matchers {
 
   it should "collect keys" in {
     val leftTemporal =
-      Temporal(
+      TemporalFrame(
         1 -> Service("foo1", None).r,
         3 -> Service("foo3", None).r
       )
 
     val rightTemporal =
-      Temporal(
+      TemporalFrame(
         2 -> Service("foo2", None).r,
         4 -> Service("foo4", None).r
       )

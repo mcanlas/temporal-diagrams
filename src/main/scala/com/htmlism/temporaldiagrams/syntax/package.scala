@@ -10,8 +10,8 @@ package object syntax {
   }
 
   implicit class ValueOpsTemporal[A](x: Renderable[A]) {
-    def t[K]: Temporal[K, A] =
-      Temporal.FixedTemporal(x)
+    def t[K]: TemporalFrame[K, A] =
+      TemporalFrame.Fixed(x)
   }
 
   implicit class RenderableOps[A](r: Renderable[A]) {
@@ -25,13 +25,13 @@ package object syntax {
       Renderable.keys(r)
   }
 
-  implicit class TemporalOps[K: Ordering, A](t: Temporal[K, A]) {
+  implicit class TemporalOps[K: Ordering, A](t: TemporalFrame[K, A]) {
     def at(k: K): Renderable[A] =
-      Temporal
+      TemporalFrame
         .resolve(t, k)
 
     def keys: List[K] =
-      Temporal
+      TemporalFrame
         .keys(t)
   }
 }

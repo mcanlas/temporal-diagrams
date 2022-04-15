@@ -9,13 +9,13 @@ import com.htmlism.temporaldiagrams.syntax._
 
 object Demo extends App {
   val producer =
-    Temporal[Int, DemoDsl](
+    TemporalFrame[Int, DemoDsl](
       1 -> (Service("foo", None)).id("foo"),
       2 -> Service("new_foo", None).r
     )
 
   val consumer =
-    Temporal[Int, DemoDsl](
+    TemporalFrame[Int, DemoDsl](
       1 -> Service("bar", "foo".some).id("bar"),
       2 -> Service("bar", "new_foo".some).id("bar"),
       3 -> Hydra("bar", "new_foo".some).r,
