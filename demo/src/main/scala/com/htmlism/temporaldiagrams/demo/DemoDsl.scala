@@ -3,9 +3,9 @@ package demo
 
 import cats.syntax.all._
 
-sealed trait ToyDsl
+sealed trait DemoDsl
 
-case class Service(name: String, dependency: Option[String]) extends ToyDsl
+case class Service(name: String, dependency: Option[String]) extends DemoDsl
 
 object Service {
   implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
