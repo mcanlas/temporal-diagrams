@@ -1,3 +1,5 @@
+- evolution narrative for payloads
+- slideshow narrative (to supplant temporal indexing and support combinators/combinations i.e. "highlight these two", highlight as composible feature flags)
 - should highlight by component be done with the tagged versions themselves (instead of asking to retype the string key)
 - partially applied dialect to minimize dialect pollution with multiple rendering avenues
 - multiple output dialects (plantuml is just one)
