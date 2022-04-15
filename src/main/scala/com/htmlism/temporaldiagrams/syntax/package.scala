@@ -16,10 +16,10 @@ package object syntax {
 
   implicit class RenderableOps[A](r: Renderable[A]) {
     def renderAs[B](implicit B: Dialect[B], enc: DslEncoder[A, B]): String =
-      B.consume(enc.encodeMonoid(r))
+      B.consume(enc.encode(r))
 
-    def renderWithHighlightsOn[B](highlights: String*)(implicit enc: DslEncoder[A, B]): String =
-      enc.encodeWithHighlights(r, highlights.toSet)
+    def renderWithHighlightsOn[B](highlights: String*)(implicit B: Dialect[B], enc: DslEncoder[A, B]): String =
+      B.consume(enc.encodeWithHighlights(r, highlights.toSet))
   }
 
   implicit class TemporalOps[K: Ordering, A](t: Temporal[K, A]) {
