@@ -6,11 +6,13 @@ import cats.syntax.all._
 sealed trait DemoDsl
 
 case class Service(name: String, dependency: Option[String]) extends DemoDsl
+case class Hydra(name: String, dependency: Option[String]) extends DemoDsl
+case class Buffered(name: String, dependency: Option[String]) extends DemoDsl
 
-object Service {
-  implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
-    new DslEncoder[Service, PlantUml] {
-      def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): List[PlantUml] =
+object DemoDsl {
+  implicit val servicePlantUmlEncoder: DslEncoder[DemoDsl, PlantUml] =
+    new DslEncoder[DemoDsl, PlantUml] {
+      def encodeWithHighlights(r: Renderable[DemoDsl], highlights: Set[String]): List[PlantUml] =
         r match {
           case Renderable.Anonymous(x) =>
             renderFlatMonoid(x, "Dim".some)
@@ -25,7 +27,7 @@ object Service {
             encodeWithHighlights(x, highlights) ::: encodeWithHighlights(y, highlights)
         }
 
-      def encode(x: Renderable[Service]): List[PlantUml] =
+      def encode(x: Renderable[DemoDsl]): List[PlantUml] =
         x match {
           case Renderable.Anonymous(x) =>
             renderFlatMonoid(x, None)
@@ -37,14 +39,27 @@ object Service {
             encode(x) ::: encode(y)
         }
 
-      private def renderFlatMonoid(x: Service, tag: Option[String]) = {
-        val component =
-          List(Component(x.name, tag))
+      private def renderFlatMonoid(x: DemoDsl, tag: Option[String]) =
+        x match {
+          case Service(name, dependency) =>
+            val component =
+              List(Component(name, tag))
 
-        val dependency =
-          x.dependency.toList.map(Link(_, x.name))
+            val link =
+              dependency.toList.map(Link(_, name))
 
-        component ::: dependency
-      }
+            component ::: link
+
+          case Hydra(name, dependency) =>
+            (1 to 3)
+              .flatMap(n => List(Component(name + n.toString, tag)) ++ dependency.toList.map(Link(_, name + n.toString)))
+              .toList
+
+          case Buffered(name, dependency) =>
+            List(
+              Component(name, tag),
+              Queue(name + "_queue", tag),
+              Link(name + "_queue", name)) ++ dependency.toList.map(Link(_, name + "_queue"))
+        }
     }
 }

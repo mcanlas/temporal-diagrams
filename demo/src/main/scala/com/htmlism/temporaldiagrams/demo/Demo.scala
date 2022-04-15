@@ -9,16 +9,17 @@ import com.htmlism.temporaldiagrams.syntax._
 
 object Demo extends App {
   val producer =
-    Temporal(
-      1 -> Service("foo", None).id("foo"),
+    Temporal[Int, DemoDsl](
+      1 -> (Service("foo", None)).id("foo"),
       2 -> Service("new_foo", None).r
     )
 
   val consumer =
-    Temporal(
+    Temporal[Int, DemoDsl](
       1 -> Service("bar", "foo".some).id("bar"),
-      2 -> Service("bar", "new_foo".some).r,
-      3 -> Service("new_bar", "new_foo".some).r
+      2 -> Service("bar", "new_foo".some).id("bar"),
+      3 -> Hydra("bar", "new_foo".some).r,
+      4 -> Buffered("new_bar", "new_foo".some).r
     )
 
   val everything =

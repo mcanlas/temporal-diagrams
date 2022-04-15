@@ -8,7 +8,7 @@ import cats.Semigroup
   * For highlighting to be supported, every other renderable must support dimming. So maybe every renderable by
   * definition should support two styles
   */
-sealed trait Renderable[A]
+sealed trait Renderable[+A]
 
 object Renderable {
   implicit def renderableSemigroup[A]: Semigroup[Renderable[A]] =
