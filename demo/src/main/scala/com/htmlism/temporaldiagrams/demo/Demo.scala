@@ -28,24 +28,42 @@ object Demo extends App {
   for {
     k <- everything.keys
   } {
-    val str =
-      wrap(everything.at(k).renderAs[PlantUml])
+    val one =
+      "" -> (_: Renderable[DemoDsl]).renderAs[PlantUml]
 
-    FilePrinterAlg[IO].print(k + ".puml")(str)
-      .unsafeRunSync()
+    val highlights =
+      everything.at(k).keys.map(s => s"-$s" -> (_: Renderable[DemoDsl]).renderWithHighlightsOn[PlantUml](s))
+
+    (one :: highlights)
+      .foreach { f =>
+        val (slug, payload) = f(everything.at(k))
+
+        FilePrinterAlg[IO].print(k + slug + ".puml")(wrap(payload))
+          .unsafeRunSync()
+      }
   }
 
-  for {
-    x <- List("foo", "bar")
-  } {
-    val str =
-      wrap(everything.at(1).renderWithHighlightsOn[PlantUml](x))
-
-    FilePrinterAlg[IO].print( x + ".puml")(str)
-      .unsafeRunSync()
-  }
+  lazy val style =
+    """
+      |skinparam component<< Dim >> {
+      |  fontColor #EEE
+      |  backgroundColor #FFF
+      |}
+      |
+      |skinparam component<< Highlighted >> {
+      |  fontColor black
+      |  backgroundColor #ffe696
+      |}
+      |
+      |skinparam component {
+      |  fontStyle bold
+      |  fontColor white
+      |  backgroundColor #586ba4
+      |  borderColor #223336
+      |  borderThickness 2
+      |}""".stripMargin
 
   private def wrap(s: String) =
-    List("@startuml", s, "@enduml")
+    List("@startuml", style, s, "@enduml")
       .mkString("\n")
 }

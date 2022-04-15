@@ -29,4 +29,15 @@ object Renderable {
     */
   case class Cons[A](x: Renderable[A], y: Renderable[A]) extends Renderable[A]
 
+  def keys[A](x: Renderable[A]): List[String] =
+    x match {
+      case Anonymous(_) =>
+        Nil
+
+      case ById(k, _) =>
+        List(k)
+
+      case Cons(x, y) =>
+        keys(x) ::: keys(y)
+    }
 }
