@@ -14,21 +14,21 @@ object PlantUml {
 
   private def consumeOne(x: PlantUml) =
     x match {
-      case Component(name) =>
-        s"component $name"
+      case Component(name, tag) =>
+        s"component $name" + tag.fold("")(s => s" << $s >>")
 
       case Link(src, dest) =>
         s"$src --> $dest"
 
-      case Queue(name) =>
-        s"queue $name"
+      case Queue(name, tag) =>
+        s"queue $name" + tag.fold("")(s => s" << $s >>")
     }
 }
 
 sealed trait PlantUml
 
-case class Component(name: String) extends PlantUml
+case class Component(name: String, tag: Option[String]) extends PlantUml
 
 case class Link(src: String, dest: String) extends PlantUml
 
-case class Queue(name: String) extends PlantUml
+case class Queue(name: String, tag: Option[String]) extends PlantUml
