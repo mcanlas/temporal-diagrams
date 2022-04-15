@@ -28,9 +28,7 @@ object Demo extends App {
     k <- everything.keys
   } {
     val str =
-      "@startuml\n" +
-      everything.at(k).renderAs[PlantUml] +
-        "\n@enduml\n"
+      wrap(everything.at(k).renderAs[PlantUml])
 
     FilePrinterAlg[IO].print(k + ".puml")(str)
       .unsafeRunSync()
@@ -40,13 +38,13 @@ object Demo extends App {
     x <- List("foo", "bar")
   } {
     val str =
-      "@startuml\n" +
-        everything.at(1).renderWithHighlightsOn[PlantUml](x) +
-        "\n@enduml\n"
+      wrap(everything.at(1).renderWithHighlightsOn[PlantUml](x))
 
     FilePrinterAlg[IO].print( x + ".puml")(str)
       .unsafeRunSync()
   }
 
-
+  private def wrap(s: String) =
+    List("@startuml", s, "@enduml")
+      .mkString("\n")
 }

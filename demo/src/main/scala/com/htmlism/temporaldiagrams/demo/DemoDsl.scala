@@ -27,18 +27,6 @@ object Service {
           .mkString(joiner)
       }
 
-      def encode(r: Renderable[Service]): String =
-        r match {
-          case Renderable.Anonymous(x) =>
-            renderFlat(x, None)
-
-          case Renderable.ById(_, x) =>
-            renderFlat(x, None)
-
-          case Renderable.Cons(x, y) =>
-            encode(x) + joiner + encode(y)
-        }
-
       def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): String = {
         r match {
           case Renderable.Anonymous(x) =>
