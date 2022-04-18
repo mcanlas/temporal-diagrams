@@ -82,7 +82,7 @@ object DemoDsl {
         x match {
           case Service(name, dependency) =>
             val component =
-              List(Component(name, if (brightly) "Service".some else None))
+              List(Component(name, None, if (brightly) "Service".some else None))
 
             val link =
               dependency.toList.map(Link(_, name))
@@ -91,12 +91,12 @@ object DemoDsl {
 
           case Hydra(name, dependency) =>
             (1 to 3)
-              .flatMap(n => List(Component(name + n.toString, if (brightly) "Service".some else None)) ++ dependency.toList.map(Link(_, name + n.toString)))
+              .flatMap(n => List(Component(name + n.toString, None, if (brightly) "Service".some else None)) ++ dependency.toList.map(Link(_, name + n.toString)))
               .toList
 
           case Buffered(name, dependency) =>
             List(
-              Component(name, if (brightly) "Service".some else None),
+              Component(name, None, if (brightly) "Service".some else None),
               Queue(name + "_queue", None),
               Link(name + "_queue", name)) ++ dependency.toList.map(Link(_, name + "_queue"))
         }

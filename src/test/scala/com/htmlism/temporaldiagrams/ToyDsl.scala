@@ -43,7 +43,7 @@ object Service {
 
       private def renderFlatMonoid(x: Service, tag: Option[String]) = {
         val component =
-          List(Component(x.name, tag))
+          List(Component(x.name, None, tag))
 
         val dependency =
           x.dependency.toList.map(Link(_, x.name))

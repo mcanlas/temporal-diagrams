@@ -11,8 +11,15 @@ object PlantUml {
 
   private def consumeOne(x: PlantUml) =
     x match {
-      case Component(name, tag) =>
-        s"component $name" + tag.fold("")(s => s" << $s >>")
+      case Component(name, title, tag) =>
+        val maybeTitle =
+          title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
+
+        val maybeTag =
+          tag.fold(List.empty[String])(s => List(s"<< $s >>"))
+
+        ("component" :: maybeTitle ::: name :: maybeTag)
+          .mkString(" ")
 
       case Link(src, dest) =>
         s"$src --> $dest"
@@ -24,7 +31,7 @@ object PlantUml {
         s"database $name" + tag.fold("")(s => s" << $s >>")
     }
 
-  case class Component(name: String, tag: Option[String]) extends PlantUml
+  case class Component(name: String, title: Option[String], tag: Option[String]) extends PlantUml
 
   case class Link(src: String, dest: String) extends PlantUml
 
