@@ -1,5 +1,7 @@
 package com.htmlism.temporaldiagrams
 
+import cats.syntax.all._
+
 object PlantUml {
   implicit val dialect: Dialect[PlantUml] =
     new Dialect[PlantUml] {
@@ -38,7 +40,15 @@ object PlantUml {
         (s"package \"$title\" {" :: xs.map(consumeOne).mkString("\n") :: List("}")).mkString("\n")
     }
 
-  case class Component(name: String, title: Option[String], tag: Option[String]) extends PlantUml
+  case class Component(name: String, title: Option[String], tag: Option[String]) extends PlantUml {
+    def of(stereotype: String): Component =
+      this.copy(tag = stereotype.some)
+  }
+
+  object Component {
+    def apply(name: String): Component =
+      Component(name, None, None)
+  }
 
   case class Link(src: String, dest: String) extends PlantUml
 

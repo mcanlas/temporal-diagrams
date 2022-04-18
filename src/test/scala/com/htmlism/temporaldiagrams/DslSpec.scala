@@ -43,7 +43,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val foo =
       Service("foo", None)
 
-    foo.r.encodeAs[PlantUml] should contain theSameElementsAs List(Component("foo", None, "Service".some))
+    foo.r.encodeAs[PlantUml] should contain theSameElementsAs List(Component("foo") of "Service")
   }
 
   "A named DSL object" should "render the same as a nameless one" in {
@@ -60,6 +60,6 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    (foo.r |+| bar.r).encodeAs[PlantUml] should contain theSameElementsAs List(Component("foo", None, "Service".some), Component("bar", None, "Service".some), Link("foo", "bar"))
+    (foo.r |+| bar.r).encodeAs[PlantUml] should contain theSameElementsAs List(Component("foo") of "Service", Component("bar") of "Service", Link("foo", "bar"))
   }
 }
