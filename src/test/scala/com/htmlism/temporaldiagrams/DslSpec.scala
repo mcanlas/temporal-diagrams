@@ -8,6 +8,8 @@ import org.scalatest.matchers.should._
 import com.htmlism.temporaldiagrams.syntax._
 
 class DslSpec extends AnyFlatSpec with Inside with Matchers {
+  import PlantUml._
+
   "A given DSL" should "support cons" in {
     val foo =
       Service("foo", None)
@@ -41,14 +43,14 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val foo =
       Service("foo", None)
 
-    foo.r.renderAs[PlantUml] shouldBe "component foo"
+    foo.r.encodeAs[PlantUml] should contain theSameElementsAs List(Component("foo", None))
   }
 
   "A named DSL object" should "render the same as a nameless one" in {
     val foo =
       Service("foo", None)
 
-    foo.r.renderAs[PlantUml] shouldBe foo.id("foo-id").renderAs[PlantUml]
+    foo.r.encodeAs[PlantUml] should contain theSameElementsAs foo.id("foo-id").encodeAs[PlantUml]
   }
 
   "Two cons DSL objects" should "support rendering using dialect cons" in {
@@ -58,6 +60,6 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    (foo.r |+| bar.r).renderAs[PlantUml] shouldBe "component foo\n\ncomponent bar\n\nfoo --> bar"
+    (foo.r |+| bar.r).encodeAs[PlantUml] should contain theSameElementsAs List(Component("foo", None), Component("bar", None), Link("foo", "bar"))
   }
 }
