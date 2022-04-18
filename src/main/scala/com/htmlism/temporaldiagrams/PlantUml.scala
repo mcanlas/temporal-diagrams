@@ -19,6 +19,14 @@ object PlantUml {
       |  borderThickness 2
       |}
       |
+      |skinparam database {
+      |  fontStyle bold
+      |  fontColor #AAA
+      |  backgroundColor white
+      |  borderColor #AAA
+      |  borderThickness 2
+      |}
+      |
       |skinparam component<< Service >> {
       |  fontStyle bold
       |  fontColor white
