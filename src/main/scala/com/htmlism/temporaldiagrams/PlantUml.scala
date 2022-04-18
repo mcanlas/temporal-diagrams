@@ -24,20 +24,36 @@ object PlantUml {
       case Link(src, dest) =>
         s"$src --> $dest"
 
-      case Queue(name, tag) =>
-        s"queue $name" + tag.fold("")(s => s" << $s >>")
+      case Queue(name, title, tag) =>
+        val maybeTitle =
+          title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
 
-      case Database(name, tag) =>
-        s"database $name" + tag.fold("")(s => s" << $s >>")
+        val maybeTag =
+          tag.fold(List.empty[String])(s => List(s"<< $s >>"))
+
+        ("queue" :: maybeTitle ::: name :: maybeTag)
+          .mkString(" ")
+
+
+      case Database(name, title, tag) =>
+        val maybeTitle =
+          title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
+
+        val maybeTag =
+          tag.fold(List.empty[String])(s => List(s"<< $s >>"))
+
+        ("database" :: maybeTitle ::: name :: maybeTag)
+          .mkString(" ")
+
     }
 
   case class Component(name: String, title: Option[String], tag: Option[String]) extends PlantUml
 
   case class Link(src: String, dest: String) extends PlantUml
 
-  case class Queue(name: String, tag: Option[String]) extends PlantUml
+  case class Queue(name: String, title: Option[String], tag: Option[String]) extends PlantUml
 
-  case class Database(name: String, tag: Option[String]) extends PlantUml
+  case class Database(name: String, title: Option[String], tag: Option[String]) extends PlantUml
 }
 
 sealed trait PlantUml
