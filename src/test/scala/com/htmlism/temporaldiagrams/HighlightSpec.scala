@@ -8,6 +8,8 @@ import org.scalatest.matchers.should._
 import com.htmlism.temporaldiagrams.syntax._
 
 class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
+  import PlantUml._
+
   "Two objects with no highlights" should "render dimly" in {
     val foo =
       Service("foo", None)
@@ -16,7 +18,7 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("bar", "foo".some)
 
     (foo.id("foo") |+| bar.id("bar"))
-      .renderWithHighlightsOn[PlantUml]() shouldBe "component foo << Dim >>\n\ncomponent bar << Dim >>\n\nfoo --> bar"
+      .encodeWithHighlightsOn[PlantUml]() should contain theSameElementsAs List(Component("foo", "Dim".some), Component("bar", "Dim".some), Link("foo", "bar"))
   }
 
   "Two objects with one highlight" should "highlight one and dim the other" in {
@@ -27,9 +29,9 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("bar", "foo".some)
 
     (foo.id("foo") |+| bar.id("bar"))
-      .renderWithHighlightsOn[PlantUml](
+      .encodeWithHighlightsOn[PlantUml](
         "foo"
-      ) shouldBe "component foo << Highlighted >>\n\ncomponent bar << Dim >>\n\nfoo --> bar"
+      ) should contain theSameElementsAs List(Component("foo", "Highlighted".some), Component("bar", "Dim".some), Link("foo", "bar"))
   }
 
   "Two objects with multiple highlights" should "highlight everything" in {
@@ -40,9 +42,9 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("bar", "foo".some)
 
     (foo.id("foo") |+| bar.id("bar"))
-      .renderWithHighlightsOn[PlantUml](
+      .encodeWithHighlightsOn[PlantUml](
         "foo",
         "bar"
-      ) shouldBe "component foo << Highlighted >>\n\ncomponent bar << Highlighted >>\n\nfoo --> bar"
+      ) should contain theSameElementsAs List(Component("foo", "Highlighted".some), Component("bar", "Highlighted".some), Link("foo", "bar"))
   }
 }
