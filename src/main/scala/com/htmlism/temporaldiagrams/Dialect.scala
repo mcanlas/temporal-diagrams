@@ -4,5 +4,5 @@ package com.htmlism.temporaldiagrams
   * There exists multiple dialects, of which PlantUml is one
   */
 trait Dialect[A] {
-  def consume(xs: List[A], hasHighlights: Boolean): String
+  def consume(xs: List[A], injectedStyle: String): String
 }

@@ -12,8 +12,45 @@ case class Buffered(name: String, dependency: Option[String]) extends DemoDsl
 object DemoDsl {
   import PlantUml._
 
+  private val spotlightStyle =
+    """
+      |skinparam component {
+      |  fontStyle bold
+      |  fontColor #AAA
+      |  backgroundColor white
+      |  borderColor #AAA
+      |  borderThickness 2
+      |}
+      |
+      |skinparam queue {
+      |  fontStyle bold
+      |  fontColor #AAA
+      |  backgroundColor white
+      |  borderColor #AAA
+      |  borderThickness 2
+      |}
+      |
+      |skinparam database {
+      |  fontStyle bold
+      |  fontColor #AAA
+      |  backgroundColor white
+      |  borderColor #AAA
+      |  borderThickness 2
+      |}
+      |
+      |skinparam component<< Service >> {
+      |  fontStyle bold
+      |  fontColor white
+      |  backgroundColor #586ba4
+      |  borderColor #223336
+      |  borderThickness 2
+      |}""".stripMargin
+
   implicit val servicePlantUmlEncoder: DslEncoder[DemoDsl, PlantUml] =
     new DslEncoder[DemoDsl, PlantUml] {
+      def injectedStyle: String =
+        spotlightStyle
+
       def encodeWithHighlights(r: Renderable[DemoDsl], highlights: Set[String]): List[PlantUml] =
         r match {
           case Renderable.Anonymous(x) =>
