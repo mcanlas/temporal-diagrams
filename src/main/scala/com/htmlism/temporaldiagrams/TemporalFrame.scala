@@ -5,7 +5,7 @@ import cats._
 /**
  * Just saying `Temporal` clashes with `cats-effect` =(
  */
-sealed trait TemporalFrame[+K, A]
+sealed trait TemporalFrame[K, A]
 
 object TemporalFrame {
   implicit def temporalSemigroup[K, A]: Semigroup[TemporalFrame[K, A]] =
@@ -16,7 +16,7 @@ object TemporalFrame {
 
   case class Indexed[K, A](xs: Seq[(K, Renderable[A])]) extends TemporalFrame[K, A]
 
-  case class Fixed[A](x: Renderable[A]) extends TemporalFrame[Nothing, A]
+  case class Fixed[K, A](x: Renderable[A]) extends TemporalFrame[K, A]
 
   case class Cons[K, A](x: TemporalFrame[K, A], y: TemporalFrame[K, A]) extends TemporalFrame[K, A]
 
