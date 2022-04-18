@@ -9,42 +9,33 @@ object PlantUml {
           .mkString("\n\n")
     }
 
-  private def consumeOne(x: PlantUml) =
+  private def oneThing(thing: String, name: String, title: Option[String], tag: Option[String]) = {
+    val maybeTitle =
+      title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
+
+    val maybeTag =
+      tag.fold(List.empty[String])(s => List(s"<< $s >>"))
+
+    (thing :: maybeTitle ::: name :: maybeTag)
+      .mkString(" ")
+  }
+
+  private def consumeOne(x: PlantUml): String =
     x match {
       case Component(name, title, tag) =>
-        val maybeTitle =
-          title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
-
-        val maybeTag =
-          tag.fold(List.empty[String])(s => List(s"<< $s >>"))
-
-        ("component" :: maybeTitle ::: name :: maybeTag)
-          .mkString(" ")
+        oneThing("component", name, title, tag)
 
       case Link(src, dest) =>
         s"$src --> $dest"
 
       case Queue(name, title, tag) =>
-        val maybeTitle =
-          title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
-
-        val maybeTag =
-          tag.fold(List.empty[String])(s => List(s"<< $s >>"))
-
-        ("queue" :: maybeTitle ::: name :: maybeTag)
-          .mkString(" ")
-
+        oneThing("queue", name, title, tag)
 
       case Database(name, title, tag) =>
-        val maybeTitle =
-          title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
+        oneThing("database", name, title, tag)
 
-        val maybeTag =
-          tag.fold(List.empty[String])(s => List(s"<< $s >>"))
-
-        ("database" :: maybeTitle ::: name :: maybeTag)
-          .mkString(" ")
-
+      case Package(title, xs) =>
+        (s"package \"$title\" {" :: xs.map(consumeOne).mkString("\n") :: List("}")).mkString("\n")
     }
 
   case class Component(name: String, title: Option[String], tag: Option[String]) extends PlantUml
@@ -54,6 +45,8 @@ object PlantUml {
   case class Queue(name: String, title: Option[String], tag: Option[String]) extends PlantUml
 
   case class Database(name: String, title: Option[String], tag: Option[String]) extends PlantUml
+
+  case class Package(title: String, xs: List[PlantUml]) extends PlantUml
 }
 
 sealed trait PlantUml
