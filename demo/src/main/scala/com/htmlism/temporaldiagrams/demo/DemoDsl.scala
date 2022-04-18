@@ -10,6 +10,8 @@ case class Hydra(name: String, dependency: Option[String]) extends DemoDsl
 case class Buffered(name: String, dependency: Option[String]) extends DemoDsl
 
 object DemoDsl {
+  import PlantUml._
+
   implicit val servicePlantUmlEncoder: DslEncoder[DemoDsl, PlantUml] =
     new DslEncoder[DemoDsl, PlantUml] {
       def encodeWithHighlights(r: Renderable[DemoDsl], highlights: Set[String]): List[PlantUml] =

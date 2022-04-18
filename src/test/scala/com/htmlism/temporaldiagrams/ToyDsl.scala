@@ -7,6 +7,8 @@ sealed trait ToyDsl
 case class Service(name: String, dependency: Option[String]) extends ToyDsl
 
 object Service {
+  import PlantUml._
+
   implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
     new DslEncoder[Service, PlantUml] {
       def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): List[PlantUml] =
