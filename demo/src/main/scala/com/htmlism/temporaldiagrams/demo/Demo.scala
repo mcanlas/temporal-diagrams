@@ -38,32 +38,8 @@ object Demo extends App {
       .foreach { f =>
         val (slug, payload) = f(everything.at(k))
 
-        FilePrinterAlg[IO].print(k + slug + ".puml")(wrap(payload))
+        FilePrinterAlg[IO].print(k + slug + ".puml")(payload)
           .unsafeRunSync()
       }
   }
-
-  lazy val style =
-    """
-      |skinparam component<< Dim >> {
-      |  fontColor #EEE
-      |  backgroundColor #FFF
-      |}
-      |
-      |skinparam component<< Highlighted >> {
-      |  fontColor black
-      |  backgroundColor #ffe696
-      |}
-      |
-      |skinparam component {
-      |  fontStyle bold
-      |  fontColor white
-      |  backgroundColor #586ba4
-      |  borderColor #223336
-      |  borderThickness 2
-      |}""".stripMargin
-
-  private def wrap(s: String) =
-    List("@startuml", style, s, "@enduml")
-      .mkString("\n")
 }

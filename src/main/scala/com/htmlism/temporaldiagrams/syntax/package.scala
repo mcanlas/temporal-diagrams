@@ -22,10 +22,10 @@ package object syntax {
       enc.encodeWithHighlights(r, highlights.toSet)
 
     def renderAs[B](implicit B: Dialect[B], enc: DslEncoder[A, B]): String =
-      B.consume(enc.encode(r))
+      B.consume(enc.encode(r), hasHighlights = false)
 
     def renderWithHighlightsOn[B](highlights: String*)(implicit B: Dialect[B], enc: DslEncoder[A, B]): String =
-      B.consume(enc.encodeWithHighlights(r, highlights.toSet))
+      B.consume(enc.encodeWithHighlights(r, highlights.toSet), hasHighlights = true)
 
     def keys: List[String] =
       Renderable.keys(r)

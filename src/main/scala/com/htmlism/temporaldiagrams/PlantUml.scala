@@ -1,11 +1,37 @@
 package com.htmlism.temporaldiagrams
 
 object PlantUml {
+  private val spotlightStyle =
+    """
+      |skinparam component {
+      |  fontStyle bold
+      |  fontColor #AAA
+      |  backgroundColor white
+      |  borderColor #AAA
+      |  borderThickness 2
+      |}
+      |
+      |skinparam queue {
+      |  fontStyle bold
+      |  fontColor #AAA
+      |  backgroundColor white
+      |  borderColor #AAA
+      |  borderThickness 2
+      |}
+      |
+      |skinparam component<< Service >> {
+      |  fontStyle bold
+      |  fontColor white
+      |  backgroundColor #586ba4
+      |  borderColor #223336
+      |  borderThickness 2
+      |}""".stripMargin
+
   implicit val dialect: Dialect[PlantUml] =
     new Dialect[PlantUml] {
-      def consume(xs: List[PlantUml]): String =
-        xs
-          .map(consumeOne)
+      def consume(xs: List[PlantUml], hasHighlights: Boolean): String =
+        ("@startuml" :: spotlightStyle :: xs
+          .map(consumeOne) ::: List("@enduml"))
           .mkString("\n\n")
     }
 

@@ -14,13 +14,13 @@ object Service {
       def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): List[PlantUml] =
         r match {
           case Renderable.Anonymous(x) =>
-            renderFlatMonoid(x, "Dim".some)
+            renderFlatMonoid(x, None)
 
           case Renderable.ById(id, x) =>
             if (highlights(id))
-              renderFlatMonoid(x, "Highlighted".some)
+              renderFlatMonoid(x, "Service".some)
             else
-              renderFlatMonoid(x, "Dim".some)
+              renderFlatMonoid(x, None)
 
           case Renderable.Cons(x, y) =>
             encodeWithHighlights(x, highlights) ::: encodeWithHighlights(y, highlights)
@@ -29,10 +29,10 @@ object Service {
       def encode(x: Renderable[Service]): List[PlantUml] =
         x match {
           case Renderable.Anonymous(x) =>
-            renderFlatMonoid(x, None)
+            renderFlatMonoid(x, "Service".some)
 
           case Renderable.ById(_, x) =>
-            renderFlatMonoid(x, None)
+            renderFlatMonoid(x, "Service".some)
 
           case Renderable.Cons(x, y) =>
             encode(x) ::: encode(y)
