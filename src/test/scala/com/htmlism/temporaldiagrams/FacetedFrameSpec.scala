@@ -10,10 +10,10 @@ import com.htmlism.temporaldiagrams.syntax._
 class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
   "Faceted frames" should "support building many" in {
     val component =
-      Service("foo1", None).r
+      Service("foo1").r
 
     val component2 =
-      Service("foo2", None).r
+      Service("foo2").r
 
     val frame =
       FacetedFrame
@@ -30,7 +30,7 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
 
   it should "support building one" in {
     val component =
-      Service("foo1", None).r
+      Service("foo1").r
 
     val frame =
       FacetedFrame
@@ -43,10 +43,10 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
 
   "Frame selection" should "pick a variant by key" in {
     val default =
-      Service("default", None).r
+      Service("default").r
 
     val variant =
-      Service("variant", None).r
+      Service("variant").r
 
     val frame =
       FacetedFrame
@@ -58,10 +58,10 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
 
   it should "pick a default if selectors don't match" in {
     val default =
-      Service("default", None).r
+      Service("default").r
 
     val variant =
-      Service("variant", None).r
+      Service("variant").r
 
     val frame =
       FacetedFrame
@@ -77,7 +77,7 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
   it should "keep the number of input frames the same as the output" in {
     val services =
       NonEmptyList
-        .of(Service("default", None).r, Service("variant", None).r)
+        .of(Service("default").r, Service("variant").r)
 
     FacetedFrame
       .selectFrames(services.map(FacetedFrame.fixed)) shouldBe services

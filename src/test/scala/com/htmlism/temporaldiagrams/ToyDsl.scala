@@ -51,4 +51,7 @@ object Service {
         component ::: dependency
       }
     }
+
+  def apply(s: String): Service =
+    Service(s, None)
 }

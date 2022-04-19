@@ -12,7 +12,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
 
   "A given DSL" should "support cons" in {
     val foo =
-      Service("foo", None)
+      Service("foo")
 
     val bar =
       Service("bar", "foo".some)
@@ -28,7 +28,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
 
   it should "support id" in {
     val foo =
-      Service("foo", None)
+      Service("foo")
 
     val id =
       "foo-id"
@@ -41,21 +41,21 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
 
   "A nameless DSL object" should "support simple rendering" in {
     val foo =
-      Service("foo", None)
+      Service("foo")
 
     foo.r.encodeAs[PlantUml] should contain theSameElementsAs List(Component("foo") of "Service")
   }
 
   "A named DSL object" should "render the same as a nameless one" in {
     val foo =
-      Service("foo", None)
+      Service("foo")
 
     foo.r.encodeAs[PlantUml] should contain theSameElementsAs foo.id("foo-id").encodeAs[PlantUml]
   }
 
   "Two cons DSL objects" should "support rendering using dialect cons" in {
     val foo =
-      Service("foo", None)
+      Service("foo")
 
     val bar =
       Service("bar", "foo".some)

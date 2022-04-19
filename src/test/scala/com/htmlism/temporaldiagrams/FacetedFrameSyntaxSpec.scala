@@ -9,7 +9,7 @@ import com.htmlism.temporaldiagrams.syntax._
 class FacetedFrameSyntaxSpec extends AnyFlatSpec with Inside with Matchers {
   "Faceted frames DSL" should "support building one" in {
     val component =
-      Service("foo1", None).r
+      Service("foo1").r
 
     inside(component.f) { case FacetedFrame.Fixed(x) =>
       x shouldBe component
