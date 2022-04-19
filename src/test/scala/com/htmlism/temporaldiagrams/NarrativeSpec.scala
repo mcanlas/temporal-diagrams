@@ -7,7 +7,7 @@ import org.scalatest.matchers.should._
 import com.htmlism.temporaldiagrams.syntax._
 
 class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
-  it should "support progressive building" in {
+  it should "support progressive building by prepending" in {
     val services =
       Nel
         .of(Service("foo", None), Service("bar", None))
@@ -21,7 +21,7 @@ class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
     narrative.episodeSelectors shouldBe Nel.of(
       Nil,
       List("foo" -> 1),
-      List("foo" -> 1, "foo" -> 2)
+      List("foo" -> 2, "foo" -> 1)
     )
   }
 

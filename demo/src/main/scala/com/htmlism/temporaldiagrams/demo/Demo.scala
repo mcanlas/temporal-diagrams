@@ -9,36 +9,48 @@ import com.htmlism.temporaldiagrams.syntax._
 
 object Demo extends App {
   val producer =
-    TemporalFrame[Int, DemoDsl](
+    FacetedFrame.from[Int, DemoDsl]("producer",
       1 -> (Service("foo", None)).id("foo"),
       2 -> Service("new_foo", None).r
     )
 
   val consumer =
-    TemporalFrame[Int, DemoDsl](
+    FacetedFrame.from[Int, DemoDsl]("consumer",
       1 -> Service("bar", "foo".some).id("bar"),
       2 -> Service("bar", "new_foo".some).id("bar"),
-      3 -> Hydra("bar", "new_foo".some).r,
-      4 -> Buffered("new_bar", "new_foo".some).r
+      3 -> Hydra("bar", "new_foo".some).id("bar"),
+      4 -> Buffered("new_bar", "foo".some).r
     )
 
   val everything =
-    producer |+| consumer
+    Nel.of(producer, consumer)
+
+  val narrative =
+    everything
+      .start
+      .next("producer" -> 2, "consumer" -> 2)
+      .next("consumer" -> 3)
+      .reset("consumer" -> 4)
 
   for {
-    k <- everything.keys
+    pair <- narrative.episodes.zipWithIndex.toList
   } {
+    val (manyR, i) = pair
+
+    val oneR =
+      manyR.reduce
+
     val one =
       "" -> (_: Renderable[DemoDsl]).renderAs[PlantUml]
 
     val highlights =
-      everything.at(k).keys.map(s => s"-$s" -> (_: Renderable[DemoDsl]).renderWithHighlightsOn[PlantUml](s))
+      oneR.keys.map(s => s"-$s" -> (_: Renderable[DemoDsl]).renderWithHighlightsOn[PlantUml](s))
 
     (one :: highlights)
       .foreach { f =>
-        val (slug, payload) = f(everything.at(k))
+        val (slug, payload) = f(oneR)
 
-        FilePrinterAlg[IO].print(k.toString + slug + ".puml")(payload)
+        FilePrinterAlg[IO].print(i.toString + slug + ".puml")(payload)
           .unsafeRunSync()
       }
   }

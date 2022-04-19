@@ -7,8 +7,10 @@ case class Narrative[K, A](frames: Nel[FacetedFrame[K, A]], episodeSelectors: Ne
     val previously =
       episodeSelectors.last
 
+    // since first selector wins, we want the new ones to go first
+    // e.g. selecting the next variant of the same component/frame
     val nextEpisodeSelectors =
-      previously concat selectors
+      selectors.toList ::: previously
 
     copy(episodeSelectors = episodeSelectors.append(nextEpisodeSelectors))
   }
