@@ -16,8 +16,11 @@ object FacetedFrame {
   type FrameId =
     String
 
-  def apply[K: Ordering, A](id: FrameId, x: (K, Renderable[A]), xs: (K, Renderable[A])*): FacetedFrame[K, A] =
+  def from[K: Ordering, A](id: FrameId, x: (K, Renderable[A]), xs: (K, Renderable[A])*): FacetedFrame[K, A] =
     WithKeys(id, NonEmptyList(x, xs.toList))
+
+  def fixed[K, A](x: Renderable[A]): FacetedFrame[K, A] =
+    Fixed(x)
 
   case class WithKeys[K: Ordering, A](id: FrameId, xs: NonEmptyList[(K, Renderable[A])]) extends FacetedFrame[K, A] {
     def select(thatId: FrameId, thatK: K): FacetedFrame[K, A] =
@@ -36,9 +39,9 @@ object FacetedFrame {
     * Given a collection of frames, fold in a collection of selectors (first one wins), refining them to be fixed. If
     * any unfixed remain, pick the default
     */
-  def afixFrames[K, A](
+  def selectFrames[K, A](
       xs: NonEmptyList[FacetedFrame[K, A]],
-      selectors: List[(FrameId, K)]
+      selectors: (FrameId, K)*
   ): NonEmptyList[Renderable[A]] =
     selectors
       .foldLeft(xs) { (xs, s) =>
