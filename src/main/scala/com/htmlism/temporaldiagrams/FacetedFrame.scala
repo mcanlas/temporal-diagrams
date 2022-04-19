@@ -1,7 +1,5 @@
 package com.htmlism.temporaldiagrams
 
-import cats.data._
-
 /**
   * A renderable unit that responds to being keyed into a specific facet or version
   *
@@ -17,12 +15,12 @@ object FacetedFrame {
     String
 
   def from[K: Ordering, A](id: FrameId, x: (K, Renderable[A]), xs: (K, Renderable[A])*): FacetedFrame[K, A] =
-    WithKeys(id, NonEmptyList(x, xs.toList))
+    WithKeys(id, Nel(x, xs.toList))
 
   def fixed[K, A](x: Renderable[A]): FacetedFrame[K, A] =
     Fixed(x)
 
-  case class WithKeys[K: Ordering, A](id: FrameId, xs: NonEmptyList[(K, Renderable[A])]) extends FacetedFrame[K, A] {
+  case class WithKeys[K: Ordering, A](id: FrameId, xs: Nel[(K, Renderable[A])]) extends FacetedFrame[K, A] {
     def select(thatId: FrameId, thatK: K): FacetedFrame[K, A] =
       if (id == thatId)
         xs
@@ -40,9 +38,9 @@ object FacetedFrame {
     * any unfixed remain, pick the default
     */
   def selectFrames[K, A](
-      xs: NonEmptyList[FacetedFrame[K, A]],
+      xs: Nel[FacetedFrame[K, A]],
       selectors: (FrameId, K)*
-  ): NonEmptyList[Renderable[A]] =
+  ): Nel[Renderable[A]] =
     selectors
       .foldLeft(xs) { (xs, s) =>
         xs

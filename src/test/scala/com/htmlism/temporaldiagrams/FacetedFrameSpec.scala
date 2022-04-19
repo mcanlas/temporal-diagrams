@@ -1,6 +1,5 @@
 package com.htmlism.temporaldiagrams
 
-import cats.data._
 import org.scalatest.Inside
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should._
@@ -53,7 +52,7 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
         .from("some id", "key1" -> default, "key2" -> variant)
 
     FacetedFrame
-      .selectFrames(NonEmptyList.of(frame), "some id" -> "key2") shouldBe NonEmptyList.of(variant)
+      .selectFrames(Nel.of(frame), "some id" -> "key2") shouldBe Nel.of(variant)
   }
 
   it should "pick a default if selectors don't match" in {
@@ -68,15 +67,15 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
         .from("some id", "key1" -> default, "key2" -> variant)
 
     FacetedFrame
-      .selectFrames(NonEmptyList.of(frame), "nonsense id" -> "key1") shouldBe NonEmptyList.of(default)
+      .selectFrames(Nel.of(frame), "nonsense id" -> "key1") shouldBe Nel.of(default)
 
     FacetedFrame
-      .selectFrames(NonEmptyList.of(frame), "some id" -> "nonsense key") shouldBe NonEmptyList.of(default)
+      .selectFrames(Nel.of(frame), "some id" -> "nonsense key") shouldBe Nel.of(default)
   }
 
   it should "keep the number of input frames the same as the output" in {
     val services =
-      NonEmptyList
+      Nel
         .of(Service("default").r, Service("variant").r)
 
     FacetedFrame
