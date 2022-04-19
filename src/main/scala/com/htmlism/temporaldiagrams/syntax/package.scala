@@ -45,4 +45,9 @@ package object syntax {
       TemporalFrame
         .keys(t)
   }
+
+  implicit class FacetedOps[K, A](xs: Nel[FacetedFrame[K, A]]) {
+    def start: Narrative[K, A] =
+      Narrative(xs, Nel.of(Nil))
+  }
 }
