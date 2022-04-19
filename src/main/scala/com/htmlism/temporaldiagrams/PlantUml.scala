@@ -38,6 +38,12 @@ object PlantUml {
 
       case Package(title, xs) =>
         (s"package \"$title\" {" :: xs.map(consumeOne).mkString("\n") :: List("}")).mkString("\n")
+
+      case Actor(name, title, tag) =>
+        oneThing("actor", name, title, tag)
+
+      case UseCase(name, title, tag) =>
+        oneThing("usecase", name, title, tag)
     }
 
   case class Component(name: String, title: Option[String], tag: Option[String]) extends PlantUml {
@@ -57,6 +63,10 @@ object PlantUml {
   case class Database(name: String, title: Option[String], tag: Option[String]) extends PlantUml
 
   case class Package(title: String, xs: List[PlantUml]) extends PlantUml
+
+  case class Actor(name: String, title: Option[String], tag: Option[String]) extends PlantUml
+
+  case class UseCase(name: String, title: Option[String], tag: Option[String]) extends PlantUml
 }
 
 sealed trait PlantUml
