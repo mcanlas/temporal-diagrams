@@ -14,6 +14,11 @@ package object syntax {
       TemporalFrame.Fixed(x)
   }
 
+  implicit class ValueOpsFaceted[A](x: Renderable[A]) {
+    def f[K]: FacetedFrame[K, A] =
+      FacetedFrame.fixed(x)
+  }
+
   implicit class RenderableOps[A](r: Renderable[A]) {
     def encodeAs[B](implicit enc: DslEncoder[A, B]): List[B] =
       enc.encode(r)
