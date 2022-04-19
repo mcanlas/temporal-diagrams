@@ -18,7 +18,11 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       Service("bar", "foo".some)
 
     (foo.id("foo") |+| bar.id("bar"))
-      .encodeWithHighlightsOn[PlantUml]() should contain theSameElementsAs List(Component("foo"), Component("bar"), Link("foo", "bar"))
+      .encodeWithHighlightsOn[PlantUml]() should contain theSameElementsAs List(
+      Component("foo"),
+      Component("bar"),
+      Link("foo", "bar")
+    )
   }
 
   "Two objects with one highlight" should "highlight one and dim the other" in {
@@ -45,6 +49,10 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
       .encodeWithHighlightsOn[PlantUml](
         "foo",
         "bar"
-      ) should contain theSameElementsAs List(Component("foo") of "Service", Component("bar") of "Service", Link("foo", "bar"))
+      ) should contain theSameElementsAs List(
+      Component("foo") of "Service",
+      Component("bar") of "Service",
+      Link("foo", "bar")
+    )
   }
 }

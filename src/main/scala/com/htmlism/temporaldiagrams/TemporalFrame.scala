@@ -3,8 +3,8 @@ package com.htmlism.temporaldiagrams
 import cats._
 
 /**
- * Just saying `Temporal` clashes with `cats-effect` =(
- */
+  * Just saying `Temporal` clashes with `cats-effect` =(
+  */
 sealed trait TemporalFrame[K, A]
 
 object TemporalFrame {

@@ -60,6 +60,10 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    (foo.r |+| bar.r).encodeAs[PlantUml] should contain theSameElementsAs List(Component("foo") of "Service", Component("bar") of "Service", Link("foo", "bar"))
+    (foo.r |+| bar.r).encodeAs[PlantUml] should contain theSameElementsAs List(
+      Component("foo") of "Service",
+      Component("bar") of "Service",
+      Link("foo", "bar")
+    )
   }
 }

@@ -38,7 +38,7 @@ object Demo extends App {
       .foreach { f =>
         val (slug, payload) = f(everything.at(k))
 
-        FilePrinterAlg[IO].print(k + slug + ".puml")(payload)
+        FilePrinterAlg[IO].print(k.toString + slug + ".puml")(payload)
           .unsafeRunSync()
       }
   }

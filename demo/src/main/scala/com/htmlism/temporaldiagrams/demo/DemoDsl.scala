@@ -1,8 +1,6 @@
 package com.htmlism.temporaldiagrams
 package demo
 
-import cats.syntax.all._
-
 sealed trait DemoDsl
 
 case class Service(name: String, dependency: Option[String]) extends DemoDsl
@@ -82,7 +80,7 @@ object DemoDsl {
         x match {
           case Service(name, dependency) =>
             val component =
-              List(Component(name, None, if (brightly) "Service".some else None))
+              List(Component(name, None, Option.when(brightly)("Service")))
 
             val link =
               dependency.toList.map(Link(_, name))
@@ -91,13 +89,13 @@ object DemoDsl {
 
           case Hydra(name, dependency) =>
             (1 to 3)
-              .flatMap(n => List(Component(name + n.toString, None, if (brightly) "Service".some else None)) ++ dependency.toList.map(Link(_, name + n.toString)))
+              .flatMap(n => List(Component(name + n.toString, None, Option.when(brightly)("Service"))) ++ dependency.toList.map(Link(_, name + n.toString)))
               .toList
 
           case Buffered(name, dependency) =>
             List(
-              Component(name, None, if (brightly) "Service".some else None),
-              Queue(name + "_queue", None),
+              Component(name, None, Option.when(brightly)("Service")),
+              Queue(name + "_queue", None, None),
               Link(name + "_queue", name)) ++ dependency.toList.map(Link(_, name + "_queue"))
         }
     }

@@ -12,6 +12,7 @@ object Scala2Plugin extends AutoPlugin {
   override def trigger: PluginTrigger = AllRequirements
 
   override val buildSettings: Seq[Setting[_]] = Seq(
+    scalaVersion := "2.13.8",
     crossScalaVersions := Seq("2.13.8", "3.1.1")
   )
 }
