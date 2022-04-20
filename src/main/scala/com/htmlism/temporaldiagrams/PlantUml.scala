@@ -18,7 +18,6 @@ object PlantUml {
       }
     }
 
-  sealed trait SkinParam extends PlantUml
   sealed trait Entity extends PlantUml
 
   private def oneThing(thing: String, name: String, title: Option[String], tag: Option[String]) = {
