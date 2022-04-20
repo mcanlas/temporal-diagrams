@@ -33,8 +33,24 @@ object PlantUml {
       case Queue(name, title, tag) =>
         oneThing("queue", name, title, tag)
 
-      case Database(name, title, tag) =>
-        oneThing("database", name, title, tag)
+      case Database(name, title, tag, xs) =>
+        val header =
+          oneThing("database", name, title, tag)
+
+        xs match {
+          case Nil =>
+            header
+
+          case _ =>
+            val open =
+              header + " {"
+
+            val close =
+              "}"
+
+            (open :: xs.map(consumeOne) ::: List(close))
+              .mkString("\n")
+        }
 
       case Package(title, xs) =>
         (s"package \"$title\" {" :: xs.map(consumeOne).mkString("\n") :: List("}")).mkString("\n")
@@ -60,7 +76,7 @@ object PlantUml {
 
   case class Queue(name: String, title: Option[String], tag: Option[String]) extends PlantUml
 
-  case class Database(name: String, title: Option[String], tag: Option[String]) extends PlantUml
+  case class Database(name: String, title: Option[String], tag: Option[String], xs: List[PlantUml]) extends PlantUml
 
   case class Package(title: String, xs: List[PlantUml]) extends PlantUml
 
