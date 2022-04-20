@@ -5,11 +5,21 @@ import cats.syntax.all._
 object PlantUml {
   implicit val dialect: Dialect[PlantUml] =
     new Dialect[PlantUml] {
-      def consume(xs: List[PlantUml], injectedStyle: String): String =
-        ("@startuml" :: injectedStyle :: xs
+      def consume(xs: List[PlantUml], injectedStyle: String): String = {
+        val entities =
+          xs.collect { case x: Entity => x }
+
+        val relationships =
+          xs.collect { case x: Link => x }
+
+        ("@startuml" :: injectedStyle :: (entities ::: relationships)
           .map(consumeOne) ::: List("@enduml"))
           .mkString("\n\n")
+      }
     }
+
+  sealed trait SkinParam extends PlantUml
+  sealed trait Entity extends PlantUml
 
   private def oneThing(thing: String, name: String, title: Option[String], tag: Option[String]) = {
     val maybeTitle =
@@ -62,7 +72,7 @@ object PlantUml {
         oneThing("usecase", name, title, tag)
     }
 
-  case class Component(name: String, title: Option[String], tag: Option[String]) extends PlantUml {
+  case class Component(name: String, title: Option[String], tag: Option[String]) extends Entity {
     def of(stereotype: String): Component =
       this.copy(tag = stereotype.some)
   }
@@ -74,15 +84,15 @@ object PlantUml {
 
   case class Link(src: String, dest: String) extends PlantUml
 
-  case class Queue(name: String, title: Option[String], tag: Option[String]) extends PlantUml
+  case class Queue(name: String, title: Option[String], tag: Option[String]) extends Entity
 
-  case class Database(name: String, title: Option[String], tag: Option[String], xs: List[PlantUml]) extends PlantUml
+  case class Database(name: String, title: Option[String], tag: Option[String], xs: List[PlantUml]) extends Entity
 
-  case class Package(title: String, xs: List[PlantUml]) extends PlantUml
+  case class Package(title: String, xs: List[PlantUml]) extends Entity
 
-  case class Actor(name: String, title: Option[String], tag: Option[String]) extends PlantUml
+  case class Actor(name: String, title: Option[String], tag: Option[String]) extends Entity
 
-  case class UseCase(name: String, title: Option[String], tag: Option[String]) extends PlantUml
+  case class UseCase(name: String, title: Option[String], tag: Option[String]) extends Entity
 }
 
 sealed trait PlantUml
