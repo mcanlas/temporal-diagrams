@@ -9,11 +9,6 @@ package object syntax {
       Renderable.ById(id, x)
   }
 
-  implicit class ValueOpsTemporal[A](x: Renderable[A]) {
-    def t[K]: TemporalFrame[K, A] =
-      TemporalFrame.Fixed(x)
-  }
-
   implicit class ValueOpsFaceted[A](x: Renderable[A]) {
     def f[K]: FacetedFrame[K, A] =
       FacetedFrame.fixed(x)
@@ -34,16 +29,6 @@ package object syntax {
 
     def keys: List[String] =
       Renderable.keys(r)
-  }
-
-  implicit class TemporalOps[K: Ordering, A](t: TemporalFrame[K, A]) {
-    def at(k: K): Renderable[A] =
-      TemporalFrame
-        .resolve(t, k)
-
-    def keys: List[K] =
-      TemporalFrame
-        .keys(t)
   }
 
   implicit class FacetedOps[K, A](xs: Nel[FacetedFrame[K, A]]) {
