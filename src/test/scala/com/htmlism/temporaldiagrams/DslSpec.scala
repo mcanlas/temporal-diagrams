@@ -20,7 +20,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val together =
       foo.r |+| bar.r
 
-    inside(together) { case Renderable.Cons(Renderable.Anonymous(x), Renderable.Anonymous(y)) =>
+    inside(together) { case Renderable.Cons(Renderable.Tagged(_, x), Renderable.Tagged(_, y)) =>
       x shouldBe foo
       y shouldBe bar
     }
@@ -34,9 +34,9 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
       "foo-id"
 
     val renderable =
-      foo.id(id)
+      foo.tag(id)
 
-    renderable shouldBe Renderable.ById(id, foo)
+    renderable shouldBe Renderable.Tagged(List(id), foo)
   }
 
   "A nameless DSL object" should "support simple rendering" in {
@@ -50,7 +50,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val foo =
       Service("foo")
 
-    foo.r.encodeAs[PlantUml] should contain theSameElementsAs foo.id("foo-id").encodeAs[PlantUml]
+    foo.r.encodeAs[PlantUml] should contain theSameElementsAs foo.tag("foo-id").encodeAs[PlantUml]
   }
 
   "Two cons DSL objects" should "support rendering using dialect cons" in {

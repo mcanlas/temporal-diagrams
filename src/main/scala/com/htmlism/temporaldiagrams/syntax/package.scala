@@ -9,10 +9,10 @@ package object syntax {
         x
 
     def r: Renderable[A] =
-      Renderable.Anonymous(x)
+      Renderable.Tagged(Nil, x)
 
-    def id(id: String): Renderable[A] =
-      Renderable.ById(id, x)
+    def tag(tags: String*): Renderable[A] =
+      Renderable.Tagged(tags.toList, x)
   }
 
   implicit class ValueOpsFaceted[A](x: Renderable[A]) {

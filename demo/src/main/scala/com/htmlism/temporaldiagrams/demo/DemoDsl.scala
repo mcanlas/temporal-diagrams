@@ -51,11 +51,8 @@ object DemoDsl {
 
       def encodeWithHighlights(r: Renderable[DemoDsl], highlights: Set[String]): List[PlantUml] =
         r match {
-          case Renderable.Anonymous(x) =>
-            renderFlatMonoid(x, brightly = false)
-
-          case Renderable.ById(id, x) =>
-            if (highlights(id))
+          case Renderable.Tagged(tags, x) =>
+            if ((highlights intersect tags.toSet).nonEmpty)
               renderFlatMonoid(x, brightly = true)
             else
               renderFlatMonoid(x, brightly = false)
@@ -66,10 +63,7 @@ object DemoDsl {
 
       def encode(x: Renderable[DemoDsl]): List[PlantUml] =
         x match {
-          case Renderable.Anonymous(x) =>
-            renderFlatMonoid(x, brightly = true)
-
-          case Renderable.ById(_, x) =>
+          case Renderable.Tagged(_, x) =>
             renderFlatMonoid(x, brightly = true)
 
           case Renderable.Cons(x, y) =>

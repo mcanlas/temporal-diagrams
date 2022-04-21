@@ -15,14 +15,9 @@ object Renderable {
     Cons(_, _)
 
   /**
-    * A renderable that can only be dimmed by others
+    * A renderable that can be targeted by tags for highlighting
     */
-  case class Anonymous[A](x: A) extends Renderable[A]
-
-  /**
-    * A renderable that can be highlighted by name
-    */
-  case class ById[A](id: String, x: A) extends Renderable[A]
+  case class Tagged[A](tags: List[String], x: A) extends Renderable[A]
 
   /**
     * A renderable that can be highlighted by name
@@ -31,11 +26,8 @@ object Renderable {
 
   def keys[A](x: Renderable[A]): List[String] =
     x match {
-      case Anonymous(_) =>
-        Nil
-
-      case ById(k, _) =>
-        List(k)
+      case Tagged(tags, _) =>
+        tags
 
       case Cons(x, y) =>
         keys(x) ::: keys(y)

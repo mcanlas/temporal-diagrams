@@ -16,11 +16,8 @@ object Service {
 
       def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): List[PlantUml] =
         r match {
-          case Renderable.Anonymous(x) =>
-            renderFlatMonoid(x, None)
-
-          case Renderable.ById(id, x) =>
-            if (highlights(id))
+          case Renderable.Tagged(tags, x) =>
+            if ((highlights intersect tags.toSet).nonEmpty)
               renderFlatMonoid(x, "Service".some)
             else
               renderFlatMonoid(x, None)
@@ -31,10 +28,7 @@ object Service {
 
       def encode(x: Renderable[Service]): List[PlantUml] =
         x match {
-          case Renderable.Anonymous(x) =>
-            renderFlatMonoid(x, "Service".some)
-
-          case Renderable.ById(_, x) =>
+          case Renderable.Tagged(_, x) =>
             renderFlatMonoid(x, "Service".some)
 
           case Renderable.Cons(x, y) =>
