@@ -8,6 +8,12 @@ package object syntax {
       else
         x
 
+    def list: List[A] =
+      List(x)
+
+    def nel: Nel[A] =
+      Nel.one(x)
+
     def r: Renderable[A] =
       Renderable.Tagged(Nil, x)
 
