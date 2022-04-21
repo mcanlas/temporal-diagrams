@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams
 package demo
 
+import cats.syntax.all._
+
 sealed trait DemoDsl
 
 case class Service(name: String, dependency: Option[String]) extends DemoDsl
@@ -11,16 +13,7 @@ object DemoDsl {
   import PlantUml._
 
   val spotlightStyle: String =
-    """
-      |skinparam component {
-      |  fontStyle bold
-      |  fontColor #AAA
-      |  backgroundColor white
-      |  borderColor #AAA
-      |  borderThickness 2
-      |}
-      |
-      |skinparam queue {
+    """skinparam queue {
       |  fontStyle bold
       |  fontColor #AAA
       |  backgroundColor white
@@ -33,14 +26,6 @@ object DemoDsl {
       |  fontColor #AAA
       |  backgroundColor white
       |  borderColor #AAA
-      |  borderThickness 2
-      |}
-      |
-      |skinparam component<< Service >> {
-      |  fontStyle bold
-      |  fontColor white
-      |  backgroundColor #586ba4
-      |  borderColor #223336
       |  borderThickness 2
       |}""".stripMargin
 
@@ -73,6 +58,24 @@ object DemoDsl {
             encode(x) ::: encode(y)
         }
 
+      private def skin(brightly: Boolean) =
+        if (brightly)
+          PlantUml.SkinParam.Bundle("component", "Service".some, List(
+            PlantUml.SkinParam.Single("fontStyle", "bold"),
+            PlantUml.SkinParam.Single("fontColor", "white"),
+            PlantUml.SkinParam.Single("backgroundColor", "#586ba4"),
+            PlantUml.SkinParam.Single("borderColor", "#223336"),
+            PlantUml.SkinParam.Single("borderThickness", "2"),
+          ))
+        else
+          PlantUml.SkinParam.Bundle("component", None, List(
+            PlantUml.SkinParam.Single("fontStyle", "bold"),
+            PlantUml.SkinParam.Single("fontColor", "#AAA"),
+            PlantUml.SkinParam.Single("backgroundColor", "white"),
+            PlantUml.SkinParam.Single("borderColor", "#AAA"),
+            PlantUml.SkinParam.Single("borderThickness", "2"),
+          ))
+
       private def renderFlatMonoid(x: DemoDsl, brightly: Boolean) =
         x match {
           case Service(name, dependency) =>
@@ -82,15 +85,16 @@ object DemoDsl {
             val link =
               dependency.toList.map(Link(_, name))
 
-            component ::: link
+            skin(brightly) :: component ::: link
 
           case Hydra(name, dependency) =>
             (1 to 3)
               .flatMap(n => List(Component(name + n.toString, None, Option.when(brightly)("Service"))) ++ dependency.toList.map(Link(_, name + n.toString)))
-              .toList
+              .toList appended skin(brightly)
 
           case Buffered(name, dependency) =>
             List(
+              skin(brightly),
               Component(name, None, Option.when(brightly)("Service")),
               Queue(name + "_queue", None, None),
               Link(name + "_queue", name)) ++ dependency.toList.map(Link(_, name + "_queue"))

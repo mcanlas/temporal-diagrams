@@ -5,28 +5,33 @@ import cats.syntax.all._
 import com.htmlism.temporaldiagrams.syntax._
 
 object PlantUml {
-  def render(injectedStyle: String)(xs: List[PlantUml]): String = {
+  def render(injectedStyle: String)(xs: List[PlantUml]): String =
+    renderWithDirection(injectedStyle, None, xs)
+
+  def renderHorizontally(injectedStyle: String)(xs: List[PlantUml]): String =
+    renderWithDirection(injectedStyle, "left to right direction".some, xs)
+
+  private def renderWithDirection(injectedStyle: String, direction: Option[String], xs: List[PlantUml]) = {
+    val skins =
+      xs.collect { case x: SkinParam => x }.distinct
+
     val entities =
-      xs.collect { case x: Entity => x }
+      xs.collect { case x: Entity => x }.distinct
 
     val relationships =
       xs.collect { case x: Link => x }
 
-    ("@startuml" :: injectedStyle :: (entities ::: relationships)
+    ("@startuml" :: direction.toList ::: injectedStyle :: (skins ::: entities ::: relationships)
       .flatMap(consumeOne) ::: List("@enduml"))
       .mkString("\n\n")
   }
 
-  def renderHorizontally(injectedStyle: String)(xs: List[PlantUml]): String = {
-    val entities =
-      xs.collect { case x: Entity => x }
+  sealed trait SkinParam extends PlantUml
 
-    val relationships =
-      xs.collect { case x: Link => x }
+  object SkinParam {
+    case class Single(key: String, value: String) extends SkinParam
 
-    ("@startuml" :: "left to right direction" :: injectedStyle :: (entities ::: relationships)
-      .flatMap(consumeOne) ::: List("@enduml"))
-      .mkString("\n\n")
+    case class Bundle(entity: String, stereotype: Option[String], xs: List[Single]) extends SkinParam
   }
 
   sealed trait Entity extends PlantUml
@@ -117,6 +122,17 @@ object PlantUml {
 
       case UseCase(name, title, tag) =>
         oneThing("usecase", name, title, tag).list
+
+      case SkinParam.Single(k, v) =>
+        s"skinparam $k $v".list
+
+      case SkinParam.Bundle(entity, oStereotype, xs) =>
+        val stereotype =
+          oStereotype.fold("")(s => s"<< $s >>")
+
+        (s"skinparam $entity$stereotype {" :: xs
+          .map { case SkinParam.Single(k, v) => s"  $k $v" } appended "}")
+          .mkString("\n").list
     }
 
   case class Component(name: String, title: Option[String], tag: Option[String]) extends Entity {
