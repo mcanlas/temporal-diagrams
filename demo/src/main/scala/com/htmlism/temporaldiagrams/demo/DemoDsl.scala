@@ -10,7 +10,7 @@ case class Buffered(name: String, dependency: Option[String]) extends DemoDsl
 object DemoDsl {
   import PlantUml._
 
-  private val spotlightStyle =
+  val spotlightStyle: String =
     """
       |skinparam component {
       |  fontStyle bold
@@ -46,9 +46,6 @@ object DemoDsl {
 
   implicit val servicePlantUmlEncoder: DslEncoder[DemoDsl, PlantUml] =
     new DslEncoder[DemoDsl, PlantUml] {
-      def injectedStyle: String =
-        spotlightStyle
-
       def encodeWithHighlights(r: Renderable[DemoDsl], highlights: Set[String]): List[PlantUml] =
         r match {
           case Renderable.Empty =>

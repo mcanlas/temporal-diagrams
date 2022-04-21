@@ -41,14 +41,18 @@ object Demo extends App {
       manyR.reduce
 
     val one =
-      "" -> (_: Renderable[DemoDsl]).renderAs[PlantUml]
+      "" -> ((r: Renderable[DemoDsl]) => PlantUml.render(DemoDsl.spotlightStyle)(r.encodeAs[PlantUml]))
 
     val highlights =
-      oneR.keys.map(s => s"-$s" -> (_: Renderable[DemoDsl]).renderWithHighlightsOn[PlantUml](s))
+      oneR.keys.map(s => s"-$s" -> ((r: Renderable[DemoDsl]) => PlantUml.render(DemoDsl.spotlightStyle)(r.encodeWithHighlightsOn[PlantUml](s))))
 
     (one :: highlights)
       .foreach { f =>
-        val (slug, payload) = f(oneR)
+        val slug =
+          f._1
+
+        val payload =
+          f._2(oneR)
 
         FilePrinterAlg[IO].print(i.toString + slug + ".puml")(payload)
           .unsafeRunSync()

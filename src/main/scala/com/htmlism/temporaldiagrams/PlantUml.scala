@@ -5,20 +5,29 @@ import cats.syntax.all._
 import com.htmlism.temporaldiagrams.syntax._
 
 object PlantUml {
-  implicit val dialect: Dialect[PlantUml] =
-    new Dialect[PlantUml] {
-      def consume(xs: List[PlantUml], injectedStyle: String): String = {
-        val entities =
-          xs.collect { case x: Entity => x }
+  def render(injectedStyle: String)(xs: List[PlantUml]): String = {
+    val entities =
+      xs.collect { case x: Entity => x }
 
-        val relationships =
-          xs.collect { case x: Link => x }
+    val relationships =
+      xs.collect { case x: Link => x }
 
-        ("@startuml" :: injectedStyle :: (entities ::: relationships)
-          .flatMap(consumeOne) ::: List("@enduml"))
-          .mkString("\n\n")
-      }
-    }
+    ("@startuml" :: injectedStyle :: (entities ::: relationships)
+      .flatMap(consumeOne) ::: List("@enduml"))
+      .mkString("\n\n")
+  }
+
+  def renderHorizontally(injectedStyle: String)(xs: List[PlantUml]): String = {
+    val entities =
+      xs.collect { case x: Entity => x }
+
+    val relationships =
+      xs.collect { case x: Link => x }
+
+    ("@startuml" :: "left to right direction" :: injectedStyle :: (entities ::: relationships)
+      .flatMap(consumeOne) ::: List("@enduml"))
+      .mkString("\n\n")
+  }
 
   sealed trait Entity extends PlantUml
 
@@ -101,7 +110,7 @@ object PlantUml {
         }
 
       case Package(title, xs) =>
-        s"package \"$title\" {" :: xs.flatMap(consumeOne).map("  " + _) appended "}"
+        s"package \"$title\" {" :: xs.flatMap(consumeOne).map("  " + _).mkString("\n\n").list appended "}"
 
       case Actor(name, title, tag) =>
         oneThing("actor", name, title, tag).list

@@ -11,9 +11,6 @@ object Service {
 
   implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
     new DslEncoder[Service, PlantUml] {
-      def injectedStyle: String =
-        "" // not used LOL
-
       def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): List[PlantUml] =
         r match {
           case Renderable.Empty =>
