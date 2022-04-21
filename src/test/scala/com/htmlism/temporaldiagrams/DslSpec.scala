@@ -26,17 +26,14 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     }
   }
 
-  it should "support id" in {
+  it should "support tagging" in {
     val foo =
       Service("foo")
 
-    val id =
-      "foo-id"
-
     val renderable =
-      foo.tag(id)
+      foo.tag("foo-tag", "bar-tag")
 
-    renderable shouldBe Renderable.Tagged(List(id), foo)
+    renderable shouldBe Renderable.Tagged(List("foo-tag", "bar-tag"), foo)
   }
 
   "A nameless DSL object" should "support simple rendering" in {
