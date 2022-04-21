@@ -14,6 +14,8 @@ object Renderable {
   implicit def renderableSemigroup[A]: Semigroup[Renderable[A]] =
     Cons(_, _)
 
+  case object Empty extends Renderable[Nothing]
+
   /**
     * A renderable that can be targeted by tags for highlighting
     */
@@ -26,6 +28,9 @@ object Renderable {
 
   def keys[A](x: Renderable[A]): List[String] =
     x match {
+      case Empty =>
+        Nil
+
       case Tagged(tags, _) =>
         tags
 
