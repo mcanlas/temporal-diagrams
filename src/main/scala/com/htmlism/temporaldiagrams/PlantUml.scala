@@ -2,6 +2,8 @@ package com.htmlism.temporaldiagrams
 
 import cats.syntax.all._
 
+import com.htmlism.temporaldiagrams.syntax._
+
 object PlantUml {
   implicit val dialect: Dialect[PlantUml] =
     new Dialect[PlantUml] {
@@ -13,7 +15,7 @@ object PlantUml {
           xs.collect { case x: Link => x }
 
         ("@startuml" :: injectedStyle :: (entities ::: relationships)
-          .map(consumeOne) ::: List("@enduml"))
+          .flatMap(consumeOne) ::: List("@enduml"))
           .mkString("\n\n")
       }
     }
@@ -31,10 +33,10 @@ object PlantUml {
       .mkString(" ")
   }
 
-  private def consumeOne(x: PlantUml): String =
+  private def consumeOne(x: PlantUml): List[String] =
     x match {
       case Component(name, title, tag) =>
-        oneThing("component", name, title, tag)
+        oneThing("component", name, title, tag).list
 
       case Link(src, dest, length, weight, direction, oColor, oComment) =>
         val (segment, style) =
@@ -75,9 +77,10 @@ object PlantUml {
 
         (s"$src $left$segment$stylesStr$remainingLength$right $dest" :: oComment.toList)
           .mkString(" : ")
+          .list
 
       case Queue(name, title, tag) =>
-        oneThing("queue", name, title, tag)
+        oneThing("queue", name, title, tag).list
 
       case Database(name, title, tag, xs) =>
         val header =
@@ -85,7 +88,7 @@ object PlantUml {
 
         xs match {
           case Nil =>
-            header
+            header.list
 
           case _ =>
             val open =
@@ -94,18 +97,17 @@ object PlantUml {
             val close =
               "}"
 
-            (open :: xs.map(consumeOne) ::: List(close))
-              .mkString("\n")
+            open :: xs.flatMap(consumeOne) appended close
         }
 
       case Package(title, xs) =>
-        (s"package \"$title\" {" :: xs.map(consumeOne).mkString("\n") :: List("}")).mkString("\n")
+        s"package \"$title\" {" :: xs.flatMap(consumeOne).map("  " + _) appended "}"
 
       case Actor(name, title, tag) =>
-        oneThing("actor", name, title, tag)
+        oneThing("actor", name, title, tag).list
 
       case UseCase(name, title, tag) =>
-        oneThing("usecase", name, title, tag)
+        oneThing("usecase", name, title, tag).list
     }
 
   case class Component(name: String, title: Option[String], tag: Option[String]) extends Entity {
