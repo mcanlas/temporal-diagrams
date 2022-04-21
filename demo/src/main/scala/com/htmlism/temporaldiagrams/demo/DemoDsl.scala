@@ -10,23 +10,6 @@ case class Buffered(name: String, dependency: Option[String]) extends DemoDsl
 object DemoDsl {
   import PlantUml._
 
-  val spotlightStyle: String =
-    """skinparam queue {
-      |  fontStyle bold
-      |  fontColor #AAA
-      |  backgroundColor white
-      |  borderColor #AAA
-      |  borderThickness 2
-      |}
-      |
-      |skinparam database {
-      |  fontStyle bold
-      |  fontColor #AAA
-      |  backgroundColor white
-      |  borderColor #AAA
-      |  borderThickness 2
-      |}""".stripMargin
-
   implicit val servicePlantUmlEncoder: DslEncoder[DemoDsl, PlantUml] =
     new DslEncoder[DemoDsl, PlantUml] {
       def encodeWithHighlights(r: Renderable[DemoDsl], highlights: Set[String]): List[PlantUml] =
@@ -91,6 +74,12 @@ object DemoDsl {
           case Buffered(name, dependency) =>
             List(
               skin(brightly),
+              PlantUml.SkinParam.build("queue")
+                .and("fontStyle", "bold")
+                .and("fontColor", "#AAA")
+                .and("backgroundColor", "white")
+                .and("borderColor", "#AAA")
+                .and("borderThickness", "2"),
               Component(name, None, Option.when(brightly)("Service")),
               Queue(name + "_queue", None, None),
               Link(name + "_queue", name)) ++ dependency.toList.map(Link(_, name + "_queue"))
