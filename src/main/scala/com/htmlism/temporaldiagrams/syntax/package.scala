@@ -2,6 +2,12 @@ package com.htmlism.temporaldiagrams
 
 package object syntax {
   implicit class ValueOps[A](x: A) {
+    def iff(cond: Boolean, f: A => A): A =
+      if (cond)
+        f(x)
+      else
+        x
+
     def r: Renderable[A] =
       Renderable.Anonymous(x)
 
