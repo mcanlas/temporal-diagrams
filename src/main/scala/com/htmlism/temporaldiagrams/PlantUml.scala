@@ -31,7 +31,16 @@ object PlantUml {
   object SkinParam {
     case class Single(key: String, value: String) extends SkinParam
 
-    case class Bundle(entity: String, stereotype: Option[String], xs: List[Single]) extends SkinParam
+    case class Bundle(entity: String, stereotype: Option[String], xs: List[Single]) extends SkinParam {
+      def and(key: String, value: String): Bundle =
+        this.copy(xs = xs appended Single(key, value))
+    }
+
+    def build(entity: String): Bundle =
+      Bundle(entity, None, Nil)
+
+    def build(entity: String, stereotype: String): Bundle =
+      Bundle(entity, stereotype.some, Nil)
   }
 
   sealed trait Entity extends PlantUml
@@ -132,7 +141,8 @@ object PlantUml {
 
         (s"skinparam $entity$stereotype {" :: xs
           .map { case SkinParam.Single(k, v) => s"  $k $v" } appended "}")
-          .mkString("\n").list
+          .mkString("\n")
+          .list
     }
 
   case class Component(name: String, title: Option[String], tag: Option[String]) extends Entity {

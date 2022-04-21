@@ -1,8 +1,6 @@
 package com.htmlism.temporaldiagrams
 package demo
 
-import cats.syntax.all._
-
 sealed trait DemoDsl
 
 case class Service(name: String, dependency: Option[String]) extends DemoDsl
@@ -60,21 +58,19 @@ object DemoDsl {
 
       private def skin(brightly: Boolean) =
         if (brightly)
-          PlantUml.SkinParam.Bundle("component", "Service".some, List(
-            PlantUml.SkinParam.Single("fontStyle", "bold"),
-            PlantUml.SkinParam.Single("fontColor", "white"),
-            PlantUml.SkinParam.Single("backgroundColor", "#586ba4"),
-            PlantUml.SkinParam.Single("borderColor", "#223336"),
-            PlantUml.SkinParam.Single("borderThickness", "2"),
-          ))
+          PlantUml.SkinParam.build("component", "Service")
+            .and("fontStyle", "bold")
+            .and("fontColor", "white")
+            .and("backgroundColor", "#586ba4")
+            .and("borderColor", "#223336")
+            .and("borderThickness", "2")
         else
-          PlantUml.SkinParam.Bundle("component", None, List(
-            PlantUml.SkinParam.Single("fontStyle", "bold"),
-            PlantUml.SkinParam.Single("fontColor", "#AAA"),
-            PlantUml.SkinParam.Single("backgroundColor", "white"),
-            PlantUml.SkinParam.Single("borderColor", "#AAA"),
-            PlantUml.SkinParam.Single("borderThickness", "2"),
-          ))
+          PlantUml.SkinParam.build("component")
+            .and("fontStyle", "bold")
+            .and("fontColor", "#AAA")
+            .and("backgroundColor", "white")
+            .and("borderColor", "#AAA")
+            .and("borderThickness", "2")
 
       private def renderFlatMonoid(x: DemoDsl, brightly: Boolean) =
         x match {
