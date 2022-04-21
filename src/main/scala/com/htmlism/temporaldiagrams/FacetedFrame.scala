@@ -8,7 +8,7 @@ package com.htmlism.temporaldiagrams
   * @tparam A
   *   DSL type
   */
-sealed trait FacetedFrame[K, A]
+sealed trait FacetedFrame[K, +A]
 
 object FacetedFrame {
   type FrameId =
@@ -20,7 +20,7 @@ object FacetedFrame {
   def fixed[K, A](x: Renderable[A]): FacetedFrame[K, A] =
     Fixed(x)
 
-  case class WithKeys[K: Ordering, A](id: FrameId, xs: Nel[(K, Renderable[A])]) extends FacetedFrame[K, A] {
+  case class WithKeys[K: Ordering, +A](id: FrameId, xs: Nel[(K, Renderable[A])]) extends FacetedFrame[K, A] {
     def select(thatId: FrameId, thatK: K): FacetedFrame[K, A] =
       if (id == thatId)
         xs
@@ -31,7 +31,7 @@ object FacetedFrame {
         this
   }
 
-  case class Fixed[K, A](x: Renderable[A]) extends FacetedFrame[K, A]
+  case class Fixed[K, +A](x: Renderable[A]) extends FacetedFrame[K, A]
 
   /**
     * Given a collection of frames, fold in a collection of selectors (first one wins), refining them to be fixed. If
