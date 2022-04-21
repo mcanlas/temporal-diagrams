@@ -36,14 +36,30 @@ object PlantUml {
       case Component(name, title, tag) =>
         oneThing("component", name, title, tag)
 
-      case Link(src, dest, weight) =>
-        weight match {
-          case Link.Weight.Solid =>
-            s"$src --> $dest"
+      case Link(src, dest, weight, oColor, oComment) =>
+        val (segment, style) =
+          weight match {
+            case Link.Weight.Solid =>
+              "-" -> Nil
 
-          case Link.Weight.Dotted =>
-            s"$src ..> $dest"
-        }
+            case Link.Weight.Dotted =>
+              "." -> Nil
+
+            case Link.Weight.Bold =>
+              "-" -> List("bold")
+          }
+
+        val styles =
+          style ++ oColor.map(s => "#" + s).toList
+
+        val stylesStr =
+          if (styles.isEmpty)
+            ""
+          else
+            "[" + styles.mkString(",") + "]"
+
+        (s"$src $segment$stylesStr$segment> $dest" :: oComment.toList)
+          .mkString(" : ")
 
       case Queue(name, title, tag) =>
         oneThing("queue", name, title, tag)
@@ -87,7 +103,9 @@ object PlantUml {
       Component(name, None, None)
   }
 
-  case class Link(src: String, dest: String, weight: Link.Weight) extends PlantUml
+  // TODO arrow heads are optional
+  case class Link(src: String, dest: String, weight: Link.Weight, color: Option[String], comment: Option[String])
+      extends PlantUml
 
   object Link {
     sealed trait Weight
@@ -95,10 +113,11 @@ object PlantUml {
     object Weight {
       case object Solid extends Weight
       case object Dotted extends Weight
+      case object Bold extends Weight
     }
 
     def apply(src: String, dest: String): Link =
-      Link(src, dest, Weight.Solid)
+      Link(src, dest, Weight.Solid, None, None)
   }
 
   case class Queue(name: String, title: Option[String], tag: Option[String]) extends Entity
