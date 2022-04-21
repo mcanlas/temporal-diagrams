@@ -36,7 +36,7 @@ object PlantUml {
       case Component(name, title, tag) =>
         oneThing("component", name, title, tag)
 
-      case Link(src, dest, weight, oColor, oComment) =>
+      case Link(src, dest, weight, direction, oColor, oComment) =>
         val (segment, style) =
           weight match {
             case Link.Weight.Solid =>
@@ -58,7 +58,19 @@ object PlantUml {
           else
             "[" + styles.mkString(",") + "]"
 
-        (s"$src $segment$stylesStr$segment> $dest" :: oComment.toList)
+        val (left, right) =
+          direction match {
+            case Link.Direction.Forwards =>
+              "" -> ">"
+
+            case Link.Direction.Backwards =>
+              "<" -> ""
+
+            case Link.Direction.Bidirectional =>
+              "<" -> ">"
+          }
+
+        (s"$src $left$segment$stylesStr$segment$right $dest" :: oComment.toList)
           .mkString(" : ")
 
       case Queue(name, title, tag) =>
@@ -104,8 +116,14 @@ object PlantUml {
   }
 
   // TODO arrow heads are optional
-  case class Link(src: String, dest: String, weight: Link.Weight, color: Option[String], comment: Option[String])
-      extends PlantUml
+  case class Link(
+      src: String,
+      dest: String,
+      weight: Link.Weight,
+      direction: Link.Direction,
+      color: Option[String],
+      comment: Option[String]
+  ) extends PlantUml
 
   object Link {
     sealed trait Weight
@@ -116,8 +134,16 @@ object PlantUml {
       case object Bold extends Weight
     }
 
+    sealed trait Direction
+
+    object Direction {
+      case object Forwards extends Direction
+      case object Backwards extends Direction
+      case object Bidirectional extends Direction
+    }
+
     def apply(src: String, dest: String): Link =
-      Link(src, dest, Weight.Solid, None, None)
+      Link(src, dest, Weight.Solid, Direction.Forwards, None, None)
   }
 
   case class Queue(name: String, title: Option[String], tag: Option[String]) extends Entity
