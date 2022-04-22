@@ -5,13 +5,13 @@ import cats.syntax.all._
 import com.htmlism.temporaldiagrams.syntax._
 
 object PlantUml {
-  def render(injectedStyle: String)(xs: List[PlantUml]): String =
-    renderWithDirection(injectedStyle, None, xs)
+  def render(xs: List[PlantUml]): String =
+    renderWithDirection(None, xs)
 
-  def renderHorizontally(injectedStyle: String)(xs: List[PlantUml]): String =
-    renderWithDirection(injectedStyle, "left to right direction".some, xs)
+  def renderHorizontally(xs: List[PlantUml]): String =
+    renderWithDirection("left to right direction".some, xs)
 
-  private def renderWithDirection(injectedStyle: String, direction: Option[String], xs: List[PlantUml]) = {
+  private def renderWithDirection(direction: Option[String], xs: List[PlantUml]) = {
     val skins =
       xs.collect { case x: SkinParam => x }.distinct
 
@@ -21,7 +21,7 @@ object PlantUml {
     val relationships =
       xs.collect { case x: Link => x }
 
-    ("@startuml" :: direction.toList ::: injectedStyle :: (skins ::: entities ::: relationships)
+    ("@startuml" :: direction.toList ::: (skins ::: entities ::: relationships)
       .flatMap(consumeOne) ::: List("@enduml"))
       .mkString("\n\n")
   }

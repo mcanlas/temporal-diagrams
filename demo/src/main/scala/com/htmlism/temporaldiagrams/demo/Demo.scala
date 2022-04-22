@@ -41,10 +41,10 @@ object Demo extends App {
       manyR.reduce
 
     val one =
-      "" -> ((r: Renderable[DemoDsl]) => PlantUml.render("")(r.encodeAs[PlantUml]))
+      "" -> ((r: Renderable[DemoDsl]) => PlantUml.render(r.encodeAs[PlantUml]))
 
     val highlights =
-      oneR.keys.map(s => s"-$s" -> ((r: Renderable[DemoDsl]) => PlantUml.render("")(r.encodeWithHighlightsOn[PlantUml](s))))
+      oneR.keys.map(s => s"-$s" -> ((r: Renderable[DemoDsl]) => PlantUml.render(r.encodeWithHighlightsOn[PlantUml](s))))
 
     (one :: highlights)
       .foreach { f =>
