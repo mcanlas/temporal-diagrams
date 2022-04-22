@@ -10,22 +10,6 @@ import com.htmlism.temporaldiagrams.syntax._
 class DslSpec extends AnyFlatSpec with Inside with Matchers {
   import PlantUml._
 
-  "A given DSL" should "support cons" in {
-    val foo =
-      Service("foo")
-
-    val bar =
-      Service("bar", "foo".some)
-
-    val together =
-      foo.r |+| bar.r
-
-    inside(together) { case Renderable.Cons(Renderable.Tagged(_, x), Renderable.Tagged(_, y)) =>
-      x shouldBe foo
-      y shouldBe bar
-    }
-  }
-
   it should "support tagging" in {
     val foo =
       Service("foo")
@@ -57,7 +41,7 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    (foo.r |+| bar.r).encodeAs[PlantUml] should contain theSameElementsAs List(
+    List(foo.r, bar.r).flatMap(_.encodeAs[PlantUml]) should contain theSameElementsAs List(
       Component("foo") of "Service",
       Component("bar") of "Service",
       Link("foo", "bar")

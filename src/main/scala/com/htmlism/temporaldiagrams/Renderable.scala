@@ -1,7 +1,5 @@
 package com.htmlism.temporaldiagrams
 
-import cats.Semigroup
-
 /**
   * A renderable must hold any domain language `A`
   *
@@ -11,9 +9,6 @@ import cats.Semigroup
 sealed trait Renderable[+A]
 
 object Renderable {
-  implicit def renderableSemigroup[A]: Semigroup[Renderable[A]] =
-    Cons(_, _)
-
   case object Empty extends Renderable[Nothing]
 
   /**

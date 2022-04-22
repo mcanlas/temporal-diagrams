@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams
 package demo
 
+import scala.util.chaining._
+
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import cats.syntax.all._
@@ -37,14 +39,11 @@ object Demo extends App {
   } {
     val (manyR, i) = pair
 
-    val oneR =
-      manyR.reduce
-
     val one =
-      "" -> ((r: Renderable[DemoDsl]) => PlantUml.render(r.encodeAs[PlantUml]))
+      "" -> ((r: Renderable[DemoDsl]) => r.encodeAs[PlantUml])
 
     val highlights =
-      oneR.keys.map(s => s"-$s" -> ((r: Renderable[DemoDsl]) => PlantUml.render(r.encodeWithHighlightsOn[PlantUml](s))))
+      manyR.toList.flatMap(_.keys).map(s => s"-$s" -> ((r: Renderable[DemoDsl]) => r.encodeWithHighlightsOn[PlantUml](s)))
 
     (one :: highlights)
       .foreach { f =>
@@ -52,7 +51,10 @@ object Demo extends App {
           f._1
 
         val payload =
-          f._2(oneR)
+          manyR
+            .toList
+            .flatMap(f._2)
+            .pipe(PlantUml.render)
 
         FilePrinterAlg[IO].print(i.toString + slug + ".puml")(payload)
           .unsafeRunSync()

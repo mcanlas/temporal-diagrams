@@ -17,8 +17,8 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    (foo.tag("foo") |+| bar.tag("bar"))
-      .encodeWithHighlightsOn[PlantUml]() should contain theSameElementsAs List(
+    List(foo.tag("foo"), bar.tag("bar"))
+      .flatMap(_.encodeWithHighlightsOn[PlantUml]()) should contain theSameElementsAs List(
       Component("foo"),
       Component("bar"),
       Link("foo", "bar")
@@ -32,9 +32,11 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    (foo.tag("foo") |+| bar.tag("bar"))
-      .encodeWithHighlightsOn[PlantUml](
-        "foo"
+    List(foo.tag("foo"), bar.tag("bar"))
+      .flatMap(
+        _.encodeWithHighlightsOn[PlantUml](
+          "foo"
+        )
       ) should contain theSameElementsAs List(Component("foo") of "Service", Component("bar"), Link("foo", "bar"))
   }
 
@@ -45,10 +47,12 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    (foo.tag("foo") |+| bar.tag("bar"))
-      .encodeWithHighlightsOn[PlantUml](
-        "foo",
-        "bar"
+    List(foo.tag("foo"), bar.tag("bar"))
+      .flatMap(
+        _.encodeWithHighlightsOn[PlantUml](
+          "foo",
+          "bar"
+        )
       ) should contain theSameElementsAs List(
       Component("foo") of "Service",
       Component("bar") of "Service",
