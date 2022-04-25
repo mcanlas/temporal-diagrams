@@ -40,10 +40,12 @@ object Demo extends App {
     val (manyR, i) = pair
 
     val one =
-      "" -> ((r: Renderable[DemoDsl]) => r.encodeAs[PlantUml])
+      "" -> ((_: Renderable[DemoDsl]).encodeAs[PlantUml])
 
     val highlights =
-      manyR.toList.flatMap(_.keys).map(s => s"-$s" -> ((r: Renderable[DemoDsl]) => r.encodeWithHighlightsOn[PlantUml](s)))
+      manyR.toList.flatMap(_.keys).map { s =>
+        s"-$s" -> ((_: Renderable[DemoDsl]).encodeWithHighlightsOn[PlantUml](s))
+      }
 
     (one :: highlights)
       .foreach { f =>
