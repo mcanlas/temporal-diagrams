@@ -14,7 +14,8 @@ class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
         .map(_.r.f[Int])
 
     val narrative =
-      services.start
+      services
+        .start
         .next("foo" -> 1)
         .next("foo" -> 2)
 
@@ -32,7 +33,8 @@ class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
         .map(_.r.f[Int])
 
     val narrative =
-      services.start
+      services
+        .start
         .next("foo" -> 1)
         .reset("foo" -> 2)
 
