@@ -1,5 +1,6 @@
 package com.htmlism.temporaldiagrams
 
+import cats.data._
 import org.scalatest.Inside
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should._
@@ -16,14 +17,14 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
 
     val frame =
       FacetedFrame
-        .from("some id", "key1" -> component, "key2" -> component2)
+        .from("some id", "key1" -> component.list, "key2" -> component2.list)
 
     inside(frame) { case FacetedFrame.WithKeys(id, xs) =>
       id shouldBe "some id"
 
-      xs.head shouldBe "key1" -> component
+      xs.head shouldBe "key1" -> component.list
 
-      xs.tail.head shouldBe "key2" -> component2
+      xs.tail.head shouldBe "key2" -> component2.list
     }
   }
 
@@ -33,10 +34,10 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
 
     val frame =
       FacetedFrame
-        .fixed(component)
+        .fixed(component.list)
 
     inside(frame) { case FacetedFrame.Fixed(x) =>
-      x shouldBe component
+      x shouldBe component.list
     }
   }
 
@@ -49,10 +50,10 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
 
     val frame =
       FacetedFrame
-        .from("some id", "key1" -> default, "key2" -> variant)
+        .from("some id", "key1" -> default.list, "key2" -> variant.list)
 
     FacetedFrame
-      .selectFrames(Nel.of(frame), "some id" -> "key2") shouldBe Nel.of(variant)
+      .selectFrames(NonEmptyList.of(frame), "some id" -> "key2") should contain theSameElementsAs variant.list
   }
 
   it should "pick a default if selectors don't match" in {
@@ -64,21 +65,20 @@ class FacetedFrameSpec extends AnyFlatSpec with Inside with Matchers {
 
     val frame =
       FacetedFrame
-        .from("some id", "key1" -> default, "key2" -> variant)
+        .from("some id", "key1" -> default.list, "key2" -> variant.list)
 
     FacetedFrame
-      .selectFrames(Nel.of(frame), "nonsense id" -> "key1") shouldBe Nel.of(default)
+      .selectFrames(NonEmptyList.of(frame), "nonsense id" -> "key1") should contain theSameElementsAs default.list
 
     FacetedFrame
-      .selectFrames(Nel.of(frame), "some id" -> "nonsense key") shouldBe Nel.of(default)
+      .selectFrames(NonEmptyList.of(frame), "some id" -> "nonsense key") should contain theSameElementsAs default.list
   }
 
   it should "keep the number of input frames the same as the output" in {
     val services =
-      Nel
-        .of(Service("default").r, Service("variant").r)
+      List(Service("default").r, Service("variant").r)
 
     FacetedFrame
-      .selectFrames(services.map(FacetedFrame.fixed)) shouldBe services
+      .selectFrames(FacetedFrame.fixed(services).nel) shouldBe services
   }
 }

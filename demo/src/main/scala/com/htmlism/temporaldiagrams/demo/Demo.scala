@@ -3,6 +3,7 @@ package demo
 
 import scala.util.chaining._
 
+import cats.data._
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import cats.syntax.all._
@@ -12,20 +13,20 @@ import com.htmlism.temporaldiagrams.syntax._
 object Demo extends App {
   val producer =
     FacetedFrame.from[Int, DemoDsl]("producer",
-      1 -> (Service("foo", None)).tag("foo"),
-      2 -> Service("new_foo", None).r
+      1 -> (Service("foo", None)).tag("foo").list,
+      2 -> Service("new_foo", None).r.list
     )
 
   val consumer =
     FacetedFrame.from[Int, DemoDsl]("consumer",
-      1 -> Service("bar", "foo".some).tag("bar"),
-      2 -> Service("bar", "new_foo".some).tag("bar"),
-      3 -> Hydra("bar", "new_foo".some).tag("bar"),
-      4 -> Buffered("new_bar", "foo".some).r
+      1 -> Service("bar", "foo".some).tag("bar").list,
+      2 -> Service("bar", "new_foo".some).tag("bar").list,
+      3 -> Hydra("bar", "new_foo".some).tag("bar").list,
+      4 -> Buffered("new_bar", "foo".some).r.list
     )
 
   val everything =
-    Nel.of(producer, consumer)
+    NonEmptyList.of(producer, consumer)
 
   val narrative =
     everything

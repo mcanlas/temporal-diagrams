@@ -11,8 +11,8 @@ class FacetedFrameSyntaxSpec extends AnyFlatSpec with Inside with Matchers {
     val component =
       Service("foo1").r
 
-    inside(component.f) { case FacetedFrame.Fixed(x) =>
-      x shouldBe component
+    inside(component.f) { case FacetedFrame.Fixed(xs) =>
+      xs should contain theSameElementsAs List(component)
     }
   }
 }

@@ -7,7 +7,7 @@ import org.scalatest.matchers.should._
 
 import com.htmlism.temporaldiagrams.syntax._
 
-class NarrativeSyntaxSpec extends AnyFlatSpec with Inside with Matchers {
+class NarrativeSyntaxSpec extends AnyFlatSpec with Inside with Matchers with NonEmptyListAggregating {
   "A narrative" should "be started from a bundle of frames" in {
     val services =
       NonEmptyList
@@ -19,6 +19,6 @@ class NarrativeSyntaxSpec extends AnyFlatSpec with Inside with Matchers {
 
     narrative.frames shouldBe services
 
-    narrative.episodeSelectors shouldBe Nel.of(Nil)
+    narrative.episodeSelectors should contain theSameElementsAs List(Nil)
   }
 }

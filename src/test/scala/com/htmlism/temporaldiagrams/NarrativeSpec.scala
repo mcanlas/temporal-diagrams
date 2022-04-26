@@ -1,15 +1,16 @@
 package com.htmlism.temporaldiagrams
 
+import cats.data._
 import org.scalatest.Inside
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should._
 
 import com.htmlism.temporaldiagrams.syntax._
 
-class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
+class NarrativeSpec extends AnyFlatSpec with Inside with Matchers with NonEmptyListAggregating {
   it should "support progressive building by prepending" in {
     val services =
-      Nel
+      NonEmptyList
         .of(Service("foo", None), Service("bar", None))
         .map(_.r.f[Int])
 
@@ -19,7 +20,7 @@ class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
         .next("foo" -> 1)
         .next("foo" -> 2)
 
-    narrative.episodeSelectors shouldBe Nel.of(
+    narrative.episodeSelectors should contain theSameElementsAs List(
       Nil,
       List("foo" -> 1),
       List("foo" -> 2, "foo" -> 1)
@@ -28,7 +29,7 @@ class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
 
   it should "support resetting" in {
     val services =
-      Nel
+      NonEmptyList
         .of(Service("foo", None), Service("bar", None))
         .map(_.r.f[Int])
 
@@ -38,7 +39,7 @@ class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
         .next("foo" -> 1)
         .reset("foo" -> 2)
 
-    narrative.episodeSelectors shouldBe Nel.of(
+    narrative.episodeSelectors should contain theSameElementsAs List(
       Nil,
       List("foo" -> 1),
       List("foo" -> 2)
@@ -48,14 +49,14 @@ class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
   it should "support mass frame selection" in {
     val fooVariants =
       FacetedFrame
-        .from("foo", "first" -> Service("foo", None).r, "second" -> Service("newfoo", None).r)
+        .from("foo", "first" -> Service("foo", None).r.list, "second" -> Service("newfoo", None).r.list)
 
     val barVariants =
       FacetedFrame
-        .from("bar", "first" -> Service("bar", None).r, "second" -> Service("newbar", None).r)
+        .from("bar", "first" -> Service("bar", None).r.list, "second" -> Service("newbar", None).r.list)
 
     val narrative =
-      Nel
+      NonEmptyList
         .of(fooVariants, barVariants)
         .start
         .next("foo" -> "second")
@@ -64,8 +65,8 @@ class NarrativeSpec extends AnyFlatSpec with Inside with Matchers {
     val episodes =
       narrative.episodes.toList
 
-    episodes(0) shouldBe Nel.of(Service("foo", None).r, Service("bar", None).r)
-    episodes(1) shouldBe Nel.of(Service("newfoo", None).r, Service("bar", None).r)
-    episodes(2) shouldBe Nel.of(Service("newfoo", None).r, Service("newbar", None).r)
+    episodes(0) should contain theSameElementsAs List(Service("foo", None).r, Service("bar", None).r)
+    episodes(1) should contain theSameElementsAs List(Service("newfoo", None).r, Service("bar", None).r)
+    episodes(2) should contain theSameElementsAs List(Service("newfoo", None).r, Service("newbar", None).r)
   }
 }

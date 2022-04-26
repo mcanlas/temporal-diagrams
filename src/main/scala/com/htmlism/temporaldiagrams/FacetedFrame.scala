@@ -1,5 +1,7 @@
 package com.htmlism.temporaldiagrams
 
+import cats.data.NonEmptyList
+
 /**
   * A renderable unit that responds to being keyed into a specific facet or version
   *
@@ -11,18 +13,20 @@ package com.htmlism.temporaldiagrams
 sealed trait FacetedFrame[K, +A]
 
 object FacetedFrame {
-  type FrameId =
-    String
+  def from[K: Ordering, A](
+      frameId: String,
+      x: (K, List[Renderable[A]]),
+      xs: (K, List[Renderable[A]])*
+  ): FacetedFrame[K, A] =
+    WithKeys(frameId, NonEmptyList(x, xs.toList))
 
-  def from[K: Ordering, A](id: FrameId, x: (K, Renderable[A]), xs: (K, Renderable[A])*): FacetedFrame[K, A] =
-    WithKeys(id, Nel(x, xs.toList))
-
-  def fixed[K, A](x: Renderable[A]): FacetedFrame[K, A] =
+  def fixed[K, A](x: List[Renderable[A]]): FacetedFrame[K, A] =
     Fixed(x)
 
-  case class WithKeys[K: Ordering, +A](id: FrameId, xs: Nel[(K, Renderable[A])]) extends FacetedFrame[K, A] {
-    def select(thatId: FrameId, thatK: K): FacetedFrame[K, A] =
-      if (id == thatId)
+  case class WithKeys[K: Ordering, +A](frameId: String, xs: NonEmptyList[(K, List[Renderable[A]])])
+      extends FacetedFrame[K, A] {
+    def select(thatId: String, thatK: K): FacetedFrame[K, A] =
+      if (frameId == thatId)
         xs
           .find(kv => Ordering[K].equiv(kv._1, thatK))
           .map(_._2)
@@ -31,24 +35,25 @@ object FacetedFrame {
         this
   }
 
-  case class Fixed[K, +A](x: Renderable[A]) extends FacetedFrame[K, A]
+  case class Fixed[K, +A](x: List[Renderable[A]]) extends FacetedFrame[K, A]
 
   /**
     * Given a collection of frames, fold in a collection of selectors (first one wins), refining them to be fixed. If
     * any unfixed remain, pick the default
     */
   def selectFrames[K, A](
-      xs: Nel[FacetedFrame[K, A]],
-      selectors: (FrameId, K)*
-  ): Nel[Renderable[A]] =
+      xs: NonEmptyList[FacetedFrame[K, A]],
+      selectors: (String, K)*
+  ): List[Renderable[A]] =
     selectors
       .foldLeft(xs) { (xs, s) =>
         xs
           .map((refineKeysFrames[K, A] _).tupled(s))
       }
-      .map(pickDefaults)
+      .toList
+      .flatMap(pickDefaults)
 
-  private def refineKeysFrames[K, A](id: FrameId, k: K)(x: FacetedFrame[K, A]) =
+  private def refineKeysFrames[K, A](id: String, k: K)(x: FacetedFrame[K, A]) =
     x match {
       case wk: WithKeys[K, A] =>
         wk.select(id, k)

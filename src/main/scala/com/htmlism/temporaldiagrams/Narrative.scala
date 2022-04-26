@@ -1,9 +1,12 @@
 package com.htmlism.temporaldiagrams
 
-import com.htmlism.temporaldiagrams.FacetedFrame.FrameId
+import cats.data._
 
-case class Narrative[K, A](frames: Nel[FacetedFrame[K, A]], episodeSelectors: Nel[List[(FrameId, K)]]) {
-  def next(selectors: (FrameId, K)*): Narrative[K, A] = {
+case class Narrative[K, A](
+    frames: NonEmptyList[FacetedFrame[K, A]],
+    episodeSelectors: NonEmptyList[List[(String, K)]]
+) {
+  def next(selectors: (String, K)*): Narrative[K, A] = {
     val previously =
       episodeSelectors.last
 
@@ -15,11 +18,11 @@ case class Narrative[K, A](frames: Nel[FacetedFrame[K, A]], episodeSelectors: Ne
     copy(episodeSelectors = episodeSelectors.append(nextEpisodeSelectors))
   }
 
-  def reset(selectors: (FrameId, K)*): Narrative[K, A] = {
+  def reset(selectors: (String, K)*): Narrative[K, A] = {
     copy(episodeSelectors = episodeSelectors.append(selectors.toList))
   }
 
-  def episodes: Nel[Nel[Renderable[A]]] =
+  def episodes: NonEmptyList[List[Renderable[A]]] =
     episodeSelectors
       .map(FacetedFrame.selectFrames(frames, _: _*))
 }

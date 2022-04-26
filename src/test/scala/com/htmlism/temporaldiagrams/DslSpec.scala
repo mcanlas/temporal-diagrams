@@ -1,6 +1,5 @@
 package com.htmlism.temporaldiagrams
 
-import cats.syntax.all._
 import org.scalatest.Inside
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should._
@@ -32,19 +31,5 @@ class DslSpec extends AnyFlatSpec with Inside with Matchers {
       Service("foo")
 
     foo.r.encodeAs[PlantUml] should contain theSameElementsAs foo.tag("foo-id").encodeAs[PlantUml]
-  }
-
-  "Two cons DSL objects" should "support rendering using dialect cons" in {
-    val foo =
-      Service("foo")
-
-    val bar =
-      Service("bar", "foo".some)
-
-    List(foo.r, bar.r).flatMap(_.encodeAs[PlantUml]) should contain theSameElementsAs List(
-      Component("foo") of "Service",
-      Component("bar") of "Service",
-      Link("foo", "bar")
-    )
   }
 }

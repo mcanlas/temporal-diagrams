@@ -1,5 +1,7 @@
 package com.htmlism.temporaldiagrams
 
+import cats.data._
+
 package object syntax {
   implicit class ValueOps[A](x: A) {
     def iff(cond: Boolean, f: A => A): A =
@@ -11,8 +13,8 @@ package object syntax {
     def list: List[A] =
       List(x)
 
-    def nel: Nel[A] =
-      Nel.one(x)
+    def nel: NonEmptyList[A] =
+      NonEmptyList.one(x)
 
     def r: Renderable[A] =
       Renderable.Tagged(Nil, x)
@@ -23,7 +25,7 @@ package object syntax {
 
   implicit class ValueOpsFaceted[A](x: Renderable[A]) {
     def f[K]: FacetedFrame[K, A] =
-      FacetedFrame.fixed(x)
+      FacetedFrame.fixed(x.list)
   }
 
   implicit class RenderableOps[A](r: Renderable[A]) {
@@ -37,8 +39,8 @@ package object syntax {
       Renderable.keys(r)
   }
 
-  implicit class FacetedOps[K, A](xs: Nel[FacetedFrame[K, A]]) {
+  implicit class FacetedOps[K, A](xs: NonEmptyList[FacetedFrame[K, A]]) {
     def start: Narrative[K, A] =
-      Narrative(xs, Nel.of(Nil))
+      Narrative(xs, NonEmptyList.of(Nil))
   }
 }
