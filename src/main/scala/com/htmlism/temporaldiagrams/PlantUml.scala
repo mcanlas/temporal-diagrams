@@ -61,7 +61,7 @@ object PlantUml {
       case Component(name, title, tag) =>
         oneThing("component", name, title, tag).list
 
-      case Link(src, dest, length, weight, direction, oColor, oComment) =>
+      case Link(src, dest, length, weight, direction, oColor, oComment, withRank) =>
         val (segment, style) =
           weight match {
             case Link.Weight.Solid =>
@@ -75,7 +75,7 @@ object PlantUml {
           }
 
         val styles =
-          style ++ oColor.map(s => "#" + s).toList
+          style ++ oColor.map(s => "#" + s).toList ++ (if (withRank) Nil else List("norank"))
 
         val stylesStr =
           if (styles.isEmpty)
@@ -162,7 +162,8 @@ object PlantUml {
       weight: Link.Weight,
       direction: Link.Direction,
       color: Option[String],
-      comment: Option[String]
+      comment: Option[String],
+      influencesRank: Boolean
   ) extends PlantUml
 
   object Link {
@@ -183,7 +184,7 @@ object PlantUml {
     }
 
     def apply(src: String, dest: String): Link =
-      Link(src, dest, 2, Weight.Solid, Direction.Forwards, None, None)
+      Link(src, dest, 2, Weight.Solid, Direction.Forwards, None, None, influencesRank = true)
   }
 
   case class Queue(name: String, title: Option[String], tag: Option[String]) extends Entity
