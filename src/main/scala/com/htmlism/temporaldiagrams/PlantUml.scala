@@ -58,6 +58,11 @@ object PlantUml {
 
   private def consumeOne(x: PlantUml): List[String] =
     x match {
+      case Interface(name, title) =>
+        title
+          .fold(s"interface $name")(t => s"interface \"$t\" as $name")
+          .list
+
       case Component(name, title, tag) =>
         oneThing("component", name, title, tag).list
 
@@ -144,6 +149,8 @@ object PlantUml {
           .mkString("\n")
           .list
     }
+
+  case class Interface(name: String, title: Option[String]) extends Entity
 
   case class Component(name: String, title: Option[String], tag: Option[String]) extends Entity {
     def of(stereotype: String): Component =
