@@ -4,4 +4,4 @@ lazy val root =
 lazy val demo =
   project
     .dependsOn(root)
-    .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.3.11")
+    .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.3.12")
