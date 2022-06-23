@@ -112,7 +112,7 @@ object PlantUml {
         val stereotype =
           oStereotype.map(s => s" << $s >>").toList
 
-        (srcArrowDest :: comment ::: stereotype)
+        (srcArrowDest :: stereotype ::: comment)
           .mkString
           .list
 
