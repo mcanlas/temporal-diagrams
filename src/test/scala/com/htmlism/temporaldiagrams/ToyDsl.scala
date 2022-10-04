@@ -11,20 +11,14 @@ object Service {
 
   implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
     new DslEncoder[Service, PlantUml] {
-      def encodeWithHighlights(r: Renderable[Service], highlights: Set[String]): List[PlantUml] =
-        r match {
-          case Renderable.Tagged(tags, x) =>
-            if ((highlights intersect tags.toSet).nonEmpty)
-              renderFlatMonoid(x, "Service".some)
-            else
-              renderFlatMonoid(x, None)
-        }
+      def encodeWithHighlights(x: Service, highlighted: Boolean): List[PlantUml] =
+        if (highlighted)
+          renderFlatMonoid(x, "Service".some)
+        else
+          renderFlatMonoid(x, None)
 
-      def encode(x: Renderable[Service]): List[PlantUml] =
-        x match {
-          case Renderable.Tagged(_, x) =>
-            renderFlatMonoid(x, "Service".some)
-        }
+      def encode(x: Service): List[PlantUml] =
+        renderFlatMonoid(x, "Service".some)
 
       private def renderFlatMonoid(x: Service, tag: Option[String]) = {
         val component =

@@ -16,27 +16,17 @@ package object syntax {
     def nel: NonEmptyList[A] =
       NonEmptyList.one(x)
 
-    def r: Renderable[A] =
+    def r: Renderable.Tagged[A] =
       Renderable.Tagged(Nil, x)
 
-    def tag(tags: String*): Renderable[A] =
+    def tag(tags: String*): Renderable.Tagged[A] =
       Renderable.Tagged(tags.toList, x)
   }
 
+  // TODO get rid of this, and all faceted frames
   implicit class ValueOpsFaceted[A](x: Renderable[A]) {
     def f[K]: FacetedFrame[K, A] =
       FacetedFrame.fixed(x.list)
-  }
-
-  implicit class RenderableOps[A](r: Renderable[A]) {
-    def encodeAs[B](implicit enc: DslEncoder[A, B]): List[B] =
-      enc.encode(r)
-
-    def encodeWithHighlightsOn[B](highlights: String*)(implicit enc: DslEncoder[A, B]): List[B] =
-      enc.encodeWithHighlights(r, highlights.toSet)
-
-    def keys: List[String] =
-      Renderable.keys(r)
   }
 
   implicit class FacetedOps[K, A](xs: NonEmptyList[FacetedFrame[K, A]]) {

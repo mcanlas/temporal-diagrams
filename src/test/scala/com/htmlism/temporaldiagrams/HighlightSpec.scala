@@ -17,8 +17,10 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    List(foo.tag("foo"), bar.tag("bar"))
-      .flatMap(_.encodeWithHighlightsOn[PlantUml]()) should contain theSameElementsAs List(
+    val withTags =
+      List(foo.tag("foo"), bar.tag("bar"))
+
+    DslEncoder.encodeManyWithHighlights[Service, PlantUml](withTags) should contain theSameElementsAs List(
       Component("foo"),
       Component("bar"),
       Link("foo", "bar")
@@ -32,12 +34,14 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    List(foo.tag("foo"), bar.tag("bar"))
-      .flatMap(
-        _.encodeWithHighlightsOn[PlantUml](
-          "foo"
-        )
-      ) should contain theSameElementsAs List(Component("foo") of "Service", Component("bar"), Link("foo", "bar"))
+    val withTags =
+      List(foo.tag("foo"), bar.tag("bar"))
+
+    DslEncoder.encodeManyWithHighlights[Service, PlantUml](withTags, "foo") should contain theSameElementsAs List(
+      Component("foo") of "Service",
+      Component("bar"),
+      Link("foo", "bar")
+    )
   }
 
   "Two objects with multiple highlights" should "highlight everything" in {
@@ -47,13 +51,14 @@ class HighlightSpec extends AnyFlatSpec with Inside with Matchers {
     val bar =
       Service("bar", "foo".some)
 
-    List(foo.tag("foo"), bar.tag("bar"))
-      .flatMap(
-        _.encodeWithHighlightsOn[PlantUml](
-          "foo",
-          "bar"
-        )
-      ) should contain theSameElementsAs List(
+    val withTags =
+      List(foo.tag("foo"), bar.tag("bar"))
+
+    DslEncoder.encodeManyWithHighlights[Service, PlantUml](
+      withTags,
+      "foo",
+      "bar"
+    ) should contain theSameElementsAs List(
       Component("foo") of "Service",
       Component("bar") of "Service",
       Link("foo", "bar")
