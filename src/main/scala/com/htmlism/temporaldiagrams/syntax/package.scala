@@ -24,7 +24,7 @@ package object syntax {
   }
 
   // TODO get rid of this, and all faceted frames
-  implicit class ValueOpsFaceted[A](x: Renderable[A]) {
+  implicit class ValueOpsFaceted[A](x: Renderable.Tagged[A]) {
     def f[K]: FacetedFrame[K, A] =
       FacetedFrame.fixed(x.list)
   }

@@ -22,7 +22,7 @@ case class Narrative[K, A](
     copy(episodeSelectors = episodeSelectors.append(selectors.toList))
   }
 
-  def episodes: NonEmptyList[List[Renderable[A]]] =
+  def episodes: NonEmptyList[List[Renderable.Tagged[A]]] =
     episodeSelectors
       .map(FacetedFrame.selectFrames(frames, _: _*))
 }

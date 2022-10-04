@@ -15,15 +15,15 @@ sealed trait FacetedFrame[K, +A]
 object FacetedFrame {
   def from[K: Ordering, A](
       frameId: String,
-      x: (K, List[Renderable[A]]),
-      xs: (K, List[Renderable[A]])*
+      x: (K, List[Renderable.Tagged[A]]),
+      xs: (K, List[Renderable.Tagged[A]])*
   ): FacetedFrame[K, A] =
     WithKeys(frameId, NonEmptyList(x, xs.toList))
 
-  def fixed[K, A](x: List[Renderable[A]]): FacetedFrame[K, A] =
+  def fixed[K, A](x: List[Renderable.Tagged[A]]): FacetedFrame[K, A] =
     Fixed(x)
 
-  case class WithKeys[K: Ordering, +A](frameId: String, xs: NonEmptyList[(K, List[Renderable[A]])])
+  case class WithKeys[K: Ordering, +A](frameId: String, xs: NonEmptyList[(K, List[Renderable.Tagged[A]])])
       extends FacetedFrame[K, A] {
     def select(thatId: String, thatK: K): FacetedFrame[K, A] =
       if (frameId == thatId)
@@ -35,7 +35,7 @@ object FacetedFrame {
         this
   }
 
-  case class Fixed[K, +A](x: List[Renderable[A]]) extends FacetedFrame[K, A]
+  case class Fixed[K, +A](x: List[Renderable.Tagged[A]]) extends FacetedFrame[K, A]
 
   /**
     * Given a collection of frames, fold in a collection of selectors (first one wins), refining them to be fixed. If
@@ -44,7 +44,7 @@ object FacetedFrame {
   def selectFrames[K, A](
       xs: NonEmptyList[FacetedFrame[K, A]],
       selectors: (String, K)*
-  ): List[Renderable[A]] =
+  ): List[Renderable.Tagged[A]] =
     selectors
       .foldLeft(xs) { (xs, s) =>
         xs

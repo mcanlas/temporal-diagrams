@@ -15,7 +15,7 @@ object Renderable {
   /**
     * A renderable that can be targeted by tags for highlighting
     */
-  case class Tagged[A](tags: List[String], x: A) extends Renderable[A]
+  case class Tagged[+A](tags: List[String], x: A) extends Renderable[A]
 
   /**
     * Defines a source for a multi-arrow; from many to "one"
