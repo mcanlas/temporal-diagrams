@@ -12,13 +12,15 @@ import com.htmlism.temporaldiagrams.syntax._
 
 object Demo extends App {
   val producer =
-    FacetedFrame.from[Int, DemoDsl]("producer",
+    FacetedFrame.from[Int, DemoDsl](
+      "producer",
       1 -> (Service("foo", None)).tag("foo").list,
       2 -> Service("new_foo", None).r.list
     )
 
   val consumer =
-    FacetedFrame.from[Int, DemoDsl]("consumer",
+    FacetedFrame.from[Int, DemoDsl](
+      "consumer",
       1 -> Service("bar", "foo".some).tag("bar").list,
       2 -> Service("bar", "new_foo".some).tag("bar").list,
       3 -> Hydra("bar", "new_foo".some).tag("bar").list,
@@ -41,12 +43,17 @@ object Demo extends App {
     val (manyR, i) = pair
 
     val one =
-      "" -> ((_: Renderable[DemoDsl]).encodeAs[PlantUml])
+      "" -> (DslEncoder.encodeMany[DemoDsl, PlantUml](_))
 
     val highlights =
-      manyR.toList.flatMap(_.keys).map { s =>
-        s"-$s" -> ((_: Renderable[DemoDsl]).encodeWithHighlightsOn[PlantUml](s))
-      }
+      manyR
+        .flatMap(_.tags)
+        .map(s =>
+          s"-$s" -> (DslEncoder.encodeManyWithHighlights[DemoDsl, PlantUml](
+            _: List[Renderable.Tagged[DemoDsl]],
+            s
+          ))
+        )
 
     (one :: highlights)
       .foreach { f =>
@@ -55,11 +62,11 @@ object Demo extends App {
 
         val payload =
           manyR
-            .toList
-            .flatMap(f._2)
+            .pipe(f._2)
             .pipe(PlantUml.render)
 
-        FilePrinterAlg[IO].print(i.toString + slug + ".puml")(payload)
+        FilePrinterAlg[IO]
+          .print(i.toString + slug + ".puml")(payload)
           .unsafeRunSync()
       }
   }

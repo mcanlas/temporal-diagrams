@@ -1,7 +1,15 @@
 lazy val root =
-  Project("temporal-diagrams", file(".")).withCats.withTesting
+  Project("temporal-diagrams", file("."))
+    .withCats
+    .withTesting
+    .aggregate(core, demo)
+
+lazy val core =
+  project
+    .withCats
+    .withTesting
 
 lazy val demo =
   project
-    .dependsOn(root)
     .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.3.14")
+    .dependsOn(core)

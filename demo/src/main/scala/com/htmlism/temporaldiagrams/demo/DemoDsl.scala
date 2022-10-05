@@ -12,31 +12,29 @@ object DemoDsl {
 
   implicit val servicePlantUmlEncoder: DslEncoder[DemoDsl, PlantUml] =
     new DslEncoder[DemoDsl, PlantUml] {
-      def encodeWithHighlights(r: Renderable[DemoDsl], highlights: Set[String]): List[PlantUml] =
-        r match {
-          case Renderable.Tagged(tags, x) =>
-            if ((highlights intersect tags.toSet).nonEmpty)
-              renderFlatMonoid(x, brightly = true)
-            else
-              renderFlatMonoid(x, brightly = false)
-        }
+      def encodeWithHighlights(x: DemoDsl, highlighted: Boolean): List[PlantUml] =
+        if (highlighted)
+          renderFlatMonoid(x, brightly = true)
+        else
+          renderFlatMonoid(x, brightly = false)
 
-      def encode(x: Renderable[DemoDsl]): List[PlantUml] =
-        x match {
-          case Renderable.Tagged(_, x) =>
-            renderFlatMonoid(x, brightly = true)
-        }
+      def encode(x: DemoDsl): List[PlantUml] =
+        renderFlatMonoid(x, brightly = true)
 
       private def skin(brightly: Boolean) =
         if (brightly)
-          PlantUml.SkinParam.build("component", "Service")
+          PlantUml
+            .SkinParam
+            .build("component", "Service")
             .and("fontStyle", "bold")
             .and("fontColor", "white")
             .and("backgroundColor", "#586ba4")
             .and("borderColor", "#223336")
             .and("borderThickness", "2")
         else
-          PlantUml.SkinParam.build("component")
+          PlantUml
+            .SkinParam
+            .build("component")
             .and("fontStyle", "bold")
             .and("fontColor", "#AAA")
             .and("backgroundColor", "white")
@@ -56,13 +54,19 @@ object DemoDsl {
 
           case Hydra(name, dependency) =>
             (1 to 3)
-              .flatMap(n => List(Component(name + n.toString, None, Option.when(brightly)("Service"))) ++ dependency.toList.map(Link(_, name + n.toString)))
+              .flatMap(n =>
+                List(Component(name + n.toString, None, Option.when(brightly)("Service"))) ++ dependency
+                  .toList
+                  .map(Link(_, name + n.toString))
+              )
               .toList appended skin(brightly)
 
           case Buffered(name, dependency) =>
             List(
               skin(brightly),
-              PlantUml.SkinParam.build("queue")
+              PlantUml
+                .SkinParam
+                .build("queue")
                 .and("fontStyle", "bold")
                 .and("fontColor", "#AAA")
                 .and("backgroundColor", "white")
@@ -70,7 +74,8 @@ object DemoDsl {
                 .and("borderThickness", "2"),
               Component(name, None, Option.when(brightly)("Service")),
               Queue(name + "_queue", None, None),
-              Link(name + "_queue", name)) ++ dependency.toList.map(Link(_, name + "_queue"))
+              Link(name + "_queue", name)
+            ) ++ dependency.toList.map(Link(_, name + "_queue"))
         }
     }
 }
