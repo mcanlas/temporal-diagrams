@@ -1,6 +1,7 @@
 package com.htmlism.temporaldiagrams
 
 import cats.data.NonEmptyList
+import cats.syntax.all._
 
 /**
   * Describes an encoding bridge from DSL `A` to diagram dialect `B`
@@ -34,10 +35,12 @@ object DslEncoder {
       ev: DslEncoder[A, B]
   ): List[B] = {
     val srcLookup =
-      xs.collect { case Renderable.Source(k, vs) => k -> vs }.toMap
+      xs.collect { case Renderable.Source(k, vs) => Map(k -> vs) }
+        .foldLeft(Map.empty[String, NonEmptyList[String]])(_ |+| _)
 
     val destLookup =
-      xs.collect { case Renderable.Destination(k, vs) => k -> vs }.toMap
+      xs.collect { case Renderable.Destination(k, vs) => Map(k -> vs) }
+        .foldLeft(Map.empty[String, NonEmptyList[String]])(_ |+| _)
 
     val arrows =
       xs
