@@ -21,7 +21,7 @@ object DemoDsl {
       def encode(x: DemoDsl): List[PlantUml] =
         renderFlatMonoid(x, brightly = true)
 
-      def encodeArrow(src: String, dest: String): List[PlantUml] =
+      def renderArrow(src: String, dest: String): List[Renderable.Tagged[DemoDsl]] =
         Nil
 
       private def skin(brightly: Boolean) =

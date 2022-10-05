@@ -17,10 +17,10 @@ class MultiArrowSpec extends AnyFlatSpec with Inside with Matchers {
       )
 
     DslEncoder.Multi.encode[Service, PlantUml](things) should contain theSameElementsAs List(
-      Link("foo-1", "bar-1"),
-      Link("foo-1", "bar-2"),
-      Link("foo-2", "bar-1"),
-      Link("foo-2", "bar-2")
+      Component("foo-1 to bar-1", None, Some("Service")),
+      Component("foo-1 to bar-2", None, Some("Service")),
+      Component("foo-2 to bar-1", None, Some("Service")),
+      Component("foo-2 to bar-2", None, Some("Service"))
     )
   }
 }

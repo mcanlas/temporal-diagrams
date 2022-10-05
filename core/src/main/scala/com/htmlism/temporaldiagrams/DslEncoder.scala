@@ -10,7 +10,7 @@ trait DslEncoder[A, B] {
 
   def encodeWithHighlights(x: A, highlighted: Boolean): List[B]
 
-  def encodeArrow(src: String, dest: String): List[B]
+  def renderArrow(src: String, dest: String): List[Renderable.Tagged[A]]
 }
 
 object DslEncoder {
@@ -31,7 +31,17 @@ object DslEncoder {
       }
 
   object Multi {
-    def encode[A, B](xs: List[Renderable[A]])(implicit ev: DslEncoder[A, B]): List[B] = {
+    def encode[A, B](xs: List[Renderable[A]])(implicit ev: DslEncoder[A, B]): List[B] =
+      encodeCommon(xs, encodeMany(_: List[Renderable.Tagged[A]]))
+
+    def encodeWithHighlights[A, B](xs: List[Renderable[A]], highlights: String*)(implicit
+        ev: DslEncoder[A, B]
+    ): List[B] =
+      encodeCommon(xs, encodeManyWithHighlights(_: List[Renderable.Tagged[A]], highlights: _*))
+
+    private def encodeCommon[A, B](xs: List[Renderable[A]], f: List[Renderable.Tagged[A]] => List[B])(implicit
+        ev: DslEncoder[A, B]
+    ): List[B] = {
       val srcLookup =
         xs.collect { case Renderable.Source(k, vs) => k -> vs }.toMap
 
@@ -45,7 +55,7 @@ object DslEncoder {
             (for {
               xs <- srcLookup.getOrElse(srcAlias, NonEmptyList.one(srcAlias))
               ys <- destLookup.getOrElse(destAlias, NonEmptyList.one(destAlias))
-            } yield ev.encodeArrow(xs, ys)).toList
+            } yield ev.renderArrow(xs, ys)).toList
           }
           .flatten
 
@@ -53,9 +63,10 @@ object DslEncoder {
         xs.collect { case x: Renderable.Tagged[A] => x }
 
       val outs =
-        encodeMany(tagged) ++ arrows
+        f(tagged ++ arrows)
 
       outs
     }
+
   }
 }

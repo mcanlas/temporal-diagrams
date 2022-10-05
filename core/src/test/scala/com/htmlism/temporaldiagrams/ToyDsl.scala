@@ -2,6 +2,8 @@ package com.htmlism.temporaldiagrams
 
 import cats.syntax.all._
 
+import com.htmlism.temporaldiagrams.syntax._
+
 sealed trait ToyDsl
 
 case class Service(name: String, dependency: Option[String]) extends ToyDsl
@@ -20,9 +22,9 @@ object Service {
       def encode(x: Service): List[PlantUml] =
         renderFlatMonoid(x, "Service".some)
 
-      def encodeArrow(src: String, dest: String): List[PlantUml] =
+      def renderArrow(src: String, dest: String): List[Renderable.Tagged[Service]] =
         List(
-          Link(src, dest)
+          Service(s"$src to $dest").r
         )
 
       private def renderFlatMonoid(x: Service, tag: Option[String]) = {
