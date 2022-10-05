@@ -14,59 +14,49 @@ trait DslEncoder[A, B] {
 }
 
 object DslEncoder {
-  def encodeMany[A, B](xs: List[Renderable.Tagged[A]])(implicit ev: DslEncoder[A, B]): List[B] =
-    xs
-      .map(_.x)
-      .flatMap(ev.encode)
+  def encodeMany[A, B](xs: List[Renderable[A]])(implicit ev: DslEncoder[A, B]): List[B] =
+    encodeCommon(xs)(
+      _.map(_.x)
+        .flatMap(ev.encode)
+    )
 
-  def encodeManyWithHighlights[A, B](xs: List[Renderable.Tagged[A]], highlights: String*)(implicit
+  def encodeManyWithHighlights[A, B](xs: List[Renderable[A]], highlights: String*)(implicit
       ev: DslEncoder[A, B]
   ): List[B] =
-    xs
-      .flatMap { case Renderable.Tagged(tags, x) =>
-        if ((highlights intersect tags).nonEmpty)
-          ev.encodeWithHighlights(x, highlighted = true)
-        else
-          ev.encodeWithHighlights(x, highlighted = false)
-      }
+    encodeCommon(xs)(_.flatMap { case Renderable.Tagged(tags, x) =>
+      if ((highlights intersect tags).nonEmpty)
+        ev.encodeWithHighlights(x, highlighted = true)
+      else
+        ev.encodeWithHighlights(x, highlighted = false)
+    })
 
-  object Multi {
-    def encode[A, B](xs: List[Renderable[A]])(implicit ev: DslEncoder[A, B]): List[B] =
-      encodeCommon(xs, encodeMany(_: List[Renderable.Tagged[A]]))
+  private def encodeCommon[A, B](xs: List[Renderable[A]])(f: List[Renderable.Tagged[A]] => List[B])(implicit
+      ev: DslEncoder[A, B]
+  ): List[B] = {
+    val srcLookup =
+      xs.collect { case Renderable.Source(k, vs) => k -> vs }.toMap
 
-    def encodeWithHighlights[A, B](xs: List[Renderable[A]], highlights: String*)(implicit
-        ev: DslEncoder[A, B]
-    ): List[B] =
-      encodeCommon(xs, encodeManyWithHighlights(_: List[Renderable.Tagged[A]], highlights: _*))
+    val destLookup =
+      xs.collect { case Renderable.Destination(k, vs) => k -> vs }.toMap
 
-    private def encodeCommon[A, B](xs: List[Renderable[A]], f: List[Renderable.Tagged[A]] => List[B])(implicit
-        ev: DslEncoder[A, B]
-    ): List[B] = {
-      val srcLookup =
-        xs.collect { case Renderable.Source(k, vs) => k -> vs }.toMap
+    val arrows =
+      xs
+        .collect { case Renderable.MultiArrow(src, dest) => src -> dest }
+        .flatMap { case (srcAlias, destAlias) =>
+          (for {
+            xs <- srcLookup.getOrElse(srcAlias, NonEmptyList.one(srcAlias))
+            ys <- destLookup.getOrElse(destAlias, NonEmptyList.one(destAlias))
+          } yield ev.renderArrow(xs, ys)).toList
+        }
+        .flatten
 
-      val destLookup =
-        xs.collect { case Renderable.Destination(k, vs) => k -> vs }.toMap
+    val tagged =
+      xs.collect { case x: Renderable.Tagged[A] => x }
 
-      val arrows =
-        xs
-          .collect { case Renderable.MultiArrow(src, dest) => src -> dest }
-          .flatMap { case (srcAlias, destAlias) =>
-            (for {
-              xs <- srcLookup.getOrElse(srcAlias, NonEmptyList.one(srcAlias))
-              ys <- destLookup.getOrElse(destAlias, NonEmptyList.one(destAlias))
-            } yield ev.renderArrow(xs, ys)).toList
-          }
-          .flatten
+    val outs =
+      f(tagged ++ arrows)
 
-      val tagged =
-        xs.collect { case x: Renderable.Tagged[A] => x }
-
-      val outs =
-        f(tagged ++ arrows)
-
-      outs
-    }
-
+    outs
   }
+
 }

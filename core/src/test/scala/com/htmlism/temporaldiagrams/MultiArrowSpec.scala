@@ -16,7 +16,7 @@ class MultiArrowSpec extends AnyFlatSpec with Inside with Matchers {
         Renderable.MultiArrow("foo", "bar")
       )
 
-    DslEncoder.Multi.encode[Service, PlantUml](things) should contain theSameElementsAs List(
+    DslEncoder.encodeMany[Service, PlantUml](things) should contain theSameElementsAs List(
       Component("foo-1 to bar-1", None, Some("Service")),
       Component("foo-1 to bar-2", None, Some("Service")),
       Component("foo-2 to bar-1", None, Some("Service")),
