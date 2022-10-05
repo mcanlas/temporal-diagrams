@@ -27,6 +27,9 @@ object Service {
           Service(s"$src to $dest").r
         )
 
+      def debug(xs: List[String]): List[PlantUml] =
+        Nil
+
       private def renderFlatMonoid(x: Service, tag: Option[String]) = {
         val component =
           List(Component(x.name, None, tag))

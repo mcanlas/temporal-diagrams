@@ -12,8 +12,8 @@ object PlantUml {
     renderWithDirection("left to right direction".some, xs)
 
   private def renderWithDirection(direction: Option[String], xs: List[PlantUml]) = {
-    val title =
-      xs.collect { case x: Title => x }
+    val singletons =
+      xs.collect { case x: Singleton => x }
 
     val skins =
       xs.collect { case x: SkinParam => x }.distinct
@@ -24,12 +24,16 @@ object PlantUml {
     val relationships =
       xs.collect { case x: Link => x }
 
-    ("@startuml" :: direction.toList ::: (title ::: skins ::: entities ::: relationships)
+    ("@startuml" :: direction.toList ::: (singletons ::: skins ::: entities ::: relationships)
       .flatMap(consumeOne) ::: List("@enduml"))
       .mkString("\n\n")
   }
 
-  case class Title(s: String) extends PlantUml
+  sealed trait Singleton extends PlantUml
+
+  case class Title(s: String) extends Singleton
+
+  case class Legend(xs: List[String]) extends Singleton
 
   sealed trait SkinParam extends PlantUml
 
@@ -65,6 +69,9 @@ object PlantUml {
     x match {
       case Title(str) =>
         s"title $str".list
+
+      case Legend(xs) =>
+        "legend" :: xs appended "end legend"
 
       case Interface(name, title) =>
         title

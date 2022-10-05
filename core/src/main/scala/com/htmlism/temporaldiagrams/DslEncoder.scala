@@ -12,6 +12,8 @@ trait DslEncoder[A, B] {
   def encodeWithHighlights(x: A, highlighted: Boolean): List[B]
 
   def renderArrow(src: String, dest: String): List[Renderable.Tagged[A]]
+
+  def debug(xs: List[String]): List[B]
 }
 
 object DslEncoder {
@@ -56,8 +58,14 @@ object DslEncoder {
     val tagged =
       xs.collect { case x: Renderable.Tagged[A] => x }
 
+    val sourcesDebug =
+      srcLookup.toList.map { case (k, vs) => s"Source `$k` rewritten as " + vs.toList.mkString(", ") }
+
+    val destsDebug =
+      destLookup.toList.map { case (k, vs) => s"Destination `$k` rewritten as " + vs.toList.mkString(", ") }
+
     val outs =
-      f(tagged ++ arrows)
+      f(tagged ++ arrows) ++ ev.debug(sourcesDebug ++ destsDebug)
 
     outs
   }

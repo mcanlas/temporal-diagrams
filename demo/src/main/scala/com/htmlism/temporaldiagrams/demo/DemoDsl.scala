@@ -24,6 +24,9 @@ object DemoDsl {
       def renderArrow(src: String, dest: String): List[Renderable.Tagged[DemoDsl]] =
         Nil
 
+      def debug(xs: List[String]): List[PlantUml] =
+        Nil
+
       private def skin(brightly: Boolean) =
         if (brightly)
           PlantUml
