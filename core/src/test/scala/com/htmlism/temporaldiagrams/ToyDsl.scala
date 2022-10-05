@@ -20,6 +20,11 @@ object Service {
       def encode(x: Service): List[PlantUml] =
         renderFlatMonoid(x, "Service".some)
 
+      def encodeArrow(src: String, dest: String): List[PlantUml] =
+        List(
+          Link(src, dest)
+        )
+
       private def renderFlatMonoid(x: Service, tag: Option[String]) = {
         val component =
           List(Component(x.name, None, tag))
