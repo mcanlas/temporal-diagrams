@@ -6,6 +6,7 @@ lazy val root =
 
 lazy val core =
   project
+    .settings(name := "temporal-diagrams-core")
     .withCats
     .withTesting
 
