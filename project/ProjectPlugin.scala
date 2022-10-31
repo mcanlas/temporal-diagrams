@@ -19,9 +19,21 @@ object ProjectPlugin extends AutoPlugin {
   object ThingsToAutoImport {
 
     implicit class ProjectOps(p: Project) {
+      val http4sVersion =
+        "0.23.16"
+
       def withCats: Project =
         p
           .settings(libraryDependencies += "org.typelevel" %% "cats-core" % "2.6.1")
+
+      def withHttpServer: Project =
+        p
+          .settings(
+            libraryDependencies ++= Seq(
+              "org.http4s" %% "http4s-dsl"          % http4sVersion,
+              "org.http4s" %% "http4s-blaze-server" % http4sVersion
+            )
+          )
 
       def withTesting: Project =
         p.settings(libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.13" % "test")

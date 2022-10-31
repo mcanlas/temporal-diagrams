@@ -71,7 +71,7 @@ object PlantUml {
         s"title $str".list
 
       case Legend(xs) =>
-        "legend" :: xs appended "end legend"
+        ("legend" :: xs appended "end legend").mkString("\n").list
 
       case Interface(name, title) =>
         title
