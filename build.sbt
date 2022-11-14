@@ -17,5 +17,5 @@ lazy val interactive =
 
 lazy val demo =
   project
-    .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.3.14")
+    .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.4.0")
     .dependsOn(core)
