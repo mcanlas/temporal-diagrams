@@ -54,7 +54,7 @@ object KeyValuePairsDecoder {
     def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, A] = {
       val fullKey =
         (ns :+ key)
-          .mkString_("")
+          .mkString_(".")
 
       Either
         .fromOption(xs.get(fullKey), s"key $fullKey did not exist")

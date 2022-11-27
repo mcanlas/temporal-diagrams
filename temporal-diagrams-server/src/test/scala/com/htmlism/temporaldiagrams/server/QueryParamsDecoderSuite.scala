@@ -51,21 +51,21 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
       .fold(succeed, _ => failure("impossible parse"))
   }
 
-  test("syntax exists to link a key and a value decoder") {
+  test("syntax exists to parse a key with a value decoder") {
     val params =
       Map(
         "key" -> List("foo")
       )
 
     implicit val dec: KeyValuePairsDecoder[String] =
-      "key".asValue[String]
+      "key".as[String]
 
     exists(QueryStringDecoder[String].decode(params)) {
       expect.eql("foo", _)
     }
   }
 
-  test("syntax exists to link a name and a record decoder") {
+  test("the pairs decode can compose via mapN") {
     val params =
       Map(
         "name" -> List("alpha"),
@@ -76,13 +76,33 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
       expect.same(Person("alpha", 123), _)
     }
   }
+
+  test("syntax exists to link a namespace and a record") {
+    val params =
+      Map(
+        "one.name" -> List("alpha"),
+        "one.age" -> List("123"),
+        "two.name" -> List("beta"),
+        "two.age" -> List("456")
+      )
+
+    implicit val dec: KeyValuePairsDecoder[(Person, Person)] =
+      (
+        "one".namespaces[Person],
+        "two".namespaces[Person]
+      ).mapN((a, b) => a -> b)
+
+    exists(QueryStringDecoder[(Person, Person)].decode(params)) {
+      expect.same(Person("alpha", 123) -> Person("beta", 456), _)
+    }
+  }
 }
 
 case class Person(name: String, age: Int)
 
 object Person {
   implicit val dec: KeyValuePairsDecoder[Person] =
-    ("name".asValue[String], "age".asValue[Int])
+    ("name".as[String], "age".as[Int])
       .mapN(Person.apply)
 }
 
