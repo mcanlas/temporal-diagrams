@@ -22,7 +22,7 @@ object ValueDecoder {
     (s: String) => s.asRight
 
   implicit val intDecoder: ValueDecoder[Int] =
-    (s: String) => util.Try(s.toInt).toEither.leftMap(_.getMessage)
+    (s: String) => util.Try(s.toInt).toEither.leftMap(_.toString)
 
   implicit val functor: Functor[ValueDecoder] =
     new Functor[ValueDecoder] {

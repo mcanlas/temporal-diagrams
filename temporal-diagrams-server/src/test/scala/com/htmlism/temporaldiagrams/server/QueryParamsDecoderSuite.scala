@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams.server
 
-import cats.data.Validated
+import cats.data._
 import cats.syntax.all._
 import weaver._
 
@@ -103,6 +103,33 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
 
     exists(QueryStringDecoder[(Person, Person)].decode(params)) {
       expect.same(Person("alpha", 123) -> Person("beta", 456), _)
+    }
+  }
+
+  test("record errors accumulate") {
+    val params =
+      Map(
+        "foo" -> List("foo"),
+        "bar" -> List("bar")
+      )
+
+    implicit val dec: KeyValuePairsDecoder[(Int, Int)] =
+      (
+        "foo".as[Int],
+        "bar".as[Int]
+      ).mapN((a, b) => a -> b)
+
+    matches(QueryStringDecoder[(Int, Int)].decode(params)) { case Validated.Invalid(xs) =>
+      verify(xs.length == 2)
+    }
+  }
+
+  test("int parse failure shows exception type") {
+    val res =
+      "foo".as[Int].decode(Map("foo" -> List("abc")), Chain.empty)
+
+    matches(res) { case Validated.Invalid(xs) =>
+      forEach(xs)(x => verify(x.contains("java.lang.NumberFormatException")))
     }
   }
 
