@@ -11,7 +11,9 @@ lazy val core =
     .withTesting
 
 lazy val server =
-  module("server").withHttpServer
+  module("server")
+    .withHttpServer
+    .withTesting
 
 lazy val demo =
   module("demo")
