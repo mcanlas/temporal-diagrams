@@ -6,6 +6,16 @@ import cats.syntax.all._
 
 sealed trait KeyValueDecoder[A] { self: KeyValueDecoder[A] =>
   def decode(xs: Map[String, List[String]]): ValidatedNec[String, A]
+
+  // TODO if the collection xs is filtered, the lead string must also be trimmed
+  // or thread the namespace into the call
+  def withNamespace(n: String): KeyValueDecoder[A] =
+    new KeyValueDecoder[A] {
+      def decode(xs: Map[String, List[String]]): ValidatedNec[String, A] =
+        self
+          .decode(xs.view.filterKeys(_.startsWith(n)).toMap)
+          .leftMap(_.map(s"within $n" + _))
+    }
 }
 
 object KeyValueDecoder {
@@ -34,13 +44,7 @@ object KeyValueDecoder {
         }
     }
 
-  case class Value[A](namespaces: List[String])(implicit A: ValueDecoder[A]) extends KeyValueDecoder[A] {
-    private lazy val key: String =
-      namespaces.mkString
-
-    def withNamespace(n: String): KeyValueDecoder.Value[A] =
-      copy(namespaces = n +: namespaces)
-
+  case class One[A](key: String)(implicit A: ValueDecoder[A]) extends KeyValueDecoder[A] {
     def decode(xs: Map[String, List[String]]): ValidatedNec[String, A] =
       Either
         .fromOption(xs.get(key), s"key $key did not exist")
