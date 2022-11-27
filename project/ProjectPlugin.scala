@@ -31,12 +31,22 @@ object ProjectPlugin extends AutoPlugin {
           .settings(
             libraryDependencies ++= Seq(
               "org.http4s" %% "http4s-dsl"          % http4sVersion,
-              "org.http4s" %% "http4s-blaze-server" % http4sVersion
+              "org.http4s" %% "http4s-blaze-server" % "0.23.12"
             )
           )
 
-      def withTesting: Project =
-        p.settings(libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % "test")
+      def withTesting: Project = {
+        val weaverVersion =
+          "0.8.1"
+
+        p.settings(
+          testFrameworks += new TestFramework("weaver.framework.CatsEffect"),
+          libraryDependencies ++= Seq(
+            "com.disneystreaming" %% "weaver-cats"       % weaverVersion % Test,
+            "com.disneystreaming" %% "weaver-scalacheck" % weaverVersion % Test
+          )
+        )
+      }
     }
   }
 }
