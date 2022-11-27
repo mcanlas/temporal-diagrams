@@ -105,10 +105,3 @@ object Person {
     ("name".as[String], "age".as[Int])
       .mapN(Person.apply)
 }
-
-case class EmptyRecord()
-
-object EmptyRecord {
-  implicit val dec: RecordDecoder[EmptyRecord] =
-    (_: Map[String, List[String]]) => EmptyRecord().validNec
-}
