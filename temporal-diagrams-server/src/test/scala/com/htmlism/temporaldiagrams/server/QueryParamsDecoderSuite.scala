@@ -5,7 +5,7 @@ import weaver._
 
 import com.htmlism.temporaldiagrams.server.builder._
 
-object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
+object QueryParamsDecoderSuite extends FunSuite {
   test("a value decoder already exists for string") {
     val dec =
       implicitly[ValueDecoder[String]]
@@ -36,16 +36,28 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
   }
 
   test("syntax exists to link a key and a value decoder") {
-    matches("foo".withValue[String]) { case KeyValueDecoder.Value(k) =>
-      expect.eql("foo", k)
-    }
+    expect.eql(
+      List("foo"),
+      "foo".withValue[String].namespaces
+    )
   }
 
   test("syntax exists to link a name and a record decoder") {
-    matches("foo".withRecord[EmptyRecord]) { case KeyValueDecoder.Record(n) =>
-      expect.eql("foo", n)
-    }
+    implicit val dec =
+      "foo".withValue[Wrapped]
+
+    expect.eql(
+      List("bar", "foo"),
+      "bar".withRecord[Wrapped].namespaces
+    )
   }
+}
+
+case class Wrapped(s: String)
+
+object Wrapped {
+  implicit val dec: ValueDecoder[Wrapped] =
+    implicitly[ValueDecoder[String]].map(Wrapped(_))
 }
 
 case class EmptyRecord()
