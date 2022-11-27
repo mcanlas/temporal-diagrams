@@ -2,7 +2,7 @@ lazy val root =
   Project("temporal-diagrams", file("."))
     .withCats
     .withTesting
-    .aggregate(core, demo)
+    .aggregate(core, demo, server)
     .disablePublshing
 
 lazy val core =
@@ -11,9 +11,9 @@ lazy val core =
     .withCats
     .withTesting
 
-lazy val interactive =
+lazy val server =
   project
-    .settings(name := "temporal-diagrams-interactive")
+    .settings(name := "temporal-diagrams-server")
     .withHttpServer
 
 lazy val demo =
