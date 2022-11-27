@@ -57,7 +57,7 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
         "key" -> List("foo")
       )
 
-    implicit val dec =
+    implicit val dec: KeyValuePairsDecoder[String] =
       "key".asValue[String]
 
     exists(QueryStringDecoder[String].decode(params)) {
@@ -68,27 +68,22 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
   test("syntax exists to link a name and a record decoder") {
     val params =
       Map(
-        "foo.bar" -> List("payload")
+        "name" -> List("alpha"),
+        "age" -> List("123")
       )
 
-    implicit val dec: KeyValuePairsDecoder[Wrapped] =
-      "bar".asValue[Wrapped]
-
-    val newDec =
-      "foo.".asRecord[Wrapped]
-
-    exists(QueryStringDecoder[Wrapped](newDec).decode(params).map(_.s)) {
-      expect.eql("payload", _)
+    exists(QueryStringDecoder[Person].decode(params)) {
+      expect.same(Person("alpha", 123), _)
     }
   }
 }
 
-case class Wrapped(s: String)
+case class Person(name: String, age: Int)
 
-object Wrapped {
-  implicit val dec: ValueDecoder[Wrapped] =
-    ValueDecoder[String]
-      .map(Wrapped(_))
+object Person {
+  implicit val dec: KeyValuePairsDecoder[Person] =
+    ("name".asValue[String], "age".asValue[Int])
+      .mapN(Person.apply)
 }
 
 case class EmptyRecord()
