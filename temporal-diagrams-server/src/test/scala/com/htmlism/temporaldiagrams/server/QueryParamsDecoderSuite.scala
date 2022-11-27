@@ -1,5 +1,6 @@
 package com.htmlism.temporaldiagrams.server
 
+import cats.data.Validated
 import cats.syntax.all._
 import weaver._
 
@@ -54,15 +55,23 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
   test("syntax exists to parse a key with a value decoder") {
     val params =
       Map(
-        "key" -> List("foo")
+        "foo" -> List("bar")
       )
 
     implicit val dec: KeyValuePairsDecoder[String] =
-      "key".as[String]
+      "foo".as[String]
 
-    exists(QueryStringDecoder[String].decode(params)) {
-      expect.eql("foo", _)
-    }
+    all(
+      exists(QueryStringDecoder[String].decode(params)) {
+        expect.eql("bar", _)
+      },
+      matches(QueryStringDecoder[String].decode(Map("" -> Nil))) { case Validated.Invalid(xs) =>
+        exists(xs)(x => verify(x.contains("foo did not exist"), "requires key"))
+      },
+      matches(QueryStringDecoder[String].decode(Map("foo" -> Nil))) { case Validated.Invalid(xs) =>
+        exists(xs)(x => verify(x.contains("foo had no values"), "values must be non-empty"))
+      }
+    )
   }
 
   test("the pairs decode can compose via mapN") {
@@ -96,6 +105,9 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
       expect.same(Person("alpha", 123) -> Person("beta", 456), _)
     }
   }
+
+  private def all(xs: Expectations*) =
+    xs.reduce(_ && _)
 }
 
 case class Person(name: String, age: Int)

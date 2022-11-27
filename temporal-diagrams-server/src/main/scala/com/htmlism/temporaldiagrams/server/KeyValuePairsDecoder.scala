@@ -58,7 +58,8 @@ object KeyValuePairsDecoder {
 
       Either
         .fromOption(xs.get(fullKey), s"key $fullKey did not exist")
-        .map(xs => xs.headOption.getOrElse(s"available key $fullKey had no values"))
+        .map(_.headOption)
+        .flatMap(Either.fromOption(_, s"available key $fullKey had no values"))
         .flatMap(A.decode)
         .toValidatedNec
     }
