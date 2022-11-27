@@ -2,10 +2,10 @@ package com.htmlism.temporaldiagrams.server
 
 package object builder {
   implicit class StringKeyOps(key: String) {
-    def withValue[A: ValueDecoder]: KeyValueDecoder[A] =
-      KeyValueDecoder.One(key)
+    def asValue[A: ValueDecoder]: KeyValuePairsDecoder[A] =
+      KeyValuePairsDecoder.One(key)
 
-    def withRecord[A](implicit A: KeyValueDecoder[A]): KeyValueDecoder[A] =
+    def asRecord[A](implicit A: KeyValuePairsDecoder[A]): KeyValuePairsDecoder[A] =
       A.withNamespace(key)
   }
 }

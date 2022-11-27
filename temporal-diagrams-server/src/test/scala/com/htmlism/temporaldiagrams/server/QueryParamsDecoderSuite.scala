@@ -35,15 +35,32 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
     }
   }
 
+  test("value decoder is a functor and exists for string") {
+    val dec =
+      ValueDecoder[String]
+        .emap(s => s.length.asRight)
+
+    exists(dec.decode("helloworld")) {
+      expect.eql(10, _)
+    }
+  }
+
+  test("value decoder is a functor and exists for int") {
+    ValueDecoder[Int]
+      .decode("helloworld")
+      .fold(succeed, _ => failure("impossible parse"))
+  }
+
   test("syntax exists to link a key and a value decoder") {
     val params =
       Map(
         "key" -> List("foo")
       )
 
-    val dec = "key".withValue[String]
+    implicit val dec =
+      "key".asValue[String]
 
-    exists(dec.decode(params)) {
+    exists(QueryStringDecoder[String].decode(params)) {
       expect.eql("foo", _)
     }
   }
@@ -54,20 +71,15 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
         "foo.bar" -> List("payload")
       )
 
-    implicit val dec: KeyValueDecoder[Wrapped] =
-      "bar".withValue[Wrapped]
+    implicit val dec: KeyValuePairsDecoder[Wrapped] =
+      "bar".asValue[Wrapped]
 
     val newDec =
-      "foo.".withRecord[Wrapped]
+      "foo.".asRecord[Wrapped]
 
-    println(dec.decode(params))
-
-    // TODO
-    exists(newDec.decode(params).map(_.s)) {
+    exists(QueryStringDecoder[Wrapped](newDec).decode(params).map(_.s)) {
       expect.eql("payload", _)
     }
-
-    expect.eql(1, 1)
   }
 }
 
@@ -75,7 +87,8 @@ case class Wrapped(s: String)
 
 object Wrapped {
   implicit val dec: ValueDecoder[Wrapped] =
-    implicitly[ValueDecoder[String]].map(Wrapped(_))
+    ValueDecoder[String]
+      .map(Wrapped(_))
 }
 
 case class EmptyRecord()

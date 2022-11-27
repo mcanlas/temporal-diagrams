@@ -21,9 +21,15 @@ object ValueDecoder {
   implicit val stringDecoder: ValueDecoder[String] =
     (s: String) => s.asRight
 
+  implicit val intDecoder: ValueDecoder[Int] =
+    (s: String) => util.Try(s.toInt).toEither.leftMap(_.getMessage)
+
   implicit val functor: Functor[ValueDecoder] =
     new Functor[ValueDecoder] {
       def map[A, B](fa: ValueDecoder[A])(f: A => B): ValueDecoder[B] =
         (s: String) => fa.decode(s).map(f)
     }
+
+  def apply[A](implicit ev: ValueDecoder[A]): ValueDecoder[A] =
+    ev
 }

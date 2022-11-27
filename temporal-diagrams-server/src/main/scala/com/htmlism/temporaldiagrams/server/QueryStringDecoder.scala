@@ -1,16 +1,15 @@
 package com.htmlism.temporaldiagrams.server
 
-import cats._
-import cats.data.ValidatedNec
+import cats.data._
 
+/**
+  * A type class to decode a query string into a structure, or return an accumulated structure of errors
+  */
 trait QueryStringDecoder[A] {
   def decode(queryString: Map[String, List[String]]): ValidatedNec[String, A]
 }
 
 object QueryStringDecoder {
-  implicit val functorQueryStringDecoder: Functor[QueryStringDecoder] =
-    new Functor[QueryStringDecoder] {
-      def map[A, B](fa: QueryStringDecoder[A])(f: A => B): QueryStringDecoder[B] =
-        (queryString: Map[String, List[String]]) => fa.decode(queryString).map(f)
-    }
+  def apply[A](implicit ev: KeyValuePairsDecoder[A]): QueryStringDecoder[A] =
+    (queryString: Map[String, List[String]]) => ev.decode(queryString, Chain.empty)
 }
