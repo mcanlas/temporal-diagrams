@@ -56,7 +56,7 @@ jobs:
       - run: sbt ++${{ matrix.scala }} scalafmtCheck test
 
       - name: Compress target directories
-        run: tar cf targets.tar target core/target server/target demo/target project/target
+        run: tar cf targets.tar target temporal-diagrams-core/target temporal-diagrams-server/target temporal-diagrams-demo/target project/target
 
       - name: Upload target directories
         uses: actions/upload-artifact@v2

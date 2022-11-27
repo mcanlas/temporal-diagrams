@@ -17,6 +17,12 @@ object ProjectPlugin extends AutoPlugin {
   override def trigger: PluginTrigger = AllRequirements
 
   object ThingsToAutoImport {
+    private def jarName(s: String) =
+      "temporal-diagrams-" + s
+
+    def module(s: String): Project =
+      Project(s, file(jarName(s)))
+        .settings(name := jarName(s))
 
     implicit class ProjectOps(p: Project) {
       val http4sVersion =
