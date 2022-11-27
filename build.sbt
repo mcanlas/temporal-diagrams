@@ -3,6 +3,7 @@ lazy val root =
     .withCats
     .withTesting
     .aggregate(core, demo)
+    .disablePublshing
 
 lazy val core =
   project
