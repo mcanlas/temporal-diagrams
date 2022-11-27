@@ -20,3 +20,4 @@ lazy val demo =
   project
     .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.4.1")
     .dependsOn(core)
+    .disablePublshing
