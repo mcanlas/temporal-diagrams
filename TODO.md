@@ -28,3 +28,4 @@
 - when rendering subcomponents in a package, and applying highlighting to them... it's not possible, because the highlighting framework only works on wholly completed components. the subcomponents cannot be assigned different tags/highlights (think of different workflows like http controllers that are bound in one layer) 
 - color math
 - gradients
+- Seq coercion and bundle type a la `scalatags`
