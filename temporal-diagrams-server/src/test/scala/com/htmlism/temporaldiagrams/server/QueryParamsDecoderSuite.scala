@@ -78,7 +78,7 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
     val params =
       Map(
         "name" -> List("alpha"),
-        "age" -> List("123")
+        "age"  -> List("123")
       )
 
     exists(QueryStringDecoder[Person].decode(params)) {
@@ -90,9 +90,9 @@ object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
     val params =
       Map(
         "one.name" -> List("alpha"),
-        "one.age" -> List("123"),
+        "one.age"  -> List("123"),
         "two.name" -> List("beta"),
-        "two.age" -> List("456")
+        "two.age"  -> List("456")
       )
 
     implicit val dec: KeyValuePairsDecoder[(Person, Person)] =

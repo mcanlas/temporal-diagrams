@@ -202,16 +202,16 @@ object PlantUml {
     sealed trait Weight
 
     object Weight {
-      case object Solid extends Weight
+      case object Solid  extends Weight
       case object Dotted extends Weight
-      case object Bold extends Weight
+      case object Bold   extends Weight
     }
 
     sealed trait Direction
 
     object Direction {
-      case object Forwards extends Direction
-      case object Backwards extends Direction
+      case object Forwards      extends Direction
+      case object Backwards     extends Direction
       case object Bidirectional extends Direction
     }
 

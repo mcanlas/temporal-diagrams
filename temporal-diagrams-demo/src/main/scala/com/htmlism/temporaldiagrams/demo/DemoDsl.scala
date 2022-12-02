@@ -3,8 +3,8 @@ package demo
 
 sealed trait DemoDsl
 
-case class Service(name: String, dependency: Option[String]) extends DemoDsl
-case class Hydra(name: String, dependency: Option[String]) extends DemoDsl
+case class Service(name: String, dependency: Option[String])  extends DemoDsl
+case class Hydra(name: String, dependency: Option[String])    extends DemoDsl
 case class Buffered(name: String, dependency: Option[String]) extends DemoDsl
 
 object DemoDsl {
