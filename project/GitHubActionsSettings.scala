@@ -25,7 +25,7 @@ object GitHubActionsSettings extends AutoPlugin {
       "mcanlas",
       sys.env("GH_PACKAGES_TOKEN")
     ),
-    githubWorkflowBuild        := Seq(WorkflowStep.Sbt(List("scalafmtCheck", "test"))),
+    githubWorkflowBuild        := Seq(WorkflowStep.Sbt(List("scalafixAll --check", "scalafmtCheck", "test"))),
     githubWorkflowEnv          := Map("GH_PACKAGES_TOKEN" -> "${{ secrets.GH_PACKAGES_TOKEN }}"),
     githubWorkflowIncludeClean := false
   )
