@@ -7,11 +7,13 @@ lazy val root =
 
 lazy val core =
   module("core")
+    .settings(description := "A Scala DSL for generating PlantUML diagrams")
     .withCats
     .withTesting
 
 lazy val server =
   module("server")
+    .settings(description := "A web service for visualizing temporal diagrams")
     .withHttpServer
     .withTesting
 
