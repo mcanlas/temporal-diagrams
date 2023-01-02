@@ -33,7 +33,7 @@ object KeyValuePairsDecoder {
             fa.decode(xs, ns) match {
               case Validated.Valid(x) =>
                 fb.decode(xs, ns) match {
-                  case Validated.Valid(y)     =>
+                  case Validated.Valid(y) =>
                     (x, y).valid
                   case Validated.Invalid(err) =>
                     err.invalid
@@ -41,7 +41,7 @@ object KeyValuePairsDecoder {
 
               case Validated.Invalid(erry) =>
                 fb.decode(xs, ns) match {
-                  case Validated.Valid(_)      =>
+                  case Validated.Valid(_) =>
                     erry.invalid
                   case Validated.Invalid(errx) =>
                     (errx |+| erry).invalid
