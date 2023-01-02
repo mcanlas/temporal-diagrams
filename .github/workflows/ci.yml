@@ -17,3 +17,4 @@ jobs:
       - run: sbt 'scalafixAll --check' scalafmtCheck +test +publish
         env:
           GITHUB_TOKEN: ${{ secrets.WRITE_PACKAGES_TOKEN }}
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
