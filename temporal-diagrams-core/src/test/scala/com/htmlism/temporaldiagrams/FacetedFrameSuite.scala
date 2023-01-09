@@ -70,9 +70,7 @@ object FacetedFrameSuite extends FunSuite with MatchesSyntax {
       FacetedFrame
         .selectFrames(NonEmptyList.of(frame), "nonsense id" -> "key1"),
       default.list
-    )
-
-    expect.same(
+    ) and expect.same(
       FacetedFrame
         .selectFrames(NonEmptyList.of(frame), "some id" -> "nonsense key"),
       default.list
