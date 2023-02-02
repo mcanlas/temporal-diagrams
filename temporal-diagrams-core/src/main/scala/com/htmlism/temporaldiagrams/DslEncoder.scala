@@ -11,9 +11,16 @@ trait DslEncoder[A, B] {
 
   def encodeWithHighlights(x: A, highlighted: Boolean): List[B]
 
-  def renderArrow(src: String, dest: String): List[Renderable.Tagged[A]]
+  /**
+    * This convenience method is used by the host language `A` as an opportunity to render arrows given only their
+    * source and destination aliases.
+    */
+  protected def renderArrow(src: String, dest: String): List[Renderable.Tagged[A]]
 
-  def debug(xs: List[String]): List[B]
+  /**
+    * Encoders opt-in to showing debug strings somewhere in the diagrams by implementing this method
+    */
+  protected def debug(xs: List[String]): List[B]
 }
 
 object DslEncoder {
