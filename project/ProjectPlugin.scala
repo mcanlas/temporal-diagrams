@@ -26,7 +26,7 @@ object ProjectPlugin extends AutoPlugin {
 
     implicit class ProjectOps(p: Project) {
       val http4sVersion =
-        "0.23.17"
+        "0.23.18"
 
       def withCats: Project =
         p
