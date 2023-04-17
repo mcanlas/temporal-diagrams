@@ -19,6 +19,6 @@ lazy val server =
 
 lazy val demo =
   module("demo")
-    .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.4.8")
+    .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.4.9")
     .dependsOn(core)
     .disablePublshing
