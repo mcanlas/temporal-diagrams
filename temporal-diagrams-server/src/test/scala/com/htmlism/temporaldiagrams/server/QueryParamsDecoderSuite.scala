@@ -6,7 +6,7 @@ import weaver._
 
 import com.htmlism.temporaldiagrams.server.builder._
 
-object QueryParamsDecoderSuite extends FunSuite with MatchesSyntax {
+object QueryParamsDecoderSuite extends FunSuite {
   test("a value decoder already exists for string") {
     val dec =
       implicitly[ValueDecoder[String]]

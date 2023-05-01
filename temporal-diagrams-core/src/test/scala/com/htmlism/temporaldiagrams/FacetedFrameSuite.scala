@@ -5,7 +5,7 @@ import weaver._
 
 import com.htmlism.temporaldiagrams.syntax._
 
-object FacetedFrameSuite extends FunSuite with MatchesSyntax {
+object FacetedFrameSuite extends FunSuite {
   test("Faceted frames should support building many") {
     val component =
       Service("foo1").r
