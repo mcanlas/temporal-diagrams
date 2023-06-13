@@ -16,6 +16,14 @@ jobs:
           java-version: '17'
           cache: sbt
 
+      - run: sbt 'scalafixAll --check' scalafmtSbtCheck scalafmtCheck
+        env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+
+      - run: sbt +test
+        env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+
       - run: sbt 'scalafixAll --check' scalafmtCheck +test +publish
         env:
           GITHUB_TOKEN: ${{ secrets.WRITE_PACKAGES_TOKEN }}
