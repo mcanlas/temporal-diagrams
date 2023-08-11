@@ -29,3 +29,8 @@
 - color math
 - gradients
 - Seq coercion and bundle type a la `scalatags`
+
+## V2 features
+
+- plantuml as target
+- mermaid as target

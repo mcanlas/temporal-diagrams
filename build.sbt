@@ -2,7 +2,7 @@ lazy val root =
   Project("temporal-diagrams", file("."))
     .withCats
     .withTesting
-    .aggregate(core, demo, server)
+    .aggregate(core, demo, server, plantUml, mermaid)
     .disablePublshing
 
 lazy val core =
@@ -22,3 +22,11 @@ lazy val demo =
     .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.1")
     .dependsOn(core)
     .disablePublshing
+
+lazy val plantUml =
+  module("plantuml")
+    .settings(description := "Temporal diagram encoders for PlantUML diagrams")
+
+lazy val mermaid =
+  module("mermaid")
+    .settings(description := "Temporal diagram encoders for Mermaid diagrams")
