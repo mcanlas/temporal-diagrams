@@ -26,7 +26,9 @@ lazy val demo =
 lazy val plantUml =
   module("plantuml")
     .settings(description := "Temporal diagram encoders for PlantUML diagrams")
+    .dependsOn(core)
 
 lazy val mermaid =
   module("mermaid")
     .settings(description := "Temporal diagram encoders for Mermaid diagrams")
+    .dependsOn(core)
