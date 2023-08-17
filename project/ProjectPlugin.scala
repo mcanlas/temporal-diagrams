@@ -23,6 +23,7 @@ object ProjectPlugin extends AutoPlugin {
     def module(s: String): Project =
       Project(s, file(jarName(s)))
         .settings(name := jarName(s))
+        .settings(addCompilerPlugin("org.typelevel" % "kind-projector" % "0.13.2" cross CrossVersion.full))
 
     implicit class ProjectOps(p: Project) {
       val http4sVersion =

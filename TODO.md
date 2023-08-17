@@ -1,3 +1,4 @@
+- unit test contramap encoder
 - evolution narrative for payloads
 - slideshow narrative (to supplant temporal indexing and support combinators/combinations i.e. "highlight these two", highlight as composible feature flags)
 - should highlight by component be done with the tagged versions themselves (instead of asking to retype the string key)
