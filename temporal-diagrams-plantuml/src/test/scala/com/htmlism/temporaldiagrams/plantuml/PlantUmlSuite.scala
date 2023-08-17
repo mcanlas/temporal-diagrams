@@ -10,4 +10,18 @@ object PlantUmlSuite extends FunSuite {
       PlantUml.render(Component("asdf", None))
     )
   }
+
+  test("PlantUML can render many components") {
+    val xs =
+      NonEmptyList
+        .of(
+          Component("foo", None),
+          Component("bar", None)
+        )
+
+    expect.eql(
+      NonEmptyList.of("@startuml", "", "", "@enduml"),
+      PlantUml.render(xs)
+    )
+  }
 }

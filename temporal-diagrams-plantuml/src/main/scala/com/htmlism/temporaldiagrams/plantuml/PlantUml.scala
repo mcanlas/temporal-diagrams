@@ -7,6 +7,15 @@ import cats.data._
 trait PlantUml
 
 object PlantUml {
+  implicit def nelEncoder[A](implicit A: PlantUmlEncoder[A]): PlantUmlEncoder[NonEmptyList[A]] =
+    new PlantUmlEncoder[NonEmptyList[A]] {
+      def encode(x: NonEmptyList[A]): NonEmptyList[String] =
+        x.flatMap(A.encode)
+
+      def encodeWithHighlights(x: NonEmptyList[A], highlighted: Boolean): NonEmptyList[String] =
+        x.flatMap(A.encodeWithHighlights(_, highlighted))
+    }
+
   def render[A](x: A)(implicit A: PlantUmlEncoder[A]): NonEmptyList[String] =
     A.encode(x).pipe(asDocument)
 
