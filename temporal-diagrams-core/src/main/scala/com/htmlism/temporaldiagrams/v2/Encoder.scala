@@ -13,8 +13,28 @@ import cats.data.NonEmptyList
   */
 
 trait Encoder[D, A] {
+
+  /**
+    * The default encoding for a given data structure
+    *
+    * In practice, it is usually equivalent to the encoding for `encodeWithHighlights` when `highlighted` is `true`
+    *
+    * @param x
+    *   The data structure being encoded
+    */
   def encode(x: A): NonEmptyList[String]
 
+  /**
+    * The encoding for a given data structure when one portion of the diagram is highlighted and the rest is not
+    *
+    * In practice, when `highlighted` is `true`, it is equivalent to the encoding from `encode`. When `highlighted` is
+    * `false`, the rendering is generally dim or gray, allowing the viewer to focus on the highlighted aspect
+    *
+    * @param x
+    *   The data structure being encoded
+    * @param highlighted
+    *   True when this data structure is being highlighted by the renderer; false otherwise
+    */
   def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyList[String]
 }
 
