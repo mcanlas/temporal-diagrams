@@ -15,4 +15,6 @@ Install the plugin [PlantUML Integration](https://plugins.jetbrains.com/plugin/7
 
 ## Elsewhere
 
+- [Mermaid](http://mermaid.js.org/)
+- [PlantUML](https://plantuml.com/)
 - https://crashedmind.github.io/PlantUMLHitchhikersGuide/layout/layout.html
