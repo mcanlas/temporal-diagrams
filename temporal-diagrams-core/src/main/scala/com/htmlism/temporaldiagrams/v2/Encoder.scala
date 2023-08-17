@@ -23,19 +23,6 @@ trait Encoder[D, A] {
     *   The data structure being encoded
     */
   def encode(x: A): NonEmptyList[String]
-
-  /**
-    * The encoding for a given data structure when one portion of the diagram is highlighted and the rest is not
-    *
-    * In practice, when `highlighted` is `true`, it is equivalent to the encoding from `encode`. When `highlighted` is
-    * `false`, the rendering is generally dim or gray, allowing the viewer to focus on the highlighted aspect
-    *
-    * @param x
-    *   The data structure being encoded
-    * @param highlighted
-    *   True when this data structure is being highlighted by the renderer; false otherwise
-    */
-  def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyList[String]
 }
 
 object Encoder {
@@ -50,9 +37,6 @@ object Encoder {
         new Encoder[D, B] {
           def encode(x: B): NonEmptyList[String] =
             fa.encode(f(x))
-
-          def encodeWithHighlights(x: B, highlighted: Boolean): NonEmptyList[String] =
-            fa.encodeWithHighlights(f(x), highlighted)
         }
     }
 }

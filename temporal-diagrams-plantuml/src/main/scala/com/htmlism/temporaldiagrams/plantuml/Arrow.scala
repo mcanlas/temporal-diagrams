@@ -14,12 +14,9 @@ import com.htmlism.temporaldiagrams.v2._
 case class Arrow(source: String, destination: String)
 
 object Arrow {
-  implicit val arrowEncoder: BrightEncoder[PlantUml, Arrow] =
-    new BrightEncoder[PlantUml, Arrow] {
-      def bright(x: Arrow): NonEmptyList[String] =
-        NonEmptyList.of("")
-
-      def dim(x: Arrow): NonEmptyList[String] =
-        NonEmptyList.of("")
+  implicit val arrowEncoder: Encoder[PlantUml, Arrow] =
+    new Encoder[PlantUml, Arrow] {
+      def encode(x: Arrow): NonEmptyList[String] =
+        NonEmptyList.one("")
     }
 }

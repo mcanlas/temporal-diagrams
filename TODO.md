@@ -1,3 +1,4 @@
+- encode heterogeneous payloads
 - highlight framework orthogonal to encoding; not a function of the target language
 - evolution narrative for payloads
 - slideshow narrative (to supplant temporal indexing and support combinators/combinations i.e. "highlight these two", highlight as composible feature flags)

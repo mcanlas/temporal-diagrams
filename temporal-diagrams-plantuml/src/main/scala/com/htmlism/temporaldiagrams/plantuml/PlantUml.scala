@@ -11,9 +11,6 @@ object PlantUml {
     new PlantUmlEncoder[NonEmptyList[A]] {
       def encode(x: NonEmptyList[A]): NonEmptyList[String] =
         x.flatMap(A.encode)
-
-      def encodeWithHighlights(x: NonEmptyList[A], highlighted: Boolean): NonEmptyList[String] =
-        x.flatMap(A.encodeWithHighlights(_, highlighted))
     }
 
   def render[A](x: A)(implicit A: PlantUmlEncoder[A]): NonEmptyList[String] =

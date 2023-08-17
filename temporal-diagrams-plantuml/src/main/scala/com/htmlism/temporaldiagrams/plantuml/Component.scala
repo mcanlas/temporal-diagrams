@@ -25,17 +25,14 @@ object Component {
         .getOrElse(x)
   }
 
-  implicit val componentEncoder: BrightEncoder[PlantUml, Component] =
-    new BrightEncoder[PlantUml, Component] {
-      def bright(x: Component): NonEmptyList[String] = {
+  implicit val componentEncoder: Encoder[PlantUml, Component] =
+    new Encoder[PlantUml, Component] {
+      def encode(x: Component): NonEmptyList[String] = {
         val Component(name, alias) = x
 
         s"component $name"
           .applyWhen(alias)((s, a) => s + s" as $a")
           .pipe(NonEmptyList.one)
       }
-
-      def dim(x: Component): NonEmptyList[String] =
-        NonEmptyList.one("")
     }
 }
