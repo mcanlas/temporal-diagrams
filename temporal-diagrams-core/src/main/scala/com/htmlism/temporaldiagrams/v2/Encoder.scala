@@ -1,5 +1,7 @@
 package com.htmlism.temporaldiagrams.v2
 
+import cats.data.NonEmptyList
+
 /**
   * A type class to encode structures into a diagram language
   *
@@ -10,7 +12,7 @@ package com.htmlism.temporaldiagrams.v2
   */
 
 trait Encoder[A, B] {
-  def encode(x: B): A
+  def encode(x: B): NonEmptyList[String]
 
-  def encodeWithHighlights(x: B, highlighted: Boolean): A
+  def encodeWithHighlights(x: B, highlighted: Boolean): NonEmptyList[String]
 }
