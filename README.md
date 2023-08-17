@@ -1,6 +1,12 @@
 # temporal-diagrams
 Exploring a temporal aspect to diagrams
 
+## Features (v2)
+
+- Supports PlantUML
+- Supports Mermaid
+- Uses `cats` style encoding, derivation, and combinators
+
 ## Viewing PlantUML
 
 ### With Google Chrome
