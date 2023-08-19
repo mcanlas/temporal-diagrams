@@ -25,8 +25,8 @@ object Component {
         .getOrElse(x)
   }
 
-  implicit val componentEncoder: Encoder[PlantUml, Component] =
-    new Encoder[PlantUml, Component] {
+  implicit val componentEncoder: DiagramEncoder[PlantUml, Component] =
+    new DiagramEncoder[PlantUml, Component] {
       def encode(x: Component): NonEmptyList[String] = {
         val Component(name, alias) = x
 

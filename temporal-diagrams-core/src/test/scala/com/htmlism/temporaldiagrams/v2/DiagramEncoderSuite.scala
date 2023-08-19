@@ -4,19 +4,19 @@ import cats.data._
 import cats.syntax.all._
 import weaver._
 
-object EncoderSuite extends FunSuite {
+object DiagramEncoderSuite extends FunSuite {
   trait TestDsl
 
-  private val intEncoder = new Encoder[TestDsl, Int] {
+  private val intEncoder = new DiagramEncoder[TestDsl, Int] {
     def encode(x: Int): NonEmptyList[String] =
       NonEmptyList.one(x.toString)
   }
 
-  test("An encoder can encode, without highlights") {
+  test("A diagram encoder can encode") {
     expect.eql(NonEmptyList.one("123"), intEncoder.encode(123))
   }
 
-  test("An encoder is contravariant") {
+  test("A diagram encoder is contravariant") {
     val stringEncoder =
       intEncoder.contramap((s: String) => s.length)
 

@@ -12,12 +12,10 @@ import cats.data.NonEmptyList
   *   The data structure being encoded
   */
 
-trait Encoder[D, A] {
+trait DiagramEncoder[D, A] {
 
   /**
     * The default encoding for a given data structure
-    *
-    * In practice, it is usually equivalent to the encoding for `encodeWithHighlights` when `highlighted` is `true`
     *
     * @param x
     *   The data structure being encoded
@@ -25,16 +23,16 @@ trait Encoder[D, A] {
   def encode(x: A): NonEmptyList[String]
 }
 
-object Encoder {
+object DiagramEncoder {
 
   /**
     * @tparam D
     *   The target diagram language to encode to
     */
-  implicit def encoderContravariant[D]: Contravariant[Encoder[D, *]] =
-    new Contravariant[Encoder[D, *]] {
-      def contramap[A, B](fa: Encoder[D, A])(f: B => A): Encoder[D, B] =
-        new Encoder[D, B] {
+  implicit def encoderContravariant[D]: Contravariant[DiagramEncoder[D, *]] =
+    new Contravariant[DiagramEncoder[D, *]] {
+      def contramap[A, B](fa: DiagramEncoder[D, A])(f: B => A): DiagramEncoder[D, B] =
+        new DiagramEncoder[D, B] {
           def encode(x: B): NonEmptyList[String] =
             fa.encode(f(x))
         }
