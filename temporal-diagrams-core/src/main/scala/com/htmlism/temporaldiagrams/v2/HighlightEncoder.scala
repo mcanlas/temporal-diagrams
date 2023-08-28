@@ -1,6 +1,36 @@
 package com.htmlism.temporaldiagrams.v2
 
-trait HighlightEncoder {}
+/**
+  * @tparam A
+  *   The input data type being encoded
+  * @tparam D
+  *   The target diagram language being encoded to
+  */
+trait HighlightEncoder[A, D] {
+
+  /**
+    * The default encoding for a given data structure
+    *
+    * In practice, it is usually equivalent to the encoding for `encodeWithHighlights` when `highlighted` is `true`
+    *
+    * @param x
+    *   The data structure being encoded
+    */
+  def encode(x: A): D
+
+  /**
+    * The encoding for a given data structure when one portion of the diagram is highlighted and the rest is not
+    *
+    * In practice, when `highlighted` is `true`, it is equivalent to the encoding from `encode`. When `highlighted` is
+    * `false`, the rendering is generally dim or gray, allowing the viewer to focus on the highlighted aspect
+    *
+    * @param x
+    *   The data structure being encoded
+    * @param highlighted
+    *   True when this data structure is being highlighted by the renderer; false otherwise
+    */
+  def encodeWithHighlights(x: A, highlighted: Boolean): D
+}
 
 // can this encoder be a kleisli?
 object HighlightEncoder
