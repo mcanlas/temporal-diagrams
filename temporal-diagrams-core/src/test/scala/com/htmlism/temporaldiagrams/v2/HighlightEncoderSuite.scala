@@ -17,7 +17,15 @@ object HighlightEncoderSuite extends FunSuite {
     expect.eql("abc", strEncoder.encode(TestDomainDsl("abc")))
   }
 
-  // TODO encode with highlights
+  test("A diagram encoder can encode with highlights") {
+    expect.eql(
+      "abctrue",
+      strEncoder.encodeWithHighlights(
+        TestDomainDsl("abc"),
+        highlighted = true
+      )
+    )
+  }
 
   // TODO contramap
 }
