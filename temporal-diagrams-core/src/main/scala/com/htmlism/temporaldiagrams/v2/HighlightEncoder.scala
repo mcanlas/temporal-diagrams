@@ -1,12 +1,14 @@
 package com.htmlism.temporaldiagrams.v2
 
+import cats.Contravariant
+
 /**
-  * @tparam A
-  *   The input data type being encoded
   * @tparam D
   *   The target diagram language being encoded to
+  * @tparam A
+  *   The input data type being encoded
   */
-trait HighlightEncoder[A, D] {
+trait HighlightEncoder[D, A] {
 
   /**
     * The default encoding for a given data structure
@@ -33,4 +35,21 @@ trait HighlightEncoder[A, D] {
 }
 
 // can this encoder be a kleisli?
-object HighlightEncoder
+object HighlightEncoder {
+
+  /**
+    * @tparam D
+    *   The target diagram language to encode to
+    */
+  implicit def encoderContravariant[D]: Contravariant[HighlightEncoder[D, *]] =
+    new Contravariant[HighlightEncoder[D, *]] {
+      def contramap[A, B](fa: HighlightEncoder[D, A])(f: B => A): HighlightEncoder[D, B] =
+        new HighlightEncoder[D, B] {
+          def encode(x: B): D =
+            fa.encode(f(x))
+
+          def encodeWithHighlights(x: B, highlighted: Boolean): D =
+            fa.encodeWithHighlights(f(x), highlighted)
+        }
+    }
+}
