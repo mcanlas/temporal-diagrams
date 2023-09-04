@@ -31,7 +31,7 @@ object PublishPlugin extends AutoPlugin {
   object ThingsToAutoImport {
 
     implicit class PublishOps(p: Project) {
-      def disablePublshing: Project =
+      def disablePublishing: Project =
         p
           .settings(publish / skip := true)
     }

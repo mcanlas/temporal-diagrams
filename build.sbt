@@ -3,7 +3,7 @@ lazy val root =
     .withCats
     .withTesting
     .aggregate(core, demo, server, plantUml, mermaid)
-    .disablePublshing
+    .disablePublishing
 
 lazy val core =
   module("core")
@@ -21,7 +21,7 @@ lazy val demo =
   module("demo")
     .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.1")
     .dependsOn(core)
-    .disablePublshing
+    .disablePublishing
 
 lazy val plantUml =
   module("plantuml")
