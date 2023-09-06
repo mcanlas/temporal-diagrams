@@ -9,8 +9,9 @@ trait PlantUml
 object PlantUml {
   implicit def nelEncoder[A](implicit A: PlantUmlEncoder[A]): PlantUmlEncoder[NonEmptyList[A]] =
     new PlantUmlEncoder[NonEmptyList[A]] {
-      def encode(x: NonEmptyList[A]): NonEmptyList[String] =
-        x.flatMap(A.encode)
+      def encode(xs: NonEmptyList[A]): NonEmptyList[String] =
+        A.encode(xs.head)
+          .appendList(xs.tail.flatMap(x => "" :: A.encode(x).toList))
     }
 
   def render[A](x: A)(implicit A: PlantUmlEncoder[A]): NonEmptyList[String] =
@@ -18,6 +19,8 @@ object PlantUml {
 
   private def asDocument(xs: NonEmptyList[String]) =
     xs
+      .prepend("")
       .prepend("@startuml")
+      .append("")
       .append("@enduml")
 }

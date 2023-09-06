@@ -6,7 +6,7 @@ import weaver._
 object PlantUmlSuite extends FunSuite {
   test("PlantUML can render one component") {
     expect.eql(
-      NonEmptyList.of("@startuml", "component asdf", "@enduml"),
+      NonEmptyList.of("@startuml", "", "component asdf", "", "@enduml"),
       PlantUml.render(Component("asdf", None))
     )
   }
@@ -20,7 +20,7 @@ object PlantUmlSuite extends FunSuite {
         )
 
     expect.eql(
-      NonEmptyList.of("@startuml", "component foo", "component bar", "@enduml"),
+      NonEmptyList.of("@startuml", "", "component foo", "", "component bar", "", "@enduml"),
       PlantUml.render(xs)
     )
   }
