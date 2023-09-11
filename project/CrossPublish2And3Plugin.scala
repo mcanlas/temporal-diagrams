@@ -12,6 +12,6 @@ object CrossPublish2And3Plugin extends AutoPlugin {
   override def trigger: PluginTrigger = AllRequirements
 
   override val buildSettings: Seq[Setting[_]] = Seq(
-    crossScalaVersions := Seq("2.13.11", "3.3.0")
+    crossScalaVersions := Seq("2.13.12", "3.3.0")
   )
 }
