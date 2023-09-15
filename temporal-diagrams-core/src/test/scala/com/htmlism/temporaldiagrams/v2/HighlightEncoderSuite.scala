@@ -4,34 +4,27 @@ import cats.syntax.all._
 import weaver._
 
 object HighlightEncoderSuite extends FunSuite {
-  case class TestDomainObject(s: String)
-
-  private val strEncoder = new HighlightEncoder[String, TestDomainObject] {
-    def encode(x: TestDomainObject): String =
-      x.s
-
-    def encodeWithHighlights(x: TestDomainObject, highlighted: Boolean): String =
-      x.s + highlighted.toString
-  }
-
   test("A diagram encoder can encode") {
-    expect.eql("abc", strEncoder.encode(TestDomainObject("abc")))
+    expect.eql("amazon ec2: abc", Amazon.Ec2.ec2Encoder.encode(Amazon.Ec2("abc")))
   }
 
   test("A diagram encoder can encode with highlights") {
     expect.eql(
-      "abctrue",
-      strEncoder.encodeWithHighlights(
-        TestDomainObject("abc"),
-        highlighted = true
-      )
+      "amazon ec2: abc true",
+      Amazon
+        .Ec2
+        .ec2Encoder
+        .encodeWithHighlights(
+          Amazon.Ec2("abc"),
+          highlighted = true
+        )
     )
   }
 
   test("A diagram encoder is contravariant") {
     val repeatEncoder =
-      strEncoder.contramap((s: String) => TestDomainObject(s + s))
+      Amazon.Ec2.ec2Encoder.contramap((s: String) => Amazon.Ec2(s"$s $s"))
 
-    expect.eql("appleapple", repeatEncoder.encode("apple"))
+    expect.eql("amazon ec2: twin twin", repeatEncoder.encode("twin"))
   }
 }
