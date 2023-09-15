@@ -18,9 +18,7 @@ object PlantUml {
     A.encode(x).pipe(asDocument)
 
   private def asDocument(xs: NonEmptyList[String]) =
-    xs
-      .prepend("")
-      .prepend("@startuml")
-      .append("")
-      .append("@enduml")
+    NonEmptyList.of("@startuml", "") :::
+      xs :::
+      NonEmptyList.of("", "@enduml")
 }
