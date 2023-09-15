@@ -5,21 +5,20 @@ import cats.syntax.all._
 import weaver._
 
 object DiagramEncoderSuite extends FunSuite {
-  trait TestDsl
-
-  private val intEncoder = new DiagramEncoder[TestDsl, Int] {
-    def encode(x: Int): NonEmptyList[String] =
-      NonEmptyList.one(x.toString)
-  }
-
   test("A diagram encoder can encode") {
-    expect.eql(NonEmptyList.one("123"), intEncoder.encode(123))
+    expect.eql(
+      NonEmptyList.one("component(abc)"),
+      ToyDiagramLanguage.Component.componentEncoder.encode(ToyDiagramLanguage.Component("abc"))
+    )
   }
 
   test("A diagram encoder is contravariant") {
     val stringEncoder =
-      intEncoder.contramap((s: String) => s.length)
+      ToyDiagramLanguage
+        .Component
+        .componentEncoder
+        .contramap((s: String) => ToyDiagramLanguage.Component(s"stringy $s"))
 
-    expect.eql(NonEmptyList.one("5"), stringEncoder.encode("apple"))
+    expect.eql(NonEmptyList.one("component(stringy abc)"), stringEncoder.encode("abc"))
   }
 }
