@@ -11,7 +11,16 @@ import cats.data.NonEmptyList
   *   The target diagram language
   */
 sealed trait Renderable[D] {
+
+  /**
+    * Renders this object into target language `D`
+    */
   def render: D
+
+  /**
+    * Returns a list of tags associated with this renderable object
+    */
+  def tags: List[String]
 }
 
 case class RenderableA[D, A](x: A, tags: List[String])(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
