@@ -4,15 +4,17 @@ import scala.util.chaining._
 
 import cats.data._
 
+import com.htmlism.temporaldiagrams.v2.DiagramEncoder
+
 sealed trait PlantUml
 
 object PlantUml {
-  implicit def nelEncoder[A](implicit A: PlantUmlEncoder[A]): PlantUmlEncoder[NonEmptyList[A]] =
+  implicit def nelEncoder[A](implicit A: DiagramEncoder[A]): DiagramEncoder[NonEmptyList[A]] =
     (xs: NonEmptyList[A]) =>
       A.encode(xs.head)
         .appendList(xs.tail.flatMap(x => "" :: A.encode(x).toList))
 
-  implicit val plantUmlEncoder: PlantUmlEncoder[PlantUml] = {
+  implicit val DiagramEncoder: DiagramEncoder[PlantUml] = {
     case Component(name, alias) =>
       s"component $name"
         .applyWhen(alias)((s, a) => s + s" as $a")
@@ -22,7 +24,7 @@ object PlantUml {
       NonEmptyList.one(s"$src --> $dest")
   }
 
-  def render[A](x: A)(implicit A: PlantUmlEncoder[A]): NonEmptyList[String] =
+  def render[A](x: A)(implicit A: DiagramEncoder[A]): NonEmptyList[String] =
     A.encode(x).pipe(asDocument)
 
   /**

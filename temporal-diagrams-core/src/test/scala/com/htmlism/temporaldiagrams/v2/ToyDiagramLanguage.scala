@@ -10,7 +10,7 @@ object ToyDiagramLanguage {
 
   case class Arrow(s: String) extends ToyDiagramLanguage
 
-  implicit val toyEncoder: DiagramEncoder[ToyDiagramLanguage, ToyDiagramLanguage] =
+  implicit val toyEncoder: DiagramEncoder[ToyDiagramLanguage] =
     (x: ToyDiagramLanguage) => {
       val str =
         x match {
