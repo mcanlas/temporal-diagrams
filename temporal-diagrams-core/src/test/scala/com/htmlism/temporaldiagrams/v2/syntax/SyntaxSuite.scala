@@ -6,7 +6,7 @@ import weaver._
 object SyntaxSuite extends FunSuite {
   test("Domain objects from unrelated hierarchies can be bound together, implicitly") {
     val _ =
-      Renderable[ToyDiagramLanguage.Component](
+      Renderable[ToyDiagramLanguage](
         Amazon.Ec2(""),
         Google.Compute("")
       )

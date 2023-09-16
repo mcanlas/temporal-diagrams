@@ -6,12 +6,12 @@ object Amazon {
   case class Ec2(s: String)
 
   object Ec2 {
-    implicit val ec2Encoder: HighlightEncoder[Component, Ec2] =
-      new HighlightEncoder[Component, Ec2] {
-        def encode(x: Ec2): Component =
+    implicit val ec2Encoder: HighlightEncoder[ToyDiagramLanguage, Ec2] =
+      new HighlightEncoder[ToyDiagramLanguage, Ec2] {
+        def encode(x: Ec2): ToyDiagramLanguage =
           Component(s"amazon ec2: ${x.s}")
 
-        def encodeWithHighlights(x: Ec2, highlighted: Boolean): Component =
+        def encodeWithHighlights(x: Ec2, highlighted: Boolean): ToyDiagramLanguage =
           Component(s"amazon ec2: ${x.s} ${highlighted.toString}")
       }
   }

@@ -3,16 +3,26 @@ package com.htmlism.temporaldiagrams.v2
 import cats.Eq
 import cats.data.NonEmptyList
 
-trait ToyDiagramLanguage
+sealed trait ToyDiagramLanguage
 
 object ToyDiagramLanguage {
-  case class Component(s: String)
+  case class Component(s: String) extends ToyDiagramLanguage
 
-  object Component {
-    implicit val componentEncoder: DiagramEncoder[ToyDiagramLanguage, Component] =
-      (x: Component) => NonEmptyList.one(s"component(${x.s})")
+  case class Arrow(s: String) extends ToyDiagramLanguage
 
-    implicit val componentEq: Eq[Component] =
-      Eq.fromUniversalEquals
-  }
+  implicit val toyEncoder: DiagramEncoder[ToyDiagramLanguage, ToyDiagramLanguage] =
+    (x: ToyDiagramLanguage) => {
+      val str =
+        x match {
+          case Component(s) =>
+            s"component($s)"
+          case Arrow(s) =>
+            s"arrow($s)"
+        }
+
+      NonEmptyList.one(str)
+    }
+
+  implicit val toyEq: Eq[ToyDiagramLanguage] =
+    Eq.fromUniversalEquals
 }
