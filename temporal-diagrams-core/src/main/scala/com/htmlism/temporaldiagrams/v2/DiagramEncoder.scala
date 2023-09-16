@@ -4,7 +4,7 @@ import cats.Contravariant
 import cats.data.NonEmptyList
 
 /**
-  * A type class to encode structures into a diagram language
+  * A type class to encode structures into a diagram language as strings
   *
   * @tparam D
   *   The target diagram language to encode to
