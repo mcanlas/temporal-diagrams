@@ -14,7 +14,7 @@ sealed trait Renderable[D] {
   def render: D
 }
 
-case class RenderableA[D, A](x: A)(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
+case class RenderableA[D, A](x: A, tags: List[String])(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
   def render: D =
     enc.encode(x)
 }

@@ -19,6 +19,6 @@ package object syntax {
       *   The target diagram language
       */
     def r[D](implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-      RenderableA(x)
+      RenderableA(x, Nil)
   }
 }
