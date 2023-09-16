@@ -16,12 +16,12 @@ object Renderable {
   def apply[D](x: Renderable[D], xs: Renderable[D]*): Renderable.Many[D] =
     Many(NonEmptyList(x, xs.toList))
 
-  def render[D: Semigroup](x: Renderable[D]): D =
+  def renderMany[D: Semigroup](x: Renderable[D]): D =
     x match {
       case one @ One(_) =>
         one.render
 
       case Many(xs) =>
-        xs.map(render(_)).reduce
+        xs.map(renderMany(_)).reduce
     }
 }

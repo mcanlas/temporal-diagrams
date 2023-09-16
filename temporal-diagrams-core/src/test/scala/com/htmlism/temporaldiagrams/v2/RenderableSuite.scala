@@ -18,7 +18,7 @@ object RenderableSuite extends FunSuite {
         ToyDiagramLanguage.Component("amazon ec2: "),
         ToyDiagramLanguage.Component("google compute: ")
       ),
-      Renderable.render(explicitRs)
+      Renderable.renderMany(explicitRs)
     )
   }
 }
