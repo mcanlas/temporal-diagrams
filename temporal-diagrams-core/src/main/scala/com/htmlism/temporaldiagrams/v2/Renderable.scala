@@ -3,25 +3,25 @@ package com.htmlism.temporaldiagrams.v2
 import cats.Semigroup
 import cats.data.NonEmptyList
 
-sealed trait Renderable[D]
+/**
+  * A trait to make the hiding of the domain type easier, for cases where two different domains are participating in the
+  * same diagram
+  *
+  * @tparam D
+  *   The target diagram language
+  */
+sealed trait Renderable[D] {
+  def render: D
+}
+
+case class RenderableA[D, A](x: A)(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
+  def render: D =
+    enc.encode(x)
+}
 
 object Renderable {
-  case class One[D, A](x: A)(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
-    def render: D =
-      enc.encode(x)
-  }
-
-  case class Many[D](xs: NonEmptyList[Renderable[D]]) extends Renderable[D]
-
-  def apply[D](x: Renderable[D], xs: Renderable[D]*): Renderable.Many[D] =
-    Many(NonEmptyList(x, xs.toList))
-
-  def renderMany[D: Semigroup](x: Renderable[D]): D =
-    x match {
-      case one @ One(_) =>
-        one.render
-
-      case Many(xs) =>
-        xs.map(renderMany(_)).reduce
-    }
+  def renderMany[D: Semigroup](xs: NonEmptyList[Renderable[D]]): D =
+    xs
+      .map(_.render)
+      .reduce
 }

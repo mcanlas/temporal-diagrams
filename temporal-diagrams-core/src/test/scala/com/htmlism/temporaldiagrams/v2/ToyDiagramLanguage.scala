@@ -25,4 +25,15 @@ object ToyDiagramLanguage {
 
   implicit val toyEq: Eq[ToyDiagramLanguage] =
     Eq.fromUniversalEquals
+
+  implicit def nelHighlightEncoder[A](implicit
+      enc: HighlightEncoder[ToyDiagramLanguage, A]
+  ): HighlightEncoder[NonEmptyList[ToyDiagramLanguage], A] =
+    new HighlightEncoder[NonEmptyList[ToyDiagramLanguage], A] {
+      def encode(x: A): NonEmptyList[ToyDiagramLanguage] =
+        NonEmptyList.one(enc.encode(x))
+
+      def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyList[ToyDiagramLanguage] =
+        NonEmptyList.one(enc.encodeWithHighlights(x, highlighted))
+    }
 }

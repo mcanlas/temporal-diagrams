@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams.v2
 
 package object syntax {
-  implicit def bindHighlightEncoder[D, A](x: A)(implicit enc: HighlightEncoder[D, A]): Renderable.One[D, A] =
-    Renderable.One(x)
+  implicit class RenderableOps[D, A](x: A) {
+    def r(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
+      RenderableA(x)
+  }
 }

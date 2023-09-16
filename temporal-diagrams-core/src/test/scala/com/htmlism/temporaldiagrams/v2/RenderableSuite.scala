@@ -4,17 +4,17 @@ import cats.data.NonEmptyList
 import weaver.FunSuite
 
 object RenderableSuite extends FunSuite {
-  val explicitRs: Renderable[NonEmptyList[ToyDiagramLanguage]] =
-    Renderable[NonEmptyList[ToyDiagramLanguage]](
-      Renderable.One(Amazon.Ec2("")),
-      Renderable.One(Google.Compute(""))
+  val explicitRs: NonEmptyList[Renderable[NonEmptyList[ToyDiagramLanguage]]] =
+    NonEmptyList.of[Renderable[NonEmptyList[ToyDiagramLanguage]]](
+      RenderableA[NonEmptyList[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2("")),
+      RenderableA[NonEmptyList[ToyDiagramLanguage], Google.Compute](Google.Compute(""))
     )
 
   test(
     "Domain objects from unrelated hierarchies can be bound together, and can render to their shared target language"
   ) {
     expect.eql(
-      NonEmptyList.of(
+      NonEmptyList.of[ToyDiagramLanguage](
         ToyDiagramLanguage.Component("amazon ec2: "),
         ToyDiagramLanguage.Component("google compute: ")
       ),
