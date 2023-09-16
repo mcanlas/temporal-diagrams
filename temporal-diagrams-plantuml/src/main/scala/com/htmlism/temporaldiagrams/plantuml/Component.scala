@@ -26,13 +26,11 @@ object Component {
   }
 
   implicit val componentEncoder: DiagramEncoder[PlantUml, Component] =
-    new DiagramEncoder[PlantUml, Component] {
-      def encode(x: Component): NonEmptyList[String] = {
-        val Component(name, alias) = x
+    (x: Component) => {
+      val Component(name, alias) = x
 
-        s"component $name"
-          .applyWhen(alias)((s, a) => s + s" as $a")
-          .pipe(NonEmptyList.one)
-      }
+      s"component $name"
+        .applyWhen(alias)((s, a) => s + s" as $a")
+        .pipe(NonEmptyList.one)
     }
 }
