@@ -20,7 +20,7 @@ lazy val server =
 lazy val demo =
   module("demo")
     .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.1")
-    .dependsOn(core)
+    .dependsOn(core, plantUml)
     .disablePublishing
 
 lazy val plantUml =

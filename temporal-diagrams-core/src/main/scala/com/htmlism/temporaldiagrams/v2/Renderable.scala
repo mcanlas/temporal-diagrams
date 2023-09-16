@@ -33,4 +33,5 @@ object Renderable {
     xs
       .map(_.render)
       .reduce
+
 }

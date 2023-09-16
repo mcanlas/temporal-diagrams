@@ -4,7 +4,7 @@ import scala.util.chaining._
 
 import cats.data._
 
-import com.htmlism.temporaldiagrams.v2.DiagramEncoder
+import com.htmlism.temporaldiagrams.v2._
 
 sealed trait PlantUml
 
@@ -13,6 +13,17 @@ object PlantUml {
     (xs: NonEmptyList[A]) =>
       A.encode(xs.head)
         .appendList(xs.tail.flatMap(x => "" :: A.encode(x).toList))
+
+  implicit def nelHighlightEncoder[A](implicit
+      enc: HighlightEncoder[PlantUml, A]
+  ): HighlightEncoder[NonEmptyList[PlantUml], A] =
+    new HighlightEncoder[NonEmptyList[PlantUml], A] {
+      def encode(x: A): NonEmptyList[PlantUml] =
+        NonEmptyList.one(enc.encode(x))
+
+      def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyList[PlantUml] =
+        NonEmptyList.one(enc.encodeWithHighlights(x, highlighted))
+    }
 
   implicit val DiagramEncoder: DiagramEncoder[PlantUml] = {
     case Component(name, alias) =>
