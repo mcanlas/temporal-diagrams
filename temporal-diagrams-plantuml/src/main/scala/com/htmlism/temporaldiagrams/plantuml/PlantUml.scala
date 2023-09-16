@@ -4,18 +4,46 @@ import scala.util.chaining._
 
 import cats.data._
 
-trait PlantUml
+sealed trait PlantUml
 
 object PlantUml {
   implicit def nelEncoder[A](implicit A: PlantUmlEncoder[A]): PlantUmlEncoder[NonEmptyList[A]] =
-    new PlantUmlEncoder[NonEmptyList[A]] {
-      def encode(xs: NonEmptyList[A]): NonEmptyList[String] =
-        A.encode(xs.head)
-          .appendList(xs.tail.flatMap(x => "" :: A.encode(x).toList))
-    }
+    (xs: NonEmptyList[A]) =>
+      A.encode(xs.head)
+        .appendList(xs.tail.flatMap(x => "" :: A.encode(x).toList))
+
+  implicit val plantUmlEncoder: PlantUmlEncoder[PlantUml] = {
+    case Component(name, alias) =>
+      s"component $name"
+        .applyWhen(alias)((s, a) => s + s" as $a")
+        .pipe(NonEmptyList.one)
+
+    case Arrow(src, dest) =>
+      NonEmptyList.one(s"$src --> $dest")
+  }
 
   def render[A](x: A)(implicit A: PlantUmlEncoder[A]): NonEmptyList[String] =
     A.encode(x).pipe(asDocument)
+
+  /**
+    * A building block in component diagrams
+    *
+    * @param name
+    *   This text is visible in the diagram
+    * @param alias
+    *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
+    *   value of `name`
+    */
+  case class Component(name: String, alias: Option[String]) extends PlantUml
+
+  /**
+    * A directed line from the source to the destination
+    *
+    * In terms of "gravity", the source is always first. In top-down diagrams, the source is on the top and the
+    * destination is on the bottom. In left-to-right diagrams, the source is on the left and the destination is on the
+    * right.
+    */
+  case class Arrow(source: String, destination: String) extends PlantUml
 
   private def asDocument(xs: NonEmptyList[String]) =
     NonEmptyList.of("@startuml", "") :::
