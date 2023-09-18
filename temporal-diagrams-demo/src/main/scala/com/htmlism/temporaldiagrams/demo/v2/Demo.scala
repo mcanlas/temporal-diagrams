@@ -5,7 +5,6 @@ import cats.data.Kleisli
 import cats.data.NonEmptyList
 import cats.effect._
 import cats.effect.std.Console
-import cats.syntax.all._
 
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
@@ -25,7 +24,7 @@ object Demo extends Demo[IO] with IOApp.Simple {
   case class ConfigBasket(isNew: Boolean, barStyle: BarAppearance)
 }
 
-class Demo[F[_]: Sync](implicit out: Console[F]) {
+class Demo[F[_]](implicit out: Console[F]) {
   private val toProducer =
     Kleisli.fromFunction[Id, Boolean] { asNew =>
       if (asNew)
@@ -53,8 +52,9 @@ class Demo[F[_]: Sync](implicit out: Console[F]) {
         toConsumer.local[Demo.ConfigBasket](_.barStyle)
       )
       .traverse(_.run)
-      .andThen(Renderable.renderMany)
-      .andThen(PlantUml.render)
+      .andThen(xs => xs.map(x => x: Renderable[NonEmptyList[PlantUml]]))
+      .andThen(xs => Renderable.renderMany[NonEmptyList[PlantUml]](xs))
+      .andThen(PlantUml.render[NonEmptyList[PlantUml]])
 
   def run: F[Unit] =
     out.println(renderBig(Demo.ConfigBasket(isNew = false, Demo.BarAppearance.AsHydra)))
