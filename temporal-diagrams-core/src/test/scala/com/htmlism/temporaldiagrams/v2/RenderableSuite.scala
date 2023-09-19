@@ -6,8 +6,8 @@ import weaver.FunSuite
 object RenderableSuite extends FunSuite {
   val explicitRs: NonEmptyList[Renderable[NonEmptyList[ToyDiagramLanguage]]] =
     NonEmptyList.of[Renderable[NonEmptyList[ToyDiagramLanguage]]](
-      RenderableA[NonEmptyList[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), Nil),
-      RenderableA[NonEmptyList[ToyDiagramLanguage], Google.Compute](Google.Compute(""), Nil)
+      Renderable.Of[NonEmptyList[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), Nil),
+      Renderable.Of[NonEmptyList[ToyDiagramLanguage], Google.Compute](Google.Compute(""), Nil)
     )
 
   test(

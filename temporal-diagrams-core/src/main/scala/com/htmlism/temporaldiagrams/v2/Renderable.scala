@@ -32,15 +32,15 @@ sealed trait Renderable[D] {
   def tags: List[String]
 }
 
-case class RenderableA[D, A](x: A, tags: List[String])(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
-  def render: D =
-    enc.encode(x)
-
-  def renderWithHighlight(tag: String): D =
-    enc.encodeWithHighlights(x, tags.contains(tag))
-}
-
 object Renderable {
+  case class Of[D, A](x: A, tags: List[String])(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
+    def render: D =
+      enc.encode(x)
+
+    def renderWithHighlight(tag: String): D =
+      enc.encodeWithHighlights(x, tags.contains(tag))
+  }
+
   def renderMany[D: Semigroup](xs: NonEmptyList[Renderable[D]]): D =
     xs
       .map(_.render)

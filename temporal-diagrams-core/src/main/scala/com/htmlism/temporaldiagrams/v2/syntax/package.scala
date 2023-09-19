@@ -19,7 +19,7 @@ package object syntax {
       *   The target diagram language
       */
     def r[D](implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-      RenderableA(x, Nil)
+      Renderable.Of(x, Nil)
 
     /**
       * Marks an expression as renderable to `D`, with the specified tags
@@ -33,9 +33,9 @@ package object syntax {
       */
 
     def tag[D](t: String, ts: String*)(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-      RenderableA(x, t :: ts.toList)
+      Renderable.Of(x, t :: ts.toList)
   }
 
   implicit def liftToRenderable[A, D](x: A)(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-    RenderableA(x, Nil)
+    Renderable.Of(x, Nil)
 }
