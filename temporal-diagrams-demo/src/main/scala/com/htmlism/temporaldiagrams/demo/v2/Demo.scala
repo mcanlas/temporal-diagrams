@@ -37,13 +37,13 @@ class Demo[F[_]: Applicative](implicit out: Console[F]) {
   private val toConsumer =
     Kleisli.fromFunction[Id, Demo.BarAppearance][Renderable[NonEmptyList[PlantUml]]] {
       case Demo.BarAppearance.AsService =>
-        DemoDsl.Service("bar", None)
+        DemoDsl.Service("bar", None).tag("bar")
 
       case Demo.BarAppearance.AsHydra =>
-        DemoDsl.Service("bar", None)
+        DemoDsl.Hydra("bar", None).tag("bar")
 
       case Demo.BarAppearance.WithBuffer =>
-        DemoDsl.Service("bar", None)
+        DemoDsl.Buffered("bar", None)
     }
 
   val renderBig =
