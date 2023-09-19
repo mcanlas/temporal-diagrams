@@ -25,4 +25,14 @@ object SyntaxSuite extends FunSuite {
     expect.eql(List("hello"), tagged.head.tags) &&
     expect.eql(Nil, tagged.toList(1).tags)
   }
+
+  test("Domain objects can be lifted implicitly") {
+    val implicitRs =
+      NonEmptyList.of[Renderable[NonEmptyList[ToyDiagramLanguage]]](
+        Amazon.Ec2(""),
+        Google.Compute("")
+      )
+
+    expect.same(RenderableSuite.explicitRs, implicitRs)
+  }
 }

@@ -35,4 +35,7 @@ package object syntax {
     def tag[D](t: String, ts: String*)(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
       RenderableA(x, t :: ts.toList)
   }
+
+  implicit def liftToRenderable[A, D](x: A)(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
+    RenderableA(x, Nil)
 }
