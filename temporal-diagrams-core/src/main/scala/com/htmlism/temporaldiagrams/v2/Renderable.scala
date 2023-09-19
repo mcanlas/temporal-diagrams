@@ -1,5 +1,8 @@
 package com.htmlism.temporaldiagrams.v2
 
+import scala.collection.immutable.ListSet
+import scala.util.chaining._
+
 import cats.Semigroup
 import cats.data.NonEmptyList
 
@@ -29,11 +32,11 @@ sealed trait Renderable[D] {
   /**
     * Returns a list of tags associated with this renderable object
     */
-  def tags: List[String]
+  def tags: ListSet[String]
 }
 
 object Renderable {
-  case class Of[D, A](x: A, tags: List[String])(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
+  case class Of[D, A](x: A, tags: ListSet[String])(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
     def render: D =
       enc.encode(x)
 
@@ -51,9 +54,9 @@ object Renderable {
       .map(_.renderWithHighlight(tag))
       .reduce
 
-  def allTags(xs: NonEmptyList[Renderable[_]]): List[String] =
+  def allTags(xs: NonEmptyList[Renderable[_]]): ListSet[String] =
     xs
-      .toList
+      .iterator
       .flatMap(_.tags)
-      .distinct
+      .pipe(ListSet.from)
 }

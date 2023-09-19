@@ -1,5 +1,7 @@
 package com.htmlism.temporaldiagrams.v2
 
+import scala.collection.immutable.ListSet
+
 package object syntax {
 
   /**
@@ -19,7 +21,7 @@ package object syntax {
       *   The target diagram language
       */
     def r[D](implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-      Renderable.Of(x, Nil)
+      Renderable.Of(x, ListSet.empty)
 
     /**
       * Marks an expression as renderable to `D`, with the specified tags
@@ -28,12 +30,10 @@ package object syntax {
       *   A required tag
       * @param ts
       *   Optional, additional tags
-      * @tparam D
-      *   The target diagram language
       */
 
-    def tag[D](t: String, ts: String*)(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-      Renderable.Of(x, t :: ts.toList)
+    def tag(t: String, ts: String*): Tagged[A] =
+      Tagged(x, ListSet.from(t +: ts))
   }
 
   /**
@@ -51,5 +51,8 @@ package object syntax {
     *   Target diagram language
     */
   implicit def liftToRenderable[A, D](x: A)(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-    Renderable.Of(x, Nil)
+    Renderable.Of(x, ListSet.empty)
+
+  implicit def liftTaggedToRenderable[A, D](xt: Tagged[A])(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
+    Renderable.Of(xt.x, xt.tags)
 }

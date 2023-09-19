@@ -8,7 +8,7 @@ import cats.Contravariant
   * @tparam A
   *   The input data type being encoded
   */
-trait HighlightEncoder[D, A] {
+trait HighlightEncoder[D, -A] {
 
   /**
     * The default encoding for a given data structure

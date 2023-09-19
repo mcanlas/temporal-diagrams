@@ -1,13 +1,15 @@
 package com.htmlism.temporaldiagrams.v2
 
+import scala.collection.immutable.ListSet
+
 import cats.data.NonEmptyList
 import weaver.FunSuite
 
 object RenderableSuite extends FunSuite {
   val explicitRs: NonEmptyList[Renderable[NonEmptyList[ToyDiagramLanguage]]] =
     NonEmptyList.of[Renderable[NonEmptyList[ToyDiagramLanguage]]](
-      Renderable.Of[NonEmptyList[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), Nil),
-      Renderable.Of[NonEmptyList[ToyDiagramLanguage], Google.Compute](Google.Compute(""), Nil)
+      Renderable.Of[NonEmptyList[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), ListSet.empty),
+      Renderable.Of[NonEmptyList[ToyDiagramLanguage], Google.Compute](Google.Compute(""), ListSet.empty)
     )
 
   test(

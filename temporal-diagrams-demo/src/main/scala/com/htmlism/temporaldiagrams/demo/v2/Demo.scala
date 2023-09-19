@@ -27,23 +27,23 @@ object Demo extends Demo[IO] with IOApp.Simple {
 
 class Demo[F[_]: Applicative](implicit out: Console[F]) {
   private val toProducer =
-    Kleisli.fromFunction[Id, Boolean] { asNew =>
+    Kleisli.fromFunction[Id, Boolean][Renderable[NonEmptyList[PlantUml]]] { asNew =>
       if (asNew)
-        (DemoDsl.Service("new_foo", None): DemoDsl).r[NonEmptyList[PlantUml]]
+        DemoDsl.Service("new_foo", None)
       else
-        (DemoDsl.Service("foo", None): DemoDsl).tag[NonEmptyList[PlantUml]]("foo")
+        DemoDsl.Service("foo", None).tag("foo")
     }
 
   private val toConsumer =
-    Kleisli.fromFunction[Id, Demo.BarAppearance] {
+    Kleisli.fromFunction[Id, Demo.BarAppearance][Renderable[NonEmptyList[PlantUml]]] {
       case Demo.BarAppearance.AsService =>
-        (DemoDsl.Service("bar", None): DemoDsl).r[NonEmptyList[PlantUml]]
+        DemoDsl.Service("bar", None)
 
       case Demo.BarAppearance.AsHydra =>
-        (DemoDsl.Service("bar", None): DemoDsl).r[NonEmptyList[PlantUml]]
+        DemoDsl.Service("bar", None)
 
       case Demo.BarAppearance.WithBuffer =>
-        (DemoDsl.Service("bar", None): DemoDsl).r[NonEmptyList[PlantUml]]
+        DemoDsl.Service("bar", None)
     }
 
   val renderBig =

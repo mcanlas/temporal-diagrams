@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams.v2
 package syntax
 
+import scala.collection.immutable.ListSet
+
 import cats.data.NonEmptyList
 import weaver._
 
@@ -17,13 +19,13 @@ object SyntaxSuite extends FunSuite {
 
   test("Domain objects from unrelated hierarchies can be bound together, with postfix tagging") {
     val tagged =
-      NonEmptyList.of(
-        Amazon.Ec2("").tag[ToyDiagramLanguage]("hello"),
-        Google.Compute("").r
+      NonEmptyList.of[Renderable[NonEmptyList[ToyDiagramLanguage]]](
+        Amazon.Ec2("").tag("hello"),
+        Google.Compute("")
       )
 
-    expect.eql(List("hello"), tagged.head.tags) &&
-    expect.eql(Nil, tagged.toList(1).tags)
+    expect.same(ListSet("hello"), tagged.head.tags) &&
+    expect.same(ListSet.empty, tagged.toList(1).tags)
   }
 
   test("Domain objects can be lifted implicitly") {
