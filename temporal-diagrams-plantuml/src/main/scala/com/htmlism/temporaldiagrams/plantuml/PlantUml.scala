@@ -26,9 +26,10 @@ object PlantUml {
     }
 
   implicit val DiagramEncoder: DiagramEncoder[PlantUml] = {
-    case Component(name, alias) =>
+    case Component(name, oAlias, oStereotype) =>
       s"component $name"
-        .applySome(alias)((s, a) => s + s" as $a")
+        .applySome(oAlias)((s, a) => s + s" as $a")
+        .applySome(oStereotype)((s, st) => s + s" << $st >>")
         .pipe(NonEmptyList.one)
 
     case Arrow(src, dest) =>
@@ -46,8 +47,10 @@ object PlantUml {
     * @param alias
     *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
     *   value of `name`
+    * @param stereotype
+    *   Optional. A tag to share styling among components of the same stereotype
     */
-  case class Component(name: String, alias: Option[String]) extends PlantUml
+  case class Component(name: String, alias: Option[String], stereotype: Option[String]) extends PlantUml
 
   /**
     * A directed line from the source to the destination

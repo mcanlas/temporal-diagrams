@@ -1,6 +1,7 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
 import cats.data.NonEmptyList
+import cats.syntax.all._
 
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.HighlightEncoder
@@ -17,21 +18,21 @@ object DemoDsl {
       def encode(x: DemoDsl): NonEmptyList[PlantUml] = {
         x match {
           case Service(n, _) =>
-            NonEmptyList.one(PlantUml.Component(n, None))
+            NonEmptyList.one(PlantUml.Component(n, None, "Service".some))
 
           case Hydra(n, _) =>
             NonEmptyList.of(
-              PlantUml.Component(n + 1.toString, None),
-              PlantUml.Component(n + 2.toString, None),
-              PlantUml.Component(n + 3.toString, None)
+              PlantUml.Component(n + 1.toString, None, "Service".some),
+              PlantUml.Component(n + 2.toString, None, "Service".some),
+              PlantUml.Component(n + 3.toString, None, "Service".some)
             )
 
           case Buffered(n, _) =>
-            NonEmptyList.one(PlantUml.Component(n, None))
+            NonEmptyList.one(PlantUml.Component(n, None, "Service".some))
         }
       }
 
       def encodeWithHighlights(x: DemoDsl, highlighted: Boolean): NonEmptyList[PlantUml] =
-        NonEmptyList.one(PlantUml.Component("", None))
+        NonEmptyList.one(PlantUml.Component("", None, "Service".some))
     }
 }
