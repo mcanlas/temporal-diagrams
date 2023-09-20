@@ -78,6 +78,11 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
         val renders =
           stackGivenCfg(cfg)
 
+        val tags =
+          Renderable.allTags(renders)
+
+        println(tags)
+
         val str =
           renders
             .map(_.extract)
