@@ -1,5 +1,7 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
+import scala.util.chaining._
+
 import cats._
 import cats.data.Kleisli
 import cats.data.NonEmptyList
@@ -46,16 +48,13 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
         DemoDsl.Buffered("bar", None)
     }
 
-  val renderBig =
+  val stackGivenCfg =
     NonEmptyList
       .of(
         toProducer.local[Demo.ConfigBasket](_.isNew),
         toConsumer.local[Demo.ConfigBasket](_.barStyle)
       )
       .traverse(_.run)
-      .andThen(xs => xs.map(x => x: Renderable[NonEmptyList[PlantUml]]))
-      .andThen(xs => Renderable.renderMany[NonEmptyList[PlantUml]](xs))
-      .andThen(PlantUml.render[NonEmptyList[PlantUml]])
 
   val z =
     Demo.ConfigBasket(isNew = false, Demo.BarAppearance.AsService)
@@ -76,8 +75,14 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
     cfgs
       .zipWithIndex
       .traverse { case (cfg, n) =>
+        val renders =
+          stackGivenCfg(cfg)
+
         val str =
-          renderBig(cfg)
+          renders
+            .map(_.extract)
+            .pipe(Renderable.renderMany[NonEmptyList[PlantUml]])
+            .pipe(PlantUml.render(_))
             .mkString_("\n")
 
         out.print(s"v2-$n.puml")(str)
