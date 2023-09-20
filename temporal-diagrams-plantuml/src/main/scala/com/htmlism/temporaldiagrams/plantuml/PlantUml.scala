@@ -28,7 +28,7 @@ object PlantUml {
   implicit val DiagramEncoder: DiagramEncoder[PlantUml] = {
     case Component(name, alias) =>
       s"component $name"
-        .applyWhen(alias)((s, a) => s + s" as $a")
+        .applySome(alias)((s, a) => s + s" as $a")
         .pipe(NonEmptyList.one)
 
     case Arrow(src, dest) =>
