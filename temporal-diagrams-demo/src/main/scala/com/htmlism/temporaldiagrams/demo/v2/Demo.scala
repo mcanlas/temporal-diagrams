@@ -57,16 +57,20 @@ class Demo[F[_]: Applicative](implicit out: Console[F]) {
       .andThen(xs => Renderable.renderMany[NonEmptyList[PlantUml]](xs))
       .andThen(PlantUml.render[NonEmptyList[PlantUml]])
 
-  val episodes =
-    NonEmptyList.of(
-      Demo.ConfigBasket(isNew = false, Demo.BarAppearance.AsService),
-      Demo.ConfigBasket(isNew = true, Demo.BarAppearance.AsService),
-      Demo.ConfigBasket(isNew = true, Demo.BarAppearance.AsHydra),
-      Demo.ConfigBasket(isNew = true, Demo.BarAppearance.WithBuffer)
+  val z =
+    Demo.ConfigBasket(isNew = false, Demo.BarAppearance.AsService)
+
+  val episodesDeltas =
+    List[Demo.ConfigBasket => Demo.ConfigBasket](
+      _.copy(isNew = true),
+      _.copy(barStyle = Demo.BarAppearance.AsHydra),
+      _.copy(barStyle = Demo.BarAppearance.WithBuffer)
     )
+      .mapAccumulate(z)((s, f) => f(s) -> f(s))
+      ._2
 
   def run: F[Unit] = {
-    episodes
+    (z :: episodesDeltas)
       .traverse(e => out.println(renderBig(e)))
       .void
   }
