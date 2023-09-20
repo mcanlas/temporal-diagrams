@@ -4,14 +4,14 @@ import cats._
 import cats.data.Kleisli
 import cats.data.NonEmptyList
 import cats.effect._
-import cats.effect.std.Console
 import cats.syntax.all._
 
+import com.htmlism.temporaldiagrams.demo.FilePrinterAlg
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax._
 
-object Demo extends Demo[IO] with IOApp.Simple {
+object Demo extends Demo[IO](FilePrinterAlg[IO]) with IOApp.Simple {
   sealed trait BarAppearance
 
   object BarAppearance {
@@ -25,7 +25,7 @@ object Demo extends Demo[IO] with IOApp.Simple {
   case class ConfigBasket(isNew: Boolean, barStyle: BarAppearance)
 }
 
-class Demo[F[_]: Applicative](implicit out: Console[F]) {
+class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
   private val toProducer =
     Kleisli.fromFunction[Id, Boolean][Renderable[NonEmptyList[PlantUml]]] { asNew =>
       if (asNew)
@@ -70,8 +70,18 @@ class Demo[F[_]: Applicative](implicit out: Console[F]) {
       ._2
 
   def run: F[Unit] = {
-    (z :: episodesDeltas)
-      .traverse(e => out.println(renderBig(e)))
+    val cfgs =
+      z :: episodesDeltas
+
+    cfgs
+      .zipWithIndex
+      .traverse { case (cfg, n) =>
+        val str =
+          renderBig(cfg)
+            .mkString_("\n")
+
+        out.print(s"v2-$n.puml")(str)
+      }
       .void
   }
 }
