@@ -1,3 +1,4 @@
+- multi arrows in v2
 - encode heterogeneous payloads
 - highlight framework orthogonal to encoding; not a function of the target language
 - evolution narrative for payloads
