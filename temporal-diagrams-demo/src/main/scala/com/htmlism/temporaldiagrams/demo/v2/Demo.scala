@@ -87,6 +87,7 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
           renders
             .map(_.extract)
             .pipe(Renderable.renderMany[NonEmptyList[PlantUml]])
+            .pipe(_.distinct.sorted)
             .pipe(PlantUml.render(_))
             .mkString_("\n")
 

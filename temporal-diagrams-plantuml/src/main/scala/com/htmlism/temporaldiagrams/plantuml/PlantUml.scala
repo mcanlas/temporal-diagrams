@@ -2,6 +2,7 @@ package com.htmlism.temporaldiagrams.plantuml
 
 import scala.util.chaining._
 
+import cats.Order
 import cats.data._
 import cats.syntax.all._
 
@@ -10,6 +11,23 @@ import com.htmlism.temporaldiagrams.v2._
 sealed trait PlantUml
 
 object PlantUml {
+  implicit val plantUmlOrdering: Order[PlantUml] =
+    Order.by { p =>
+      val rank =
+        p match {
+          case Component(name, _, _) =>
+            1 -> name
+
+          case Arrow(src, dest) =>
+            2 -> (src + dest)
+
+          case SkinParamGroup(base, _, _) =>
+            0 -> base
+        }
+
+      rank
+    }
+
   implicit def nelEncoder[A](implicit A: DiagramEncoder[A]): DiagramEncoder[NonEmptyList[A]] =
     (xs: NonEmptyList[A]) =>
       A.encode(xs.head)
