@@ -19,14 +19,23 @@ object DemoDsl {
         x match {
           case Service(n, _) =>
             NonEmptyList.of(
-              PlantUml.Component(n, None, "Service".some),
-              PlantUml
-                .SkinParamGroup("component", "Service")
-                .and("fontStyle", "bold")
-                .and("fontColor", "white")
-                .and("backgroundColor", "#586ba4")
-                .and("borderColor", "#223336")
-                .and("borderThickness", "2")
+              PlantUml.Component(n, None, Option.when(isBright)("Service")),
+              if (isBright)
+                PlantUml
+                  .SkinParamGroup("component", "Service")
+                  .and("fontStyle", "bold")
+                  .and("fontColor", "white")
+                  .and("backgroundColor", "#586ba4")
+                  .and("borderColor", "#223336")
+                  .and("borderThickness", "2")
+              else
+                PlantUml
+                  .SkinParamGroup("component")
+                  .and("fontStyle", "bold")
+                  .and("fontColor", "#AAA")
+                  .and("backgroundColor", "white")
+                  .and("borderColor", "#AAA")
+                  .and("borderThickness", "2")
             )
 
           case Hydra(n, _) =>

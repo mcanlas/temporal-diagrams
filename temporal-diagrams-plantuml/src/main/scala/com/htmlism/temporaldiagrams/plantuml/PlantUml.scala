@@ -15,14 +15,14 @@ object PlantUml {
     Order.by { p =>
       val rank =
         p match {
-          case Component(name, _, _) =>
-            1 -> name
+          case Component(name, _, oStereotype) =>
+            1 -> name -> oStereotype.toString
 
           case Arrow(src, dest) =>
-            2 -> (src + dest)
+            2 -> src -> dest
 
-          case SkinParamGroup(base, _, _) =>
-            0 -> base
+          case SkinParamGroup(base, _, oStereotype) =>
+            0 -> base -> oStereotype.toString
         }
 
       rank
