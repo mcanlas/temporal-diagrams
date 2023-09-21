@@ -18,7 +18,16 @@ object DemoDsl {
       def encode(x: DemoDsl): NonEmptyList[PlantUml] = {
         x match {
           case Service(n, _) =>
-            NonEmptyList.one(PlantUml.Component(n, None, "Service".some))
+            NonEmptyList.of(
+              PlantUml.Component(n, None, "Service".some),
+              PlantUml
+                .SkinParamGroup("component", "Service")
+                .and("fontStyle", "bold")
+                .and("fontColor", "white")
+                .and("backgroundColor", "#586ba4")
+                .and("borderColor", "#223336")
+                .and("borderThickness", "2")
+            )
 
           case Hydra(n, _) =>
             NonEmptyList.of(

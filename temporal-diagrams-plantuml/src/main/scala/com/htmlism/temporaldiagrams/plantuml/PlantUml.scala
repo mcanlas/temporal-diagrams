@@ -3,6 +3,7 @@ package com.htmlism.temporaldiagrams.plantuml
 import scala.util.chaining._
 
 import cats.data._
+import cats.syntax.all._
 
 import com.htmlism.temporaldiagrams.v2._
 
@@ -42,7 +43,7 @@ object PlantUml {
         }
         .prepended {
           val stereotype =
-            oStereotype.fold("")(" " + _)
+            oStereotype.fold("")("<< " + _ + " >>")
 
           s"skinparam $base$stereotype {"
         }
@@ -75,10 +76,19 @@ object PlantUml {
   case class Arrow(source: String, destination: String) extends PlantUml
 
   case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
-      extends PlantUml
+      extends PlantUml {
+    def and(key: String, value: String): SkinParamGroup =
+      this.copy(parameters = parameters.appended(SkinParamGroup.Parameter(key, value)))
+  }
 
   object SkinParamGroup {
     case class Parameter(name: String, value: String)
+
+    def apply(base: String): SkinParamGroup =
+      SkinParamGroup(base, Nil, None)
+
+    def apply(base: String, stereotype: String): SkinParamGroup =
+      SkinParamGroup(base, Nil, stereotype.some)
   }
 
   private def asDocument(xs: NonEmptyList[String]) =
