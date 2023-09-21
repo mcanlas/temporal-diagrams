@@ -18,8 +18,14 @@ object PlantUml {
           case Component(name, _, oStereotype) =>
             1 -> name -> oStereotype.toString
 
+          case Queue(name, _, oStereotype) =>
+            2 -> name -> oStereotype.toString
+
+          case Database(name, _, oStereotype) =>
+            3 -> name -> oStereotype.toString
+
           case Arrow(src, dest) =>
-            2 -> src -> dest
+            10 -> src -> dest
 
           case SkinParamGroup(base, _, oStereotype) =>
             0 -> base -> oStereotype.toString
@@ -47,6 +53,18 @@ object PlantUml {
   implicit val DiagramEncoder: DiagramEncoder[PlantUml] = {
     case Component(name, oAlias, oStereotype) =>
       s"component $name"
+        .applySome(oAlias)((s, a) => s + s" as $a")
+        .applySome(oStereotype)((s, st) => s + s" << $st >>")
+        .pipe(NonEmptyList.one)
+
+    case Queue(name, oAlias, oStereotype) =>
+      s"queue $name"
+        .applySome(oAlias)((s, a) => s + s" as $a")
+        .applySome(oStereotype)((s, st) => s + s" << $st >>")
+        .pipe(NonEmptyList.one)
+
+    case Database(name, oAlias, oStereotype) =>
+      s"database $name"
         .applySome(oAlias)((s, a) => s + s" as $a")
         .applySome(oStereotype)((s, st) => s + s" << $st >>")
         .pipe(NonEmptyList.one)
@@ -83,6 +101,10 @@ object PlantUml {
     *   Optional. A tag to share styling among components of the same stereotype
     */
   case class Component(name: String, alias: Option[String], stereotype: Option[String]) extends PlantUml
+
+  case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends PlantUml
+
+  case class Database(name: String, alias: Option[String], stereotype: Option[String]) extends PlantUml
 
   /**
     * A directed line from the source to the destination
