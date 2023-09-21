@@ -8,8 +8,8 @@ import com.htmlism.temporaldiagrams.v2.BrightEncoder
 sealed trait DemoDsl
 
 object DemoDsl {
-  case class ClusterService(name: String, dependency: Option[String], asHydra: Boolean) extends DemoDsl
-  case class Buffered(name: String, dependency: Option[String])                         extends DemoDsl
+  case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
+  case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
 
   implicit val demoBrightEncoder: BrightEncoder[NonEmptyList[PlantUml], DemoDsl] =
     new BrightEncoder[NonEmptyList[PlantUml], DemoDsl] {

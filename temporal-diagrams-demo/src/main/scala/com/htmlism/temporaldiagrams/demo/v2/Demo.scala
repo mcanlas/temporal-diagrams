@@ -14,55 +14,60 @@ import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax._
 
 object Demo extends Demo[IO](FilePrinterAlg[IO]) with IOApp.Simple {
-  sealed trait BarAppearance
+  sealed trait ServiceAppearance
 
-  object BarAppearance {
-    case object AsService extends BarAppearance
+  object ServiceAppearance {
+    case object AsSingleton extends ServiceAppearance
 
-    case object AsHydra extends BarAppearance
+    case object AsCluster extends ServiceAppearance
 
-    case object WithBuffer extends BarAppearance
+    case object WithBuffer extends ServiceAppearance
   }
 
-  case class ConfigBasket(isNew: Boolean, barStyle: BarAppearance)
+  case class ConfigBasket(fooStyle: ServiceAppearance, barStyle: ServiceAppearance)
 }
 
 class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
   private val toProducer =
-    Kleisli.fromFunction[Id, Boolean][Renderable[NonEmptyList[PlantUml]]] { asNew =>
-      if (asNew)
-        DemoDsl.ClusterService("new_foo", None, asHydra = false)
-      else
-        DemoDsl.ClusterService("foo", None, asHydra = false).tag("foo")
+    Kleisli.fromFunction[Id, Demo.ServiceAppearance][Renderable[NonEmptyList[PlantUml]]] {
+      case Demo.ServiceAppearance.AsSingleton =>
+        DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo")
+
+      case Demo.ServiceAppearance.AsCluster =>
+        DemoDsl.ClusterService("foo", None, asCluster = true).tag("foo")
+
+      case Demo.ServiceAppearance.WithBuffer =>
+        DemoDsl.Buffered("foo", None).tag("foo")
     }
 
   private val toConsumer =
-    Kleisli.fromFunction[Id, Demo.BarAppearance][Renderable[NonEmptyList[PlantUml]]] {
-      case Demo.BarAppearance.AsService =>
-        DemoDsl.ClusterService("bar", "foo".some, asHydra = false).tag("bar")
+    Kleisli.fromFunction[Id, Demo.ServiceAppearance][Renderable[NonEmptyList[PlantUml]]] {
+      case Demo.ServiceAppearance.AsSingleton =>
+        DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar")
 
-      case Demo.BarAppearance.AsHydra =>
-        DemoDsl.ClusterService("bar", "foo".some, asHydra = true).tag("bar")
+      case Demo.ServiceAppearance.AsCluster =>
+        DemoDsl.ClusterService("bar", "foo".some, asCluster = true).tag("bar")
 
-      case Demo.BarAppearance.WithBuffer =>
-        DemoDsl.Buffered("bar", "new_foo".some)
+      case Demo.ServiceAppearance.WithBuffer =>
+        DemoDsl.Buffered("bar", "foo".some).tag("bar")
     }
 
   val stackGivenCfg =
     NonEmptyList
       .of(
-        toProducer.local[Demo.ConfigBasket](_.isNew),
+        toProducer.local[Demo.ConfigBasket](_.fooStyle),
         toConsumer.local[Demo.ConfigBasket](_.barStyle)
       )
       .traverse(_.run)
 
   val z =
-    Demo.ConfigBasket(isNew = false, Demo.BarAppearance.AsService)
+    Demo.ConfigBasket(fooStyle = Demo.ServiceAppearance.AsSingleton, Demo.ServiceAppearance.AsSingleton)
 
   val episodesDeltas =
     List[Demo.ConfigBasket => Demo.ConfigBasket](
-      _.copy(isNew = true, barStyle = Demo.BarAppearance.AsHydra),
-      _.copy(isNew = true, barStyle = Demo.BarAppearance.WithBuffer)
+      _.copy(fooStyle = Demo.ServiceAppearance.AsCluster),
+      _.copy(barStyle = Demo.ServiceAppearance.AsCluster),
+      _.copy(barStyle = Demo.ServiceAppearance.WithBuffer)
     )
       .mapAccumulate(z)((s, f) => f(s) -> f(s))
       ._2
