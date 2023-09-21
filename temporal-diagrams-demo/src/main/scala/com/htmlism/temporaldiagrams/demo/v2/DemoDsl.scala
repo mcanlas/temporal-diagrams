@@ -15,15 +15,29 @@ object DemoDsl {
     new BrightEncoder[NonEmptyList[PlantUml], DemoDsl] {
       def encodeBrightly(x: DemoDsl, isBright: Boolean): NonEmptyList[PlantUml] = {
         x match {
-          case ClusterService(n, oDep, _) =>
-            NonEmptyList
-              .of[PlantUml](
-                PlantUml.Component(n, None, Option.when(isBright)("Service")),
-                skin(isBright)
-              )
-              .applySome(oDep) { (a, d) =>
-                a.appendList(List(PlantUml.Arrow(d, n)))
-              }
+          case ClusterService(n, oDep, asCluster) =>
+            if (asCluster)
+              NonEmptyList
+                .of(1, 2, 3, 4)
+                .flatMap { i =>
+                  NonEmptyList
+                    .of[PlantUml](
+                      PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
+                      skin(isBright)
+                    )
+                    .applySome(oDep) { (a, d) =>
+                      a.appendList(List(PlantUml.Arrow(d + i.toString, n)))
+                    }
+                }
+            else
+              NonEmptyList
+                .of[PlantUml](
+                  PlantUml.Component(n, None, Option.when(isBright)("Service")),
+                  skin(isBright)
+                )
+                .applySome(oDep) { (a, d) =>
+                  a.appendList(List(PlantUml.Arrow(d, n)))
+                }
 
           case Buffered(n, oDep) =>
             NonEmptyList
