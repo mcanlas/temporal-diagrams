@@ -75,15 +75,16 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
     cfgs
       .zipWithIndex
       .traverse { case (cfg, n) =>
-        printNormalDiagram(cfg, n)
+        val renders: NonEmptyList[Renderable[NonEmptyList[PlantUml]]] =
+          stackGivenCfg(cfg)
+            .map(_.extract)
+
+        printNormalDiagram(renders, n)
       }
       .void
   }
 
-  private def printNormalDiagram(cfg: Demo.ConfigBasket, n: Int) = {
-    val renders =
-      stackGivenCfg(cfg)
-
+  private def printNormalDiagram(renders: NonEmptyList[Renderable[NonEmptyList[PlantUml]]], n: Int) = {
     val tags =
       Renderable.allTags(renders)
 
@@ -91,7 +92,6 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
 
     val str =
       renders
-        .map(_.extract)
         .pipe(Renderable.renderMany[NonEmptyList[PlantUml]])
         .pipe(_.distinct.sorted)
         .pipe(PlantUml.render(_))
