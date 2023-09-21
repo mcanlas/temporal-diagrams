@@ -31,18 +31,18 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
   private val toProducer =
     Kleisli.fromFunction[Id, Boolean][Renderable[NonEmptyList[PlantUml]]] { asNew =>
       if (asNew)
-        DemoDsl.Service("new_foo", None)
+        DemoDsl.ClusterService("new_foo", None, asHydra = false)
       else
-        DemoDsl.Service("foo", None).tag("foo")
+        DemoDsl.ClusterService("foo", None, asHydra = false).tag("foo")
     }
 
   private val toConsumer =
     Kleisli.fromFunction[Id, Demo.BarAppearance][Renderable[NonEmptyList[PlantUml]]] {
       case Demo.BarAppearance.AsService =>
-        DemoDsl.Service("bar", "foo".some).tag("bar")
+        DemoDsl.ClusterService("bar", "foo".some, asHydra = false).tag("bar")
 
       case Demo.BarAppearance.AsHydra =>
-        DemoDsl.Hydra("bar", "new_foo".some).tag("bar")
+        DemoDsl.ClusterService("bar", "foo".some, asHydra = true).tag("bar")
 
       case Demo.BarAppearance.WithBuffer =>
         DemoDsl.Buffered("bar", "new_foo".some)

@@ -8,15 +8,14 @@ import com.htmlism.temporaldiagrams.v2.BrightEncoder
 sealed trait DemoDsl
 
 object DemoDsl {
-  case class Service(name: String, dependency: Option[String])  extends DemoDsl
-  case class Hydra(name: String, dependency: Option[String])    extends DemoDsl
-  case class Buffered(name: String, dependency: Option[String]) extends DemoDsl
+  case class ClusterService(name: String, dependency: Option[String], asHydra: Boolean) extends DemoDsl
+  case class Buffered(name: String, dependency: Option[String])                         extends DemoDsl
 
   implicit val demoBrightEncoder: BrightEncoder[NonEmptyList[PlantUml], DemoDsl] =
     new BrightEncoder[NonEmptyList[PlantUml], DemoDsl] {
       def encodeBrightly(x: DemoDsl, isBright: Boolean): NonEmptyList[PlantUml] = {
         x match {
-          case Service(n, oDep) =>
+          case ClusterService(n, oDep, _) =>
             NonEmptyList
               .of[PlantUml](
                 PlantUml.Component(n, None, Option.when(isBright)("Service")),
@@ -25,21 +24,6 @@ object DemoDsl {
               .applySome(oDep) { (a, d) =>
                 a.appendList(List(PlantUml.Arrow(d, n)))
               }
-
-          case Hydra(n, oDep) =>
-            NonEmptyList
-              .of(1, 2, 3)
-              .flatMap { i =>
-                val name =
-                  n + i.toString
-
-                NonEmptyList
-                  .one[PlantUml](PlantUml.Component(name, None, Option.when(isBright)("Service")))
-                  .applySome(oDep) { (a, d) =>
-                    a.appendList(List(PlantUml.Arrow(d, name)))
-                  }
-              }
-              .append(skin(isBright))
 
           case Buffered(n, oDep) =>
             NonEmptyList
