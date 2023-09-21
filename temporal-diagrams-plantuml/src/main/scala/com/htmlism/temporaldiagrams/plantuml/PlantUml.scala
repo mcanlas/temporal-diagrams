@@ -34,6 +34,19 @@ object PlantUml {
 
     case Arrow(src, dest) =>
       NonEmptyList.one(s"$src --> $dest")
+
+    case SkinParamGroup(base, parameters, oStereotype) =>
+      parameters
+        .map { case SkinParamGroup.Parameter(key, value) =>
+          s"  $key $value"
+        }
+        .prepended {
+          val stereotype =
+            oStereotype.fold("")(" " + _)
+
+          s"skinparam $base$stereotype {"
+        }
+        .pipe(NonEmptyList.one("}").prependList)
   }
 
   def render[A](x: A)(implicit A: DiagramEncoder[A]): NonEmptyList[String] =
@@ -60,6 +73,13 @@ object PlantUml {
     * right.
     */
   case class Arrow(source: String, destination: String) extends PlantUml
+
+  case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
+      extends PlantUml
+
+  object SkinParamGroup {
+    case class Parameter(name: String, value: String)
+  }
 
   private def asDocument(xs: NonEmptyList[String]) =
     NonEmptyList.of("@startuml", "") :::
