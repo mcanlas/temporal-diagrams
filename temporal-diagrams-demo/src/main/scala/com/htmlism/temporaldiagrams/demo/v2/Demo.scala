@@ -79,17 +79,12 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
           stackGivenCfg(cfg)
             .map(_.extract)
 
-        printNormalDiagram(renders, n)
+        printNormalDiagram(renders, n) *> printHighlightDiagrams(renders, n)
       }
       .void
   }
 
   private def printNormalDiagram(renders: NonEmptyList[Renderable[NonEmptyList[PlantUml]]], n: Int) = {
-    val tags =
-      Renderable.allTags(renders)
-
-    println(tags)
-
     val str =
       renders
         .pipe(Renderable.renderMany[NonEmptyList[PlantUml]])
@@ -98,5 +93,23 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
         .mkString_("\n")
 
     out.print(s"v2-$n.puml")(str)
+  }
+
+  private def printHighlightDiagrams(renders: NonEmptyList[Renderable[NonEmptyList[PlantUml]]], n: Int) = {
+    val tags =
+      Renderable
+        .allTags(renders)
+        .toList
+
+    tags.traverse_ { t =>
+      val str =
+        renders
+          .pipe(Renderable.renderManyWithTag[NonEmptyList[PlantUml]](_, t))
+          .pipe(_.distinct.sorted)
+          .pipe(PlantUml.render(_))
+          .mkString_("\n")
+
+      out.print(s"v2-$n-$t.puml")(str)
+    }
   }
 }
