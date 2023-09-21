@@ -4,7 +4,7 @@ import cats.data.NonEmptyList
 import cats.syntax.all._
 
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
-import com.htmlism.temporaldiagrams.v2.HighlightEncoder
+import com.htmlism.temporaldiagrams.v2.BrightEncoder
 
 sealed trait DemoDsl
 
@@ -13,9 +13,9 @@ object DemoDsl {
   case class Hydra(name: String, dependency: Option[String])    extends DemoDsl
   case class Buffered(name: String, dependency: Option[String]) extends DemoDsl
 
-  implicit val demoHighlightEncoder: HighlightEncoder[NonEmptyList[PlantUml], DemoDsl] =
-    new HighlightEncoder[NonEmptyList[PlantUml], DemoDsl] {
-      def encode(x: DemoDsl): NonEmptyList[PlantUml] = {
+  implicit val demoBrightEncoder: BrightEncoder[NonEmptyList[PlantUml], DemoDsl] =
+    new BrightEncoder[NonEmptyList[PlantUml], DemoDsl] {
+      def encodeBrightly(x: DemoDsl, isBright: Boolean): NonEmptyList[PlantUml] = {
         x match {
           case Service(n, _) =>
             NonEmptyList.of(
@@ -40,8 +40,5 @@ object DemoDsl {
             NonEmptyList.one(PlantUml.Component(n, None, "Service".some))
         }
       }
-
-      def encodeWithHighlights(x: DemoDsl, highlighted: Boolean): NonEmptyList[PlantUml] =
-        NonEmptyList.one(PlantUml.Component("", None, "Service".some))
     }
 }

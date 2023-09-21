@@ -3,6 +3,8 @@ package com.htmlism.temporaldiagrams.v2
 import cats.Contravariant
 
 /**
+  * A type class that describes an encoding relationship for an input domain language into a target diagram language
+  *
   * @tparam D
   *   The target diagram language being encoded to
   * @tparam A
