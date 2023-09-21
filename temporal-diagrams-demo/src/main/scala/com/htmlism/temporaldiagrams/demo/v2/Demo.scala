@@ -63,7 +63,7 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
     List[Demo.ConfigBasket => Demo.ConfigBasket](
       _.copy(isNew = true),
       _.copy(barStyle = Demo.BarAppearance.AsHydra),
-      _.copy(barStyle = Demo.BarAppearance.WithBuffer)
+      _.copy(isNew = false, barStyle = Demo.BarAppearance.WithBuffer)
     )
       .mapAccumulate(z)((s, f) => f(s) -> f(s))
       ._2
