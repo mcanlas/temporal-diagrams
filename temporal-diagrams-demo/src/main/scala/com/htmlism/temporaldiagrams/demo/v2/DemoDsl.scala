@@ -44,13 +44,16 @@ object DemoDsl {
 
           case Hydra(n, oDep) =>
             NonEmptyList
-              .of[PlantUml](
-                PlantUml.Component(n + 1.toString, None, "Service".some),
-                PlantUml.Component(n + 2.toString, None, "Service".some),
-                PlantUml.Component(n + 3.toString, None, "Service".some)
-              )
-              .applySome(oDep) { (a, d) =>
-                a.appendList(List(PlantUml.Arrow(d, n)))
+              .of(1, 2, 3)
+              .flatMap { i =>
+                val name =
+                  n + i.toString
+
+                NonEmptyList
+                  .one[PlantUml](PlantUml.Component(name, None, "Service".some))
+                  .applySome(oDep) { (a, d) =>
+                    a.appendList(List(PlantUml.Arrow(d, name)))
+                  }
               }
 
           case Buffered(n, oDep) =>
