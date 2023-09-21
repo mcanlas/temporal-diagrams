@@ -39,13 +39,13 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
   private val toConsumer =
     Kleisli.fromFunction[Id, Demo.BarAppearance][Renderable[NonEmptyList[PlantUml]]] {
       case Demo.BarAppearance.AsService =>
-        DemoDsl.Service("bar", None).tag("bar")
+        DemoDsl.Service("bar", "foo".some).tag("bar")
 
       case Demo.BarAppearance.AsHydra =>
-        DemoDsl.Hydra("bar", None).tag("bar")
+        DemoDsl.Hydra("bar", "new_foo".some).tag("bar")
 
       case Demo.BarAppearance.WithBuffer =>
-        DemoDsl.Buffered("bar", None)
+        DemoDsl.Buffered("bar", "new_foo".some)
     }
 
   val stackGivenCfg =
@@ -61,9 +61,8 @@ class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
 
   val episodesDeltas =
     List[Demo.ConfigBasket => Demo.ConfigBasket](
-      _.copy(isNew = true),
-      _.copy(barStyle = Demo.BarAppearance.AsHydra),
-      _.copy(isNew = false, barStyle = Demo.BarAppearance.WithBuffer)
+      _.copy(isNew = true, barStyle = Demo.BarAppearance.AsHydra),
+      _.copy(isNew = true, barStyle = Demo.BarAppearance.WithBuffer)
     )
       .mapAccumulate(z)((s, f) => f(s) -> f(s))
       ._2
