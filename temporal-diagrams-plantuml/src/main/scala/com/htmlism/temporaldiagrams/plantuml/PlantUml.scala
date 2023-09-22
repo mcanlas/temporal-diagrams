@@ -12,26 +12,21 @@ sealed trait PlantUml
 
 object PlantUml {
   implicit val plantUmlOrdering: Order[PlantUml] =
-    Order.by { p =>
-      val rank =
-        p match {
-          case Component(name, _, oStereotype) =>
-            1 -> name -> oStereotype.toString
+    Order.by { x =>
+      val index =
+        x match {
+          case _: SkinParamGroup =>
+            0
 
-          case Queue(name, _, oStereotype) =>
-            2 -> name -> oStereotype.toString
-
-          case Database(name, _, oStereotype) =>
-            3 -> name -> oStereotype.toString
-
-          case Arrow(src, dest) =>
-            10 -> src -> dest
-
-          case SkinParamGroup(base, _, oStereotype) =>
-            0 -> base -> oStereotype.toString
+          case _ =>
+            1
         }
 
-      rank
+      val str =
+        implicitly[DiagramEncoder[PlantUml]]
+          .encode(x)
+
+      index -> str
     }
 
   implicit def nelEncoder[A](implicit A: DiagramEncoder[A]): DiagramEncoder[NonEmptyList[A]] =
