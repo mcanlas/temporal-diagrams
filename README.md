@@ -19,6 +19,10 @@ When viewing on GitHub, be sure to access the "raw" version of the file (as plai
 
 Install the plugin [PlantUML Integration](https://plugins.jetbrains.com/plugin/7017-plantuml-integration)
 
+## See also
+
+- [Architecture](/docs/architecture.md)
+
 ## Elsewhere
 
 - [Mermaid](http://mermaid.js.org/)
