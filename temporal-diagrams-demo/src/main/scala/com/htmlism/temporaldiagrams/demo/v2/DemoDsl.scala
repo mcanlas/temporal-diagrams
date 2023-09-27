@@ -81,4 +81,18 @@ object DemoDsl {
         .and("backgroundColor", "white")
         .and("borderColor", "#AAA")
         .and("borderThickness", "2")
+
+  case class ConfigBasket(fooStyle: ConfigBasket.ServiceAppearance, barStyle: ConfigBasket.ServiceAppearance)
+
+  object ConfigBasket {
+    sealed trait ServiceAppearance
+
+    object ServiceAppearance {
+      case object AsSingleton extends ServiceAppearance
+
+      case object AsCluster extends ServiceAppearance
+
+      case object WithBuffer extends ServiceAppearance
+    }
+  }
 }

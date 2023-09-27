@@ -13,61 +13,52 @@ import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax._
 
-object Demo extends Demo[IO](FilePrinterAlg[IO]) with IOApp.Simple {
-  sealed trait ServiceAppearance
-
-  object ServiceAppearance {
-    case object AsSingleton extends ServiceAppearance
-
-    case object AsCluster extends ServiceAppearance
-
-    case object WithBuffer extends ServiceAppearance
-  }
-
-  case class ConfigBasket(fooStyle: ServiceAppearance, barStyle: ServiceAppearance)
-}
+object Demo extends Demo[IO](FilePrinterAlg[IO]) with IOApp.Simple
 
 class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
   private val toProducer =
-    Kleisli.fromFunction[Id, Demo.ServiceAppearance][Renderable[NonEmptyList[PlantUml]]] {
-      case Demo.ServiceAppearance.AsSingleton =>
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[NonEmptyList[PlantUml]]] {
+      case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
         DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo")
 
-      case Demo.ServiceAppearance.AsCluster =>
+      case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
         DemoDsl.ClusterService("foo", None, asCluster = true).tag("foo")
 
-      case Demo.ServiceAppearance.WithBuffer =>
+      case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
         DemoDsl.Buffered("foo", None).tag("foo")
     }
 
   private val toConsumer =
-    Kleisli.fromFunction[Id, Demo.ServiceAppearance][Renderable[NonEmptyList[PlantUml]]] {
-      case Demo.ServiceAppearance.AsSingleton =>
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[NonEmptyList[PlantUml]]] {
+      case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
         DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar")
 
-      case Demo.ServiceAppearance.AsCluster =>
+      case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
         DemoDsl.ClusterService("bar", "foo".some, asCluster = true).tag("bar")
 
-      case Demo.ServiceAppearance.WithBuffer =>
+      case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
         DemoDsl.Buffered("bar", "foo".some).tag("bar")
     }
 
   val stackGivenCfg =
     NonEmptyList
       .of(
-        toProducer.local[Demo.ConfigBasket](_.fooStyle),
-        toConsumer.local[Demo.ConfigBasket](_.barStyle)
+        toProducer.local[DemoDsl.ConfigBasket](_.fooStyle),
+        toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
       )
       .traverse(_.run)
 
   val z =
-    Demo.ConfigBasket(fooStyle = Demo.ServiceAppearance.AsSingleton, Demo.ServiceAppearance.AsSingleton)
+    DemoDsl.ConfigBasket(
+      fooStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton,
+      DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton
+    )
 
   val episodesDeltas =
-    List[Demo.ConfigBasket => Demo.ConfigBasket](
-      _.copy(fooStyle = Demo.ServiceAppearance.AsCluster),
-      _.copy(barStyle = Demo.ServiceAppearance.AsCluster),
-      _.copy(barStyle = Demo.ServiceAppearance.WithBuffer)
+    List[DemoDsl.ConfigBasket => DemoDsl.ConfigBasket](
+      _.copy(fooStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsCluster),
+      _.copy(barStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsCluster),
+      _.copy(barStyle = DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer)
     )
       .mapAccumulate(z)((s, f) => f(s) -> f(s))
       ._2
