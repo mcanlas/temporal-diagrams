@@ -30,7 +30,7 @@ object OuroborosDsl {
 
           case Output(s) =>
             NonEmptyChain
-              .one(PlantUml.Component(s, None, None))
+              .one(PlantUml.Database(s, None, None))
         }
     }
 }
