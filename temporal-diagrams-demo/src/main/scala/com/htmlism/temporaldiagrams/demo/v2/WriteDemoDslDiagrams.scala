@@ -13,9 +13,9 @@ import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax._
 
-object Demo extends Demo[IO](FilePrinterAlg[IO]) with IOApp.Simple
+object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinterAlg[IO]) with IOApp.Simple
 
-class Demo[F[_]: Applicative](out: FilePrinterAlg[F]) {
+class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]) {
   private val toProducer =
     Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[NonEmptyList[PlantUml]]] {
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
