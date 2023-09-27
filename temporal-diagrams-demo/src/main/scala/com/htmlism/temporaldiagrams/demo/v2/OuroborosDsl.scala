@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
-import cats.data.NonEmptyList
+import cats.data.NonEmptyChain
 
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.BrightEncoder
@@ -14,21 +14,21 @@ object OuroborosDsl {
 
   case class Output(language: String) extends OuroborosDsl
 
-  implicit val demoBrightEncoder: BrightEncoder[NonEmptyList[PlantUml], OuroborosDsl] =
-    new BrightEncoder[NonEmptyList[PlantUml], OuroborosDsl] {
-      def encodeBrightly(x: OuroborosDsl, isBright: Boolean): NonEmptyList[PlantUml] =
+  implicit val demoBrightEncoder: BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] =
+    new BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] {
+      def encodeBrightly(x: OuroborosDsl, isBright: Boolean): NonEmptyChain[PlantUml] =
         x match {
           case Type(s) =>
-            NonEmptyList
+            NonEmptyChain
               .one(PlantUml.Component(s, None, None))
 
           case Encoding(src, dest, _) =>
             // TODO need arrow comment support
-            NonEmptyList
+            NonEmptyChain
               .one(PlantUml.Arrow(src, dest))
 
           case Output(s) =>
-            NonEmptyList
+            NonEmptyChain
               .one(PlantUml.Component(s, None, None))
         }
     }

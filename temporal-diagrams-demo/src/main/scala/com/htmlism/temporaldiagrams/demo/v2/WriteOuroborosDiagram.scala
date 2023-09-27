@@ -2,7 +2,7 @@ package com.htmlism.temporaldiagrams.demo.v2
 
 import scala.util.chaining._
 
-import cats.data.NonEmptyList
+import cats.data.NonEmptyChain
 import cats.effect._
 import cats.syntax.all._
 
@@ -13,7 +13,7 @@ import com.htmlism.temporaldiagrams.v2.syntax.RenderableOps
 
 object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO]) with IOApp.Simple {
   val diagram =
-    NonEmptyList
+    NonEmptyChain
       .of(
         OuroborosDsl.Type("User.Config"),
         OuroborosDsl.Type("User.Dsl"),

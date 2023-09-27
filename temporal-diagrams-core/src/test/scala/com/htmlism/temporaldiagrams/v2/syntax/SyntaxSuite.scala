@@ -3,13 +3,14 @@ package syntax
 
 import scala.collection.immutable.ListSet
 
-import cats.data.NonEmptyList
+import cats.data.NonEmptyChain
+import cats.syntax.all._
 import weaver._
 
 object SyntaxSuite extends FunSuite {
   test("Domain objects from unrelated hierarchies can be bound together, with postfix syntax") {
     val implicitRs =
-      NonEmptyList.of[Renderable[NonEmptyList[ToyDiagramLanguage]]](
+      NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2("").r,
         Google.Compute("").r
       )
@@ -19,7 +20,7 @@ object SyntaxSuite extends FunSuite {
 
   test("Domain objects from unrelated hierarchies can be bound together, with postfix tagging") {
     val tagged =
-      NonEmptyList.of[Renderable[NonEmptyList[ToyDiagramLanguage]]](
+      NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2("").tag("hello"),
         Google.Compute("")
       )
@@ -30,7 +31,7 @@ object SyntaxSuite extends FunSuite {
 
   test("Domain objects can be lifted implicitly") {
     val implicitRs =
-      NonEmptyList.of[Renderable[NonEmptyList[ToyDiagramLanguage]]](
+      NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2(""),
         Google.Compute("")
       )

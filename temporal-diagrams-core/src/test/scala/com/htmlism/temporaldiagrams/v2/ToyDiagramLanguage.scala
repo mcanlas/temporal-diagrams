@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams.v2
 
 import cats.Eq
-import cats.data.NonEmptyList
+import cats.data._
 
 sealed trait ToyDiagramLanguage
 
@@ -20,20 +20,20 @@ object ToyDiagramLanguage {
             s"arrow($s)"
         }
 
-      NonEmptyList.one(str)
+      NonEmptyChain.one(str)
     }
 
   implicit val toyEq: Eq[ToyDiagramLanguage] =
     Eq.fromUniversalEquals
 
-  implicit def nelHighlightEncoder[A](implicit
+  implicit def necHighlightEncoder[A](implicit
       enc: HighlightEncoder[ToyDiagramLanguage, A]
-  ): HighlightEncoder[NonEmptyList[ToyDiagramLanguage], A] =
-    new HighlightEncoder[NonEmptyList[ToyDiagramLanguage], A] {
-      def encode(x: A): NonEmptyList[ToyDiagramLanguage] =
-        NonEmptyList.one(enc.encode(x))
+  ): HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], A] =
+    new HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], A] {
+      def encode(x: A): NonEmptyChain[ToyDiagramLanguage] =
+        NonEmptyChain.one(enc.encode(x))
 
-      def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyList[ToyDiagramLanguage] =
-        NonEmptyList.one(enc.encodeWithHighlights(x, highlighted))
+      def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyChain[ToyDiagramLanguage] =
+        NonEmptyChain.one(enc.encodeWithHighlights(x, highlighted))
     }
 }

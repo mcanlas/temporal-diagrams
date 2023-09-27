@@ -7,7 +7,7 @@ import weaver._
 object DiagramEncoderSuite extends FunSuite {
   test("A diagram encoder can encode") {
     expect.eql(
-      NonEmptyList.one("component(abc)"),
+      NonEmptyChain.one("component(abc)"),
       ToyDiagramLanguage.toyEncoder.encode(ToyDiagramLanguage.Component("abc"))
     )
   }
@@ -18,6 +18,6 @@ object DiagramEncoderSuite extends FunSuite {
         .toyEncoder
         .contramap((s: String) => ToyDiagramLanguage.Component(s"stringy $s"))
 
-    expect.eql(NonEmptyList.one("component(stringy abc)"), stringEncoder.encode("abc"))
+    expect.eql(NonEmptyChain.one("component(stringy abc)"), stringEncoder.encode("abc"))
   }
 }

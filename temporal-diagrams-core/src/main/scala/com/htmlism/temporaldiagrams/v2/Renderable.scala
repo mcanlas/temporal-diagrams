@@ -4,7 +4,7 @@ import scala.collection.immutable.ListSet
 import scala.util.chaining._
 
 import cats.Semigroup
-import cats.data.NonEmptyList
+import cats.data.NonEmptyChain
 
 /**
   * A trait to make the hiding of the domain type easier, for cases where two different domains are participating in the
@@ -44,17 +44,17 @@ object Renderable {
       enc.encodeWithHighlights(x, tags.contains(tag))
   }
 
-  def renderMany[D: Semigroup](xs: NonEmptyList[Renderable[D]]): D =
+  def renderMany[D: Semigroup](xs: NonEmptyChain[Renderable[D]]): D =
     xs
       .map(_.render)
       .reduce
 
-  def renderManyWithTag[D: Semigroup](xs: NonEmptyList[Renderable[D]], tag: String): D =
+  def renderManyWithTag[D: Semigroup](xs: NonEmptyChain[Renderable[D]], tag: String): D =
     xs
       .map(_.renderWithHighlight(tag))
       .reduce
 
-  def allTags(xs: NonEmptyList[Renderable[_]]): ListSet[String] =
+  def allTags(xs: NonEmptyChain[Renderable[_]]): ListSet[String] =
     xs
       .iterator
       .flatMap(_.tags)

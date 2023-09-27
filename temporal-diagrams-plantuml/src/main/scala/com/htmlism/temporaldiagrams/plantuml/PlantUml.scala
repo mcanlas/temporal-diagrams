@@ -29,20 +29,20 @@ object PlantUml {
       index -> str
     }
 
-  implicit def nelEncoder[A](implicit A: DiagramEncoder[A]): DiagramEncoder[NonEmptyList[A]] =
-    (xs: NonEmptyList[A]) =>
+  implicit def necEncoder[A](implicit A: DiagramEncoder[A]): DiagramEncoder[NonEmptyChain[A]] =
+    (xs: NonEmptyChain[A]) =>
       A.encode(xs.head)
-        .appendList(xs.tail.flatMap(x => "" :: A.encode(x).toList))
+        .appendChain(xs.tail.flatMap(x => "" +: A.encode(x).toChain))
 
-  implicit def nelHighlightEncoder[A](implicit
+  implicit def necHighlightEncoder[A](implicit
       enc: HighlightEncoder[PlantUml, A]
-  ): HighlightEncoder[NonEmptyList[PlantUml], A] =
-    new HighlightEncoder[NonEmptyList[PlantUml], A] {
-      def encode(x: A): NonEmptyList[PlantUml] =
-        NonEmptyList.one(enc.encode(x))
+  ): HighlightEncoder[NonEmptyChain[PlantUml], A] =
+    new HighlightEncoder[NonEmptyChain[PlantUml], A] {
+      def encode(x: A): NonEmptyChain[PlantUml] =
+        NonEmptyChain.one(enc.encode(x))
 
-      def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyList[PlantUml] =
-        NonEmptyList.one(enc.encodeWithHighlights(x, highlighted))
+      def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyChain[PlantUml] =
+        NonEmptyChain.one(enc.encodeWithHighlights(x, highlighted))
     }
 
   implicit val DiagramEncoder: DiagramEncoder[PlantUml] = {
@@ -50,22 +50,22 @@ object PlantUml {
       s"component $name"
         .applySome(oAlias)((s, a) => s + s" as $a")
         .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(NonEmptyList.one)
+        .pipe(NonEmptyChain.one)
 
     case Queue(name, oAlias, oStereotype) =>
       s"queue $name"
         .applySome(oAlias)((s, a) => s + s" as $a")
         .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(NonEmptyList.one)
+        .pipe(NonEmptyChain.one)
 
     case Database(name, oAlias, oStereotype) =>
       s"database $name"
         .applySome(oAlias)((s, a) => s + s" as $a")
         .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(NonEmptyList.one)
+        .pipe(NonEmptyChain.one)
 
     case Arrow(src, dest) =>
-      NonEmptyList.one(s"$src --> $dest")
+      NonEmptyChain.one(s"$src --> $dest")
 
     case SkinParamGroup(base, parameters, oStereotype) =>
       parameters
@@ -78,10 +78,11 @@ object PlantUml {
 
           s"skinparam $base$stereotype {"
         }
-        .pipe(NonEmptyList.one("}").prependList)
+        .pipe(Chain.fromSeq)
+        .pipe(NonEmptyChain.one("}").prependChain)
   }
 
-  def render[A](x: A)(implicit A: DiagramEncoder[A]): NonEmptyList[String] =
+  def render[A](x: A)(implicit A: DiagramEncoder[A]): NonEmptyChain[String] =
     A.encode(x).pipe(asDocument)
 
   /**
@@ -126,8 +127,8 @@ object PlantUml {
       SkinParamGroup(base, Nil, stereotype.some)
   }
 
-  private def asDocument(xs: NonEmptyList[String]) =
-    NonEmptyList.of("@startuml", "") :::
-      xs :::
-      NonEmptyList.of("", "@enduml")
+  private def asDocument(xs: NonEmptyChain[String]) =
+    NonEmptyChain.of("@startuml", "") ++
+      xs ++
+      NonEmptyChain.of("", "@enduml")
 }
