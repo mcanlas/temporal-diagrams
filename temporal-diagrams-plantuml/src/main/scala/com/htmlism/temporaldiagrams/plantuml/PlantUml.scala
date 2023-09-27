@@ -21,6 +21,11 @@ object PlantUml {
           case _: SkinParamGroup =>
             1
 
+          case _: Arrow =>
+            // if arrows refer to a component that isn't defined, they will implicitly create their own;
+            // so allow components to take priority
+            10
+
           case _ =>
             2
         }
