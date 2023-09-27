@@ -32,4 +32,7 @@ object DiagramEncoder {
       def contramap[A, B](fa: DiagramEncoder[A])(f: B => A): DiagramEncoder[B] =
         (x: B) => fa.encode(f(x))
     }
+
+  def apply[A: DiagramEncoder]: DiagramEncoder[A] =
+    implicitly[DiagramEncoder[A]]
 }

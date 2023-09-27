@@ -49,8 +49,7 @@ class WriteOuroborosDiagram[F[_]](out: FilePrinterAlg[F]) {
     out.print("ouroboros.puml")(
       Renderable
         .renderMany(WriteOuroborosDiagram.diagram)
-        .append(PlantUml.LeftToRightDirection)
-        .pipe(PlantUml.render(_))
+        .pipe(PlantUml.render)
         .mkString_("\n")
     )
 }

@@ -83,8 +83,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]) {
     val str =
       renders
         .pipe(Renderable.renderMany[NonEmptyChain[PlantUml]])
-        .pipe(_.distinct.sorted)
-        .pipe(PlantUml.render(_))
+        .pipe(PlantUml.render)
         .mkString_("\n")
 
     out.print(s"v2-$n.puml")(str)
@@ -100,8 +99,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]) {
       val str =
         renders
           .pipe(Renderable.renderManyWithTag[NonEmptyChain[PlantUml]](_, t))
-          .pipe(_.distinct.sorted)
-          .pipe(PlantUml.render(_))
+          .pipe(PlantUml.render)
           .mkString_("\n")
 
       out.print(s"v2-$n-$t.puml")(str)

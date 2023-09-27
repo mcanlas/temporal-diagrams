@@ -53,7 +53,7 @@ object PlantUml {
         NonEmptyChain.one(enc.encodeWithHighlights(x, highlighted))
     }
 
-  implicit val DiagramEncoder: DiagramEncoder[PlantUml] = {
+  implicit val plantUmlDiagramEncoder: DiagramEncoder[PlantUml] = {
     case LeftToRightDirection =>
       "left to right direction"
         .pipe(NonEmptyChain.one)
@@ -96,8 +96,20 @@ object PlantUml {
         .pipe(NonEmptyChain.one("}").prependChain)
   }
 
-  def render[A](x: A)(implicit A: DiagramEncoder[A]): NonEmptyChain[String] =
-    A.encode(x).pipe(asDocument)
+  def render(xs: NonEmptyChain[PlantUml]): NonEmptyChain[String] =
+    xs
+      .distinct
+      .sorted
+      .pipe(DiagramEncoder[NonEmptyChain[PlantUml]].encode)
+      .pipe(asDocument)
+
+  def renderHorizontally(xs: NonEmptyChain[PlantUml]): NonEmptyChain[String] =
+    xs
+      .distinct
+      .sorted
+      .prepend(LeftToRightDirection)
+      .pipe(DiagramEncoder[NonEmptyChain[PlantUml]].encode)
+      .pipe(asDocument)
 
   case object LeftToRightDirection extends PlantUml
 
