@@ -24,7 +24,6 @@ object OuroborosDsl {
               .one(PlantUml.Component(s, None, None))
 
           case Encoding(src, dest, name) =>
-            // TODO need arrow comment support
             NonEmptyChain
               .one(PlantUml.Arrow(src, dest, name.some))
 
