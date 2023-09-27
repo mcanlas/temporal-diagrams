@@ -15,11 +15,14 @@ object PlantUml {
     Order.by { x =>
       val index =
         x match {
-          case _: SkinParamGroup =>
+          case LeftToRightDirection =>
             0
 
-          case _ =>
+          case _: SkinParamGroup =>
             1
+
+          case _ =>
+            2
         }
 
       val str =
@@ -46,6 +49,10 @@ object PlantUml {
     }
 
   implicit val DiagramEncoder: DiagramEncoder[PlantUml] = {
+    case LeftToRightDirection =>
+      "left to right direction"
+        .pipe(NonEmptyChain.one)
+
     case Component(name, oAlias, oStereotype) =>
       s"component $name"
         .applySome(oAlias)((s, a) => s + s" as $a")
@@ -84,6 +91,8 @@ object PlantUml {
 
   def render[A](x: A)(implicit A: DiagramEncoder[A]): NonEmptyChain[String] =
     A.encode(x).pipe(asDocument)
+
+  case object LeftToRightDirection extends PlantUml
 
   /**
     * A building block in component diagrams

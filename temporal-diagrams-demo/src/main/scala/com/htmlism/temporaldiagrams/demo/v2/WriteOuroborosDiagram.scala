@@ -31,12 +31,12 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO
       .map(_.r)
 }
 
-// TODO need left to write support
 class WriteOuroborosDiagram[F[_]](out: FilePrinterAlg[F]) {
   def run: F[Unit] =
     out.print("ouroboros.puml")(
       Renderable
         .renderMany(WriteOuroborosDiagram.diagram)
+        .append(PlantUml.LeftToRightDirection)
         .pipe(PlantUml.render(_))
         .mkString_("\n")
     )
