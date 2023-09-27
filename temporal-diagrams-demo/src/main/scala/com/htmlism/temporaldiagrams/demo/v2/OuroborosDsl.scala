@@ -1,6 +1,7 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
 import cats.data.NonEmptyChain
+import cats.syntax.all._
 
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.BrightEncoder
@@ -22,10 +23,10 @@ object OuroborosDsl {
             NonEmptyChain
               .one(PlantUml.Component(s, None, None))
 
-          case Encoding(src, dest, _) =>
+          case Encoding(src, dest, name) =>
             // TODO need arrow comment support
             NonEmptyChain
-              .one(PlantUml.Arrow(src, dest))
+              .one(PlantUml.Arrow(src, dest, name.some))
 
           case Output(s) =>
             NonEmptyChain

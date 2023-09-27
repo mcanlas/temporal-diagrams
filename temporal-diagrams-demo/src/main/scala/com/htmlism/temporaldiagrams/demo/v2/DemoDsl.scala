@@ -27,7 +27,7 @@ object DemoDsl {
                       skin(isBright)
                     )
                     .applySome(oDep) { (a, d) =>
-                      a.appendChain(Chain.one(PlantUml.Arrow(d + i.toString, n)))
+                      a.appendChain(Chain.one(PlantUml.Arrow(d + i.toString, n, None)))
                     }
                 }
             else
@@ -37,7 +37,7 @@ object DemoDsl {
                   skin(isBright)
                 )
                 .applySome(oDep) { (a, d) =>
-                  a.appendChain(Chain.one(PlantUml.Arrow(d, n)))
+                  a.appendChain(Chain.one(PlantUml.Arrow(d, n, None)))
                 }
 
           case Buffered(n, oDep) =>
@@ -46,11 +46,11 @@ object DemoDsl {
                 PlantUml.Component(n, None, Option.when(isBright)("Service")),
                 skin(isBright),
                 PlantUml.Queue(n + "_queue", None, None),
-                PlantUml.Arrow(n + "_queue", n),
+                PlantUml.Arrow(n + "_queue", n, None),
                 queueSkin
               )
               .applySome(oDep) { (a, d) =>
-                a.appendChain(Chain.one(PlantUml.Arrow(d, n + "_queue")))
+                a.appendChain(Chain.one(PlantUml.Arrow(d, n + "_queue", None)))
               }
         }
       }

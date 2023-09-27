@@ -71,8 +71,10 @@ object PlantUml {
         .applySome(oStereotype)((s, st) => s + s" << $st >>")
         .pipe(NonEmptyChain.one)
 
-    case Arrow(src, dest) =>
-      NonEmptyChain.one(s"$src --> $dest")
+    case Arrow(src, dest, oText) =>
+      s"$src --> $dest"
+        .applySome(oText)((s, t) => s"$s : $t")
+        .pipe(NonEmptyChain.one)
 
     case SkinParamGroup(base, parameters, oStereotype) =>
       parameters
@@ -117,8 +119,15 @@ object PlantUml {
     * In terms of "gravity", the source is always first. In top-down diagrams, the source is on the top and the
     * destination is on the bottom. In left-to-right diagrams, the source is on the left and the destination is on the
     * right.
+    *
+    * @param source
+    *   The base side of the arrow, where it originates
+    * @param destination
+    *   The tip side of the arrow, where it stops
+    * @param text
+    *   Optional text written along the arrow
     */
-  case class Arrow(source: String, destination: String) extends PlantUml
+  case class Arrow(source: String, destination: String, text: Option[String]) extends PlantUml
 
   case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
       extends PlantUml {
