@@ -19,14 +19,26 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO
         OuroborosDsl.Type("User.Dsl"),
         OuroborosDsl.Type("TemporalDiagrams.PlantUml"),
         OuroborosDsl.Type("TemporalDiagrams.Mermaid"),
-        OuroborosDsl.Output("Plantuml"),
-        OuroborosDsl.Output("Mermaid"),
+        OuroborosDsl.Output("PlantUml", "vertical"),
+        OuroborosDsl.Output("PlantUml", "horizontal"),
+        OuroborosDsl.Output("PlantUml", "with_highlights"),
+        OuroborosDsl.Output("Mermaid", "default"),
         OuroborosDsl.Encoding("User.Config", "User.Dsl", "Episode 1"),
         OuroborosDsl.Encoding("User.Config", "User.Dsl", "Episode 2"),
         OuroborosDsl.Encoding("User.Dsl", "TemporalDiagrams.PlantUml", "HighlightEncoder[PlantUml, User.Dsl]"),
         OuroborosDsl.Encoding("User.Dsl", "TemporalDiagrams.Mermaid", "HighlightEncoder[Mermaid, User.Dsl]"),
-        OuroborosDsl.Encoding("TemporalDiagrams.PlantUml", "Plantuml", "DiagramEncoder[Plantuml]"),
-        OuroborosDsl.Encoding("TemporalDiagrams.Mermaid", "Mermaid", "DiagramEncoder[Mermaid]")
+        OuroborosDsl.Encoding("TemporalDiagrams.PlantUml", "PlantUml_vertical", "DiagramEncoder[Plantuml]\\nrender"),
+        OuroborosDsl.Encoding(
+          "TemporalDiagrams.PlantUml",
+          "PlantUml_horizontal",
+          "DiagramEncoder[Plantuml]\\nrender horizontally"
+        ),
+        OuroborosDsl.Encoding(
+          "TemporalDiagrams.PlantUml",
+          "PlantUml_with_highlights",
+          "DiagramEncoder[Plantuml]\\nrender with highlights"
+        ),
+        OuroborosDsl.Encoding("TemporalDiagrams.Mermaid", "Mermaid_default", "DiagramEncoder[Mermaid]")
       )
       .map(_.r)
 }

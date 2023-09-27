@@ -13,7 +13,7 @@ object OuroborosDsl {
 
   case class Encoding(src: String, dest: String, name: String) extends OuroborosDsl
 
-  case class Output(language: String) extends OuroborosDsl
+  case class Output(language: String, namespace: String) extends OuroborosDsl
 
   implicit val demoBrightEncoder: BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] =
     new BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] {
@@ -27,9 +27,9 @@ object OuroborosDsl {
             NonEmptyChain
               .one(PlantUml.Arrow(src, dest, name.some))
 
-          case Output(s) =>
+          case Output(s, namespace) =>
             NonEmptyChain
-              .one(PlantUml.Database(s, None, None))
+              .one(PlantUml.Database(s, Some(s + "_" + namespace), None))
         }
     }
 }
