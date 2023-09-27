@@ -28,6 +28,7 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO
         OuroborosDsl.Encoding("User.Dsl", "TemporalDiagrams.PlantUml", "HighlightEncoder[PlantUml, User.Dsl]"),
         OuroborosDsl.Encoding("User.Dsl", "TemporalDiagrams.Mermaid", "HighlightEncoder[Mermaid, User.Dsl]"),
         OuroborosDsl.Encoding("TemporalDiagrams.PlantUml", "PlantUml_vertical", "DiagramEncoder[Plantuml]\\nrender"),
+        // TODO variants are upstream; this is not accurate
         OuroborosDsl.Encoding(
           "TemporalDiagrams.PlantUml",
           "PlantUml_horizontal",
