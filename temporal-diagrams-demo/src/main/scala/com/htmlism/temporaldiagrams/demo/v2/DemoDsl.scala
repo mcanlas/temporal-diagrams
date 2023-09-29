@@ -1,4 +1,5 @@
-package com.htmlism.temporaldiagrams.demo.v2
+package com.htmlism.temporaldiagrams
+package demo.v2
 
 import cats.data.Chain
 import cats.data.NonEmptyChain
