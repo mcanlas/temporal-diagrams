@@ -4,7 +4,7 @@ package demo.v2
 import cats.data.Chain
 import cats.data.NonEmptyChain
 
-import com.htmlism.temporaldiagrams.plantuml.PlantUml
+import com.htmlism.temporaldiagrams.plantuml._
 import com.htmlism.temporaldiagrams.v2.BrightEncoder
 
 sealed trait DemoDsl
