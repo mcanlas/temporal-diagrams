@@ -96,6 +96,7 @@ object PlantUml {
         .pipe(NonEmptyChain.one("}").prependChain)
   }
 
+  // TODO test this
   def render(xs: NonEmptyChain[PlantUml]): NonEmptyChain[String] =
     xs
       .distinct
