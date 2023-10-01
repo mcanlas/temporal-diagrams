@@ -39,7 +39,7 @@ object ProjectPlugin extends AutoPlugin {
 
       def withCats: Project =
         p
-          .settings(libraryDependencies += "org.typelevel" %% "cats-core" % "2.9.0")
+          .settings(libraryDependencies += "org.typelevel" %% "cats-core" % "2.10.0")
 
       def withHttpServer: Project =
         p
