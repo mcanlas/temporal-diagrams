@@ -35,7 +35,7 @@ object ProjectPlugin extends AutoPlugin {
 
     implicit class ProjectOps(p: Project) {
       val http4sVersion =
-        "0.23.18"
+        "0.23.23"
 
       def withCats: Project =
         p
@@ -46,7 +46,7 @@ object ProjectPlugin extends AutoPlugin {
           .settings(
             libraryDependencies ++= Seq(
               "org.http4s" %% "http4s-dsl"          % http4sVersion,
-              "org.http4s" %% "http4s-blaze-server" % "0.23.13"
+              "org.http4s" %% "http4s-blaze-server" % "0.23.15"
             )
           )
 
