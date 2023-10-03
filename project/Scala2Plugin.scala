@@ -15,6 +15,7 @@ object Scala2Plugin extends AutoPlugin {
     scalaVersion := "2.13.12"
   )
 
+  // putting into project settings helps with late binding for properly detecting scala3 cross build?
   override val projectSettings: Seq[Setting[?]] = Seq(
     scalacOptions ++= scala3Syntax(scalaVersion.value)
   )
