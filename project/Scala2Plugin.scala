@@ -16,6 +16,15 @@ object Scala2Plugin extends AutoPlugin {
   )
 
   override val projectSettings: Seq[Setting[?]] = Seq(
-    scalacOptions ++= Seq("-Xsource:3")
+    scalacOptions ++= scala3Syntax(scalaVersion.value)
   )
+
+  private def scala3Syntax(s: String) =
+    CrossVersion.partialVersion(s) match {
+      case Some((2, _)) =>
+        Seq("-Xsource:3")
+
+      case _ =>
+        Nil
+    }
 }
