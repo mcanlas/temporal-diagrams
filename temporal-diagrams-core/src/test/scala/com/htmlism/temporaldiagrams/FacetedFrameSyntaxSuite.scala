@@ -1,8 +1,8 @@
 package com.htmlism.temporaldiagrams
 
-import weaver._
+import weaver.*
 
-import com.htmlism.temporaldiagrams.syntax._
+import com.htmlism.temporaldiagrams.syntax.*
 
 object FacetedFrameSyntaxSuite extends FunSuite {
   test("Faceted frames DSL should support building one") {

@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
 import cats.data.NonEmptyChain
-import cats.syntax.all._
+import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.BrightEncoder

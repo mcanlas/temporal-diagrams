@@ -1,9 +1,9 @@
 package com.htmlism.temporaldiagrams.v2
 
-import cats.syntax.all._
-import weaver._
+import cats.syntax.all.*
+import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage._
+import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
 
 object HighlightEncoderSuite extends FunSuite {
   test("A diagram encoder can encode") {

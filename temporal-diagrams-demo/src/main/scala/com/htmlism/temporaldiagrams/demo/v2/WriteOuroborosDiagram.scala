@@ -1,10 +1,10 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
-import scala.util.chaining._
+import scala.util.chaining.*
 
 import cats.data.NonEmptyChain
-import cats.effect._
-import cats.syntax.all._
+import cats.effect.*
+import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.demo.FilePrinterAlg
 import com.htmlism.temporaldiagrams.plantuml.PlantUml

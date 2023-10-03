@@ -1,11 +1,11 @@
 package com.htmlism.temporaldiagrams
 
-import weaver._
+import weaver.*
 
-import com.htmlism.temporaldiagrams.syntax._
+import com.htmlism.temporaldiagrams.syntax.*
 
 object DslSuite extends FunSuite {
-  import PlantUml._
+  import PlantUml.*
 
   test("support tagging") {
     val foo =

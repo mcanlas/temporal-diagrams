@@ -2,7 +2,7 @@ package com.htmlism.temporaldiagrams.demo
 
 import java.io.PrintWriter
 
-import cats.effect._
+import cats.effect.*
 
 trait FilePrinterAlg[F[_]] {
   def print(dest: String)(s: String): F[Unit]

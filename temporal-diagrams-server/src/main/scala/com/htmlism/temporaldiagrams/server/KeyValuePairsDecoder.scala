@@ -1,8 +1,8 @@
 package com.htmlism.temporaldiagrams.server
 
-import cats._
-import cats.data._
-import cats.syntax.all._
+import cats.*
+import cats.data.*
+import cats.syntax.all.*
 
 sealed trait KeyValuePairsDecoder[A] { self: KeyValuePairsDecoder[A] =>
   def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, A]

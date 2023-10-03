@@ -1,5 +1,5 @@
-import sbt._
-import sbt.Keys._
+import sbt.*
+import sbt.Keys.*
 
 /**
   * Automatically enriches projects with the following settings (despite the word "override").

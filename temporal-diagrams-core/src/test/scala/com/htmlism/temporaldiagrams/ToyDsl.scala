@@ -1,15 +1,15 @@
 package com.htmlism.temporaldiagrams
 
-import cats.syntax.all._
+import cats.syntax.all.*
 
-import com.htmlism.temporaldiagrams.syntax._
+import com.htmlism.temporaldiagrams.syntax.*
 
 sealed trait ToyDsl
 
 case class Service(name: String, dependency: Option[String]) extends ToyDsl
 
 object Service {
-  import PlantUml._
+  import PlantUml.*
 
   implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
     new DslEncoder[Service, PlantUml] {

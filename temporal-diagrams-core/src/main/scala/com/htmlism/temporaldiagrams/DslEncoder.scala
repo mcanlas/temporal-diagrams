@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams
 
 import cats.data.NonEmptyList
-import cats.syntax.all._
+import cats.syntax.all.*
 
 /**
   * Describes an encoding bridge from DSL `A` to diagram dialect `B`

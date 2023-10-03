@@ -1,17 +1,17 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
-import scala.util.chaining._
+import scala.util.chaining.*
 
-import cats._
+import cats.*
 import cats.data.Kleisli
 import cats.data.NonEmptyChain
-import cats.effect._
-import cats.syntax.all._
+import cats.effect.*
+import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.demo.FilePrinterAlg
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
-import com.htmlism.temporaldiagrams.v2.syntax._
+import com.htmlism.temporaldiagrams.v2.syntax.*
 
 object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinterAlg[IO]) with IOApp.Simple
 

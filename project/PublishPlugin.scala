@@ -1,5 +1,5 @@
-import sbt.Keys._
-import sbt._
+import sbt.Keys.*
+import sbt.*
 
 /**
   * Automatically enriches projects with the following settings (despite the word "override").
@@ -16,7 +16,7 @@ object PublishPlugin extends AutoPlugin {
     */
   override def trigger: PluginTrigger = AllRequirements
 
-  override val buildSettings: Seq[Setting[_]] = Seq(
+  override val buildSettings: Seq[Setting[?]] = Seq(
     organization  := "com.htmlism",
     versionScheme := Some("strict"),
     publishTo     := Some("GitHub" at "https://maven.pkg.github.com/mcanlas/temporal-diagrams/"),

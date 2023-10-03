@@ -1,8 +1,8 @@
 package com.htmlism.temporaldiagrams
 
-import cats.syntax.all._
+import cats.syntax.all.*
 
-import com.htmlism.temporaldiagrams.syntax._
+import com.htmlism.temporaldiagrams.syntax.*
 
 object PlantUml {
   def render(xs: List[PlantUml]): String =

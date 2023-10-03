@@ -1,9 +1,9 @@
 package com.htmlism.temporaldiagrams
 
-import cats.data._
-import weaver._
+import cats.data.*
+import weaver.*
 
-import com.htmlism.temporaldiagrams.syntax._
+import com.htmlism.temporaldiagrams.syntax.*
 
 object NarrativeSuite extends FunSuite {
   test("support progressive building by prepending") {

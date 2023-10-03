@@ -1,12 +1,12 @@
 package com.htmlism.temporaldiagrams
 
-import cats.syntax.all._
-import weaver._
+import cats.syntax.all.*
+import weaver.*
 
-import com.htmlism.temporaldiagrams.syntax._
+import com.htmlism.temporaldiagrams.syntax.*
 
 object HighlightSuite extends FunSuite {
-  import PlantUml._
+  import PlantUml.*
 
   test("Two objects with no highlights should render dimly") {
     val foo =

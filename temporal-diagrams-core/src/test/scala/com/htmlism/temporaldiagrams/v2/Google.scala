@@ -2,7 +2,7 @@ package com.htmlism.temporaldiagrams.v2
 
 import cats.data.NonEmptyChain
 
-import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage._
+import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
 
 object Google {
   case class Compute(s: String)

@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams.v2
 
 import scala.collection.immutable.ListSet
-import scala.util.chaining._
+import scala.util.chaining.*
 
 import cats.Semigroup
 import cats.data.NonEmptyChain
@@ -54,7 +54,7 @@ object Renderable {
       .map(_.renderWithHighlight(tag))
       .reduce
 
-  def allTags(xs: NonEmptyChain[Renderable[_]]): ListSet[String] =
+  def allTags(xs: NonEmptyChain[Renderable[?]]): ListSet[String] =
     xs
       .iterator
       .flatMap(_.tags)

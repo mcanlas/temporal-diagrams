@@ -4,8 +4,8 @@ package syntax
 import scala.collection.immutable.ListSet
 
 import cats.data.NonEmptyChain
-import cats.syntax.all._
-import weaver._
+import cats.syntax.all.*
+import weaver.*
 
 object SyntaxSuite extends FunSuite {
   test("Domain objects from unrelated hierarchies can be bound together, with postfix syntax") {

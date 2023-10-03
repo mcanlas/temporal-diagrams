@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams.v2
 
 import cats.Eq
-import cats.data._
+import cats.data.*
 
 sealed trait ToyDiagramLanguage
 

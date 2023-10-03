@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams.server
 
-import cats.data._
+import cats.data.*
 
 /**
   * A type class to decode a query string into a structure, or return an accumulated structure of errors

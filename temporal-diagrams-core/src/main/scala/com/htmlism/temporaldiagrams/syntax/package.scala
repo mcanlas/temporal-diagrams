@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams
 
-import cats.data._
+import cats.data.*
 
 package object syntax {
   implicit class ValueOps[A](x: A) {

@@ -1,10 +1,10 @@
 package com.htmlism.temporaldiagrams.server
 
-import cats.data._
-import cats.syntax.all._
-import weaver._
+import cats.data.*
+import cats.syntax.all.*
+import weaver.*
 
-import com.htmlism.temporaldiagrams.server.builder._
+import com.htmlism.temporaldiagrams.server.builder.*
 
 object QueryParamsDecoderSuite extends FunSuite {
   test("a value decoder already exists for string") {

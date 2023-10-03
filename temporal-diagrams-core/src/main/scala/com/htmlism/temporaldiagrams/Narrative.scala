@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams
 
-import cats.data._
+import cats.data.*
 
 case class Narrative[K, A](
     frames: NonEmptyList[FacetedFrame[K, A]],
@@ -24,5 +24,5 @@ case class Narrative[K, A](
 
   def episodes: NonEmptyList[List[Renderable.Tagged[A]]] =
     episodeSelectors
-      .map(FacetedFrame.selectFrames(frames, _: _*))
+      .map(FacetedFrame.selectFrames(frames, _*))
 }

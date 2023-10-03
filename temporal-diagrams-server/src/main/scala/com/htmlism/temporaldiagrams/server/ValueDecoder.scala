@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams.server
 
-import cats._
-import cats.syntax.all._
+import cats.*
+import cats.syntax.all.*
 
 // a named kleisli for `A => Either[String, B]`
 // the error channel is linear (as is the case with flatmap refinements

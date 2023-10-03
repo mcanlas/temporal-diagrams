@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams.plantuml
 
-import cats.data._
-import weaver._
+import cats.data.*
+import weaver.*
 
 object PlantUmlSuite extends FunSuite {
   test("PlantUML can render one component") {

@@ -1,10 +1,10 @@
 package com.htmlism.temporaldiagrams
 
 import cats.data.NonEmptyList
-import weaver._
+import weaver.*
 
 object MultiArrowSuite extends FunSuite {
-  import PlantUml._
+  import PlantUml.*
 
   test("A multiarrow spec should render as a product") {
     val things =

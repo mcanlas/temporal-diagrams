@@ -1,12 +1,12 @@
 package com.htmlism.temporaldiagrams.plantuml
 
-import scala.util.chaining._
+import scala.util.chaining.*
 
 import cats.Order
-import cats.data._
-import cats.syntax.all._
+import cats.data.*
+import cats.syntax.all.*
 
-import com.htmlism.temporaldiagrams.v2._
+import com.htmlism.temporaldiagrams.v2.*
 
 sealed trait PlantUml
 

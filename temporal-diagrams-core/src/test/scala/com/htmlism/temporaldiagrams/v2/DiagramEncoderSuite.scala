@@ -1,8 +1,8 @@
 package com.htmlism.temporaldiagrams.v2
 
-import cats.data._
-import cats.syntax.all._
-import weaver._
+import cats.data.*
+import cats.syntax.all.*
+import weaver.*
 
 object DiagramEncoderSuite extends FunSuite {
   test("A diagram encoder can encode") {

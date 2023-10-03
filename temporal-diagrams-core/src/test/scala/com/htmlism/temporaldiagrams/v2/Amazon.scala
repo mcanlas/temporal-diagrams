@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams.v2
 
-import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage._
+import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
 
 object Amazon {
   case class Ec2(s: String)
