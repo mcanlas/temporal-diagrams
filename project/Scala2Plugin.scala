@@ -14,4 +14,8 @@ object Scala2Plugin extends AutoPlugin {
   override val buildSettings: Seq[Setting[?]] = Seq(
     scalaVersion := "2.13.12"
   )
+
+  override val projectSettings: Seq[Setting[?]] = Seq(
+    scalacOptions ++= Seq("-Xsource:3")
+  )
 }
