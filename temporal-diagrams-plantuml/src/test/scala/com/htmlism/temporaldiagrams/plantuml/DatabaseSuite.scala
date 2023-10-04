@@ -24,4 +24,13 @@ object DatabaseSuite extends FunSuite {
       )
     )
   }
+
+  test("A database has an optional stereotype") {
+    expect.eql(
+      NonEmptyChain.one("database foo << bar >>"),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Database("foo", None, "bar".some)
+      )
+    )
+  }
 }

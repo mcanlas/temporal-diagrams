@@ -24,4 +24,13 @@ object QueueSuite extends FunSuite {
       )
     )
   }
+
+  test("A queue has an optional stereotype") {
+    expect.eql(
+      NonEmptyChain.one("queue foo << bar >>"),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Queue("foo", None, "bar".some)
+      )
+    )
+  }
 }

@@ -24,4 +24,13 @@ object ComponentSuite extends FunSuite {
       )
     )
   }
+
+  test("A component has an optional stereotype") {
+    expect.eql(
+      NonEmptyChain.one("component foo << bar >>"),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Component("foo", None, "bar".some)
+      )
+    )
+  }
 }
