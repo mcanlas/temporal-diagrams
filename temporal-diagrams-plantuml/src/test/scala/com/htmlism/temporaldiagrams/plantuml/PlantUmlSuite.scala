@@ -1,10 +1,11 @@
 package com.htmlism.temporaldiagrams.plantuml
 
 import cats.data.*
+import com.htmlism.temporaldiagrams.v2.DiagramEncoder
 import weaver.*
 
 object PlantUmlSuite extends FunSuite {
-  test("PlantUML can render one component") {
+  test("Can render one component") {
     expect.eql(
       NonEmptyChain.of("@startuml", "", "component asdf", "", "@enduml"),
       PlantUml.render(
@@ -15,7 +16,7 @@ object PlantUmlSuite extends FunSuite {
     )
   }
 
-  test("PlantUML can render many components, AND lexicographically sorts them") {
+  test("Can render many components, AND lexicographically sorts them") {
     val xs =
       NonEmptyChain
         .of[PlantUml](
@@ -26,6 +27,15 @@ object PlantUmlSuite extends FunSuite {
     expect.eql(
       NonEmptyChain.of("@startuml", "", "component bar", "", "component foo", "", "@enduml"),
       PlantUml.render(xs)
+    )
+  }
+
+  test("Can render the left to right directive") {
+    expect.eql(
+      NonEmptyChain.one("left to right direction"),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.LeftToRightDirection
+      )
     )
   }
 }
