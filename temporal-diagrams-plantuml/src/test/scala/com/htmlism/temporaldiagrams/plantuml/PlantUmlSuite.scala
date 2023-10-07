@@ -40,21 +40,21 @@ object PlantUmlSuite extends FunSuite {
   }
 
   test("Can derive a non-empty chain highlight encoder from an elemental highlight encoder") {
-    implicit val elementEncoder: HighlightEncoder[PlantUml, FooDsl] = {
-      new HighlightEncoder[PlantUml, FooDsl] {
-        def encode(x: FooDsl): PlantUml =
+    implicit val elementEncoder: HighlightEncoder[PlantUml, NecTestDsl] = {
+      new HighlightEncoder[PlantUml, NecTestDsl] {
+        def encode(x: NecTestDsl): PlantUml =
           PlantUml.Component(x.s, None, None)
 
-        def encodeWithHighlights(x: FooDsl, highlighted: Boolean): PlantUml =
+        def encodeWithHighlights(x: NecTestDsl, highlighted: Boolean): PlantUml =
           PlantUml.Component(s"${x.s} with highlights", None, None)
       }
     }
 
     val derivedEncoder =
-      implicitly[HighlightEncoder[NonEmptyChain[PlantUml], FooDsl]]
+      implicitly[HighlightEncoder[NonEmptyChain[PlantUml], NecTestDsl]]
 
     val x =
-      FooDsl("asdf")
+      NecTestDsl("asdf")
 
     expect.eql(
       NonEmptyChain.one(PlantUml.Component("asdf", None, None)),
@@ -65,5 +65,5 @@ object PlantUmlSuite extends FunSuite {
     )
   }
 
-  case class FooDsl(s: String)
+  case class NecTestDsl(s: String)
 }
