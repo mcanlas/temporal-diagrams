@@ -1,5 +1,7 @@
 package com.htmlism.temporaldiagrams.plantuml
 
+import scala.util.chaining.*
+
 import cats.data.*
 import weaver.*
 
@@ -68,7 +70,21 @@ object PlantUmlSuite extends FunSuite {
 
   case class NecTestDsl(s: String)
 
+  // TODO moar adt
   test("Components are rendered in an order and lexicographically") {
-    expect.eql(1, 1)
+    expect.eql(
+      NonEmptyChain.of(
+        "@startuml",
+        "",
+        "component asdf",
+        "",
+        "@enduml"
+      ),
+      NonEmptyChain
+        .of(
+          PlantUml.Component("asdf", None, None)
+        )
+        .pipe(PlantUml.render)
+    )
   }
 }
