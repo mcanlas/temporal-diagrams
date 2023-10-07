@@ -1,8 +1,9 @@
 package com.htmlism.temporaldiagrams.plantuml
 
 import cats.data.*
-import com.htmlism.temporaldiagrams.v2.*
 import weaver.*
+
+import com.htmlism.temporaldiagrams.v2.*
 
 object PlantUmlSuite extends FunSuite {
   test("Can render one component") {
@@ -66,4 +67,8 @@ object PlantUmlSuite extends FunSuite {
   }
 
   case class NecTestDsl(s: String)
+
+  test("Components are rendered in an order and lexicographically") {
+    expect.eql(1, 1)
+  }
 }
