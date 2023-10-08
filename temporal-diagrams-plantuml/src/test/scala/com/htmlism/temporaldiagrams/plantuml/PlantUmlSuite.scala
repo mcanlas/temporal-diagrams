@@ -83,10 +83,13 @@ object PlantUmlSuite extends FunSuite {
         "",
         "component asdf",
         "",
+        "src --> dest",
+        "",
         "@enduml"
       ),
       NonEmptyChain
         .of(
+          PlantUml.Arrow("src", "dest", None),
           PlantUml.Component("asdf", None, None),
           PlantUml.SkinParamGroup("foo"),
           PlantUml.LeftToRightDirection
