@@ -76,13 +76,20 @@ object PlantUmlSuite extends FunSuite {
       NonEmptyChain.of(
         "@startuml",
         "",
+        "left to right direction",
+        "",
+        "skinparam foo {",
+        "}",
+        "",
         "component asdf",
         "",
         "@enduml"
       ),
       NonEmptyChain
         .of(
-          PlantUml.Component("asdf", None, None)
+          PlantUml.Component("asdf", None, None),
+          PlantUml.SkinParamGroup("foo"),
+          PlantUml.LeftToRightDirection
         )
         .pipe(PlantUml.render)
     )
