@@ -19,6 +19,24 @@ object PlantUmlSuite extends FunSuite {
     )
   }
 
+  test("Can render horizontally") {
+    expect.eql(
+      NonEmptyChain.of(
+        "@startuml",
+        "",
+        "left to right direction",
+        "",
+        "component asdf",
+        "",
+        "@enduml"),
+      PlantUml.renderHorizontally(
+        NonEmptyChain.one(
+          PlantUml.Component("asdf", None, None)
+        )
+      )
+    )
+  }
+
   test("Can render many components, AND lexicographically sorts them") {
     val xs =
       NonEmptyChain
