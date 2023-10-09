@@ -70,7 +70,6 @@ object PlantUmlSuite extends FunSuite {
 
   case class NecTestDsl(s: String)
 
-  // TODO moar adt
   test("Components are rendered in an order and lexicographically") {
     expect.eql(
       NonEmptyChain.of(
@@ -93,6 +92,24 @@ object PlantUmlSuite extends FunSuite {
           PlantUml.Component("asdf", None, None),
           PlantUml.SkinParamGroup("foo"),
           PlantUml.LeftToRightDirection
+        )
+        .pipe(PlantUml.render)
+    )
+  }
+
+  test("Duplicate components are rendered uniquely") {
+    expect.eql(
+      NonEmptyChain.of(
+        "@startuml",
+        "",
+        "component asdf",
+        "",
+        "@enduml"
+      ),
+      NonEmptyChain
+        .of(
+          PlantUml.Component("asdf", None, None),
+          PlantUml.Component("asdf", None, None),
         )
         .pipe(PlantUml.render)
     )
