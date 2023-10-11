@@ -27,6 +27,12 @@ object HighlightEncoderSuite extends FunSuite {
     val repeatEncoder =
       Amazon.Ec2.ec2Encoder.contramap((s: String) => Amazon.Ec2(s"$s $s"))
 
-    expect.eql(Component("amazon ec2: twin twin"), repeatEncoder.encode("twin"))
+    expect.eql(
+      Component("amazon ec2: twin twin"),
+      repeatEncoder.encode("twin")
+    ) and expect.eql(
+      Component("amazon ec2: twin twin true"),
+      repeatEncoder.encodeWithHighlights("twin", highlighted = true)
+    )
   }
 }
