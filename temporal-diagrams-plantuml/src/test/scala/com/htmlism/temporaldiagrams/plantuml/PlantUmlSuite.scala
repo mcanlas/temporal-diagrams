@@ -21,14 +21,7 @@ object PlantUmlSuite extends FunSuite {
 
   test("Can render horizontally") {
     expect.eql(
-      NonEmptyChain.of(
-        "@startuml",
-        "",
-        "left to right direction",
-        "",
-        "component asdf",
-        "",
-        "@enduml"),
+      NonEmptyChain.of("@startuml", "", "left to right direction", "", "component asdf", "", "@enduml"),
       PlantUml.renderHorizontally(
         NonEmptyChain.one(
           PlantUml.Component("asdf", None, None)
@@ -127,7 +120,7 @@ object PlantUmlSuite extends FunSuite {
       NonEmptyChain
         .of(
           PlantUml.Component("asdf", None, None),
-          PlantUml.Component("asdf", None, None),
+          PlantUml.Component("asdf", None, None)
         )
         .pipe(PlantUml.render)
     )

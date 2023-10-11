@@ -1,8 +1,9 @@
 package com.htmlism.temporaldiagrams.plantuml
 
 import cats.data.*
-import com.htmlism.temporaldiagrams.v2.DiagramEncoder
 import weaver.*
+
+import com.htmlism.temporaldiagrams.v2.DiagramEncoder
 
 object SkinParamSuite extends FunSuite {
   test("Can render skin params") {
@@ -25,7 +26,8 @@ object SkinParamSuite extends FunSuite {
         "}"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.SkinParamGroup("asdf")
+        PlantUml
+          .SkinParamGroup("asdf")
           .and("key", "value")
       )
     )
