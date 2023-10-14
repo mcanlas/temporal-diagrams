@@ -23,4 +23,17 @@ object RenderableSuite extends FunSuite {
       Renderable.renderMany(explicitRs)
     )
   }
+
+  test("Renderables have tags") {
+    val renderablesWithTags: NonEmptyChain[Renderable[NonEmptyChain[ToyDiagramLanguage]]] =
+      NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
+        Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), ListSet("amazon")),
+        Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Google.Compute](Google.Compute(""), ListSet("google"))
+      )
+
+    expect.same(
+      ListSet("amazon", "google"),
+      Renderable.allTags(renderablesWithTags)
+    )
+  }
 }
