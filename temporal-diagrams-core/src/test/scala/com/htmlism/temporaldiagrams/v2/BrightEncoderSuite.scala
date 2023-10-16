@@ -20,7 +20,7 @@ object BrightEncoderSuite extends FunSuite {
       enc.encodeBrightly(domainInput, isBright = true)
     ) and expect.eql(
       enc.encodeWithHighlights(domainInput, highlighted = true),
-      enc.encodeBrightly(domainInput, isBright = true)
+      enc.encodeBrightly(domainInput, isBright          = true)
     )
   }
 }

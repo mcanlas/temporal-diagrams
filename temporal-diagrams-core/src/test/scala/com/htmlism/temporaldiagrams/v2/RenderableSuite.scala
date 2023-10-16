@@ -12,6 +12,12 @@ object RenderableSuite extends FunSuite {
       Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Google.Compute](Google.Compute(""), ListSet.empty)
     )
 
+  val renderablesWithTags: NonEmptyChain[Renderable[NonEmptyChain[ToyDiagramLanguage]]] =
+    NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
+      Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2("foo"), ListSet("amazon")),
+      Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Google.Compute](Google.Compute("bar"), ListSet("google"))
+    )
+
   test(
     "Domain objects from unrelated hierarchies can be bound together, and can render to their shared target language"
   ) {
@@ -25,15 +31,20 @@ object RenderableSuite extends FunSuite {
   }
 
   test("Renderables have tags") {
-    val renderablesWithTags: NonEmptyChain[Renderable[NonEmptyChain[ToyDiagramLanguage]]] =
-      NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
-        Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), ListSet("amazon")),
-        Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Google.Compute](Google.Compute(""), ListSet("google"))
-      )
-
     expect.same(
       ListSet("amazon", "google"),
       Renderable.allTags(renderablesWithTags)
+    )
+  }
+
+  test("Can render with highlights") {
+    expect.same(
+      NonEmptyChain.of[ToyDiagramLanguage](
+        ToyDiagramLanguage.Component("amazon ec2: foo true"),
+        ToyDiagramLanguage.Component("google compute: bar false")
+      ),
+      Renderable
+        .renderManyWithTag(renderablesWithTags, "amazon")
     )
   }
 }
