@@ -25,11 +25,6 @@ sealed trait Renderable[D] {
     *   style
     */
   def renderWithHighlight(tag: String): D
-
-  /**
-    * Returns a list of tags associated with this renderable object
-    */
-  def tags: ListSet[String]
 }
 
 object Renderable {
@@ -41,7 +36,13 @@ object Renderable {
     * @tparam D
     *   The target diagram language
     */
-  trait Of[D] extends Renderable[D]
+  trait Of[D] extends Renderable[D] {
+
+    /**
+      * Returns a list of tags associated with this renderable object
+      */
+    def tags: ListSet[String]
+  }
 
   /**
     * @tparam D
@@ -70,6 +71,11 @@ object Renderable {
   def allTags(xs: NonEmptyChain[Renderable[?]]): ListSet[String] =
     xs
       .iterator
-      .flatMap(_.tags)
+      .flatMap { case x: Of[?] =>
+        x.tags
+
+//        case _ =>
+//          ListSet.empty
+      }
       .pipe(ListSet.from)
 }
