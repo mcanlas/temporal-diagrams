@@ -1,3 +1,4 @@
+- 213 tasty canary
 - diagram the framework itself
 - multi arrows in v2
 - encode heterogeneous payloads
