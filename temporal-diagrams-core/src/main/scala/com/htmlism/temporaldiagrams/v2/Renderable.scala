@@ -7,9 +7,6 @@ import cats.Semigroup
 import cats.data.NonEmptyChain
 
 /**
-  * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.Of]], for cases where two different
-  * domains are participating in the same diagram
-  *
   * @tparam D
   *   The target diagram language
   */
@@ -38,12 +35,21 @@ sealed trait Renderable[D] {
 object Renderable {
 
   /**
+    * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
+    * different domains are participating in the same diagram
+    *
+    * @tparam D
+    *   The target diagram language
+    */
+  trait Of[D] extends Renderable[D]
+
+  /**
     * @tparam D
     *   The target diagram language
     * @tparam A
     *   The source domain language
     */
-  case class Of[D, A](x: A, tags: ListSet[String])(implicit enc: HighlightEncoder[D, A]) extends Renderable[D] {
+  case class OfA[D, A](x: A, tags: ListSet[String])(implicit enc: HighlightEncoder[D, A]) extends Of[D] {
     def render: D =
       enc.encode(x)
 

@@ -8,14 +8,14 @@ import weaver.FunSuite
 object RenderableSuite extends FunSuite {
   val explicitRs: NonEmptyChain[Renderable[NonEmptyChain[ToyDiagramLanguage]]] =
     NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
-      Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), ListSet.empty),
-      Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Google.Compute](Google.Compute(""), ListSet.empty)
+      Renderable.OfA[NonEmptyChain[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), ListSet.empty),
+      Renderable.OfA[NonEmptyChain[ToyDiagramLanguage], Google.Compute](Google.Compute(""), ListSet.empty)
     )
 
   val renderablesWithTags: NonEmptyChain[Renderable[NonEmptyChain[ToyDiagramLanguage]]] =
     NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
-      Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2("foo"), ListSet("amazon")),
-      Renderable.Of[NonEmptyChain[ToyDiagramLanguage], Google.Compute](Google.Compute("bar"), ListSet("google"))
+      Renderable.OfA[NonEmptyChain[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2("foo"), ListSet("amazon")),
+      Renderable.OfA[NonEmptyChain[ToyDiagramLanguage], Google.Compute](Google.Compute("bar"), ListSet("google"))
     )
 
   test(

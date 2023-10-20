@@ -10,7 +10,7 @@ import weaver.*
 object SyntaxSuite extends FunSuite {
   test("Domain objects from unrelated hierarchies can be bound together, with postfix syntax") {
     val implicitRs =
-      NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
+      NonEmptyChain.of[Renderable.Of[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2("").r,
         Google.Compute("").r
       )
@@ -20,7 +20,7 @@ object SyntaxSuite extends FunSuite {
 
   test("Domain objects from unrelated hierarchies can be bound together, with postfix tagging") {
     val tagged =
-      NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
+      NonEmptyChain.of[Renderable.Of[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2("").tag("hello"),
         Google.Compute("")
       )
@@ -31,7 +31,7 @@ object SyntaxSuite extends FunSuite {
 
   test("Domain objects can be lifted implicitly") {
     val implicitRs =
-      NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
+      NonEmptyChain.of[Renderable.Of[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2(""),
         Google.Compute("")
       )

@@ -3,10 +3,6 @@ package com.htmlism.temporaldiagrams.v2.syntax
 import weaver.FunSuite
 
 object MultiArrowSuite extends FunSuite {
-  test("syntax specifically targets the simple enum") {
-    expect.eql(1, 1)
-  }
-
   test("can add multi-arrow sources") {
     expect.eql(1, 1)
   }

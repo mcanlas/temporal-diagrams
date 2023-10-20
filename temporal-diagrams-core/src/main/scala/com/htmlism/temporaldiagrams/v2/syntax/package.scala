@@ -20,8 +20,8 @@ package object syntax {
       * @tparam D
       *   The target diagram language
       */
-    def r[D](implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-      Renderable.Of(x, ListSet.empty)
+    def r[D](implicit enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+      Renderable.OfA(x, ListSet.empty)
 
     /**
       * Marks an expression as renderable to `D`, with the specified tags
@@ -50,9 +50,9 @@ package object syntax {
     * @tparam D
     *   Target diagram language
     */
-  implicit def liftToRenderable[A, D](x: A)(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-    Renderable.Of(x, ListSet.empty)
+  implicit def liftToRenderable[A, D](x: A)(implicit enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+    Renderable.OfA(x, ListSet.empty)
 
-  implicit def liftTaggedToRenderable[A, D](xt: Tagged[A])(implicit enc: HighlightEncoder[D, A]): Renderable[D] =
-    Renderable.Of(xt.x, xt.tags)
+  implicit def liftTaggedToRenderable[A, D](xt: Tagged[A])(implicit enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+    Renderable.OfA(xt.x, xt.tags)
 }
