@@ -1,3 +1,4 @@
+- flip publishing
 - 213 tasty canary
 - diagram the framework itself
 - multi arrows in v2
