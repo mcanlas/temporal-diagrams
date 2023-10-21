@@ -2,7 +2,7 @@ lazy val root =
   Project("temporal-diagrams", file("."))
     .withCats
     .withTesting
-    .aggregate(core, demo, server, plantUml, mermaid)
+    .aggregate(core, demo, server, plantUml, mermaid, canary213)
     .disablePublishing
 
 lazy val core =
@@ -34,3 +34,9 @@ lazy val mermaid =
     .settings(description := "Temporal diagram encoders for Mermaid diagrams")
     .dependsOn(core)
     .withTesting
+
+lazy val canary213 =
+  module("canary213")
+    .dependsOn(core, plantUml, mermaid)
+    .settings(scalaVersion := "2.13.12")
+    .disablePublishing
