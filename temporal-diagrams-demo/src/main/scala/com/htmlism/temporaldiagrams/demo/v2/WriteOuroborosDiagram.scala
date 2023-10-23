@@ -11,7 +11,7 @@ import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax.RenderableOps
 
-object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO]) with IOApp.Simple {
+object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO]) with IOApp.Simple:
   val diagram =
     NonEmptyChain
       .of(
@@ -42,9 +42,8 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO
         OuroborosDsl.Encoding("TemporalDiagrams.Mermaid", "Mermaid_default", "DiagramEncoder[Mermaid]")
       )
       .map(_.r)
-}
 
-class WriteOuroborosDiagram[F[_]](out: FilePrinterAlg[F]) {
+class WriteOuroborosDiagram[F[_]](out: FilePrinterAlg[F]):
   def run: F[Unit] =
     out.print("ouroboros.puml")(
       Renderable
@@ -52,4 +51,3 @@ class WriteOuroborosDiagram[F[_]](out: FilePrinterAlg[F]) {
         .pipe(PlantUml.render)
         .mkString_("\n")
     )
-}

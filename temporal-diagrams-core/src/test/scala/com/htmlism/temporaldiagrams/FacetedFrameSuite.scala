@@ -5,8 +5,8 @@ import weaver.*
 
 import com.htmlism.temporaldiagrams.syntax.*
 
-object FacetedFrameSuite extends FunSuite {
-  test("Faceted frames should support building many") {
+object FacetedFrameSuite extends FunSuite:
+  test("Faceted frames should support building many"):
     val component =
       Service("foo1").r
 
@@ -22,9 +22,8 @@ object FacetedFrameSuite extends FunSuite {
         expect.same(xs.head, "key1" -> component.list) and
         expect.same(xs.tail.head, "key2" -> component2.list)
     }
-  }
 
-  test("support building one") {
+  test("support building one"):
     val component =
       Service("foo1").r
 
@@ -35,9 +34,8 @@ object FacetedFrameSuite extends FunSuite {
     matches(frame) { case FacetedFrame.Fixed(x) =>
       expect.same(x, component.list)
     }
-  }
 
-  test("Frame selection pick a variant by key") {
+  test("Frame selection pick a variant by key"):
     val default =
       Service("default").r
 
@@ -53,9 +51,8 @@ object FacetedFrameSuite extends FunSuite {
         .selectFrames(NonEmptyList.of(frame), "some id" -> "key2"),
       variant.list
     )
-  }
 
-  test("pick a default if selectors don't match") {
+  test("pick a default if selectors don't match"):
     val default =
       Service("default").r
 
@@ -75,9 +72,8 @@ object FacetedFrameSuite extends FunSuite {
         .selectFrames(NonEmptyList.of(frame), "some id" -> "nonsense key"),
       default.list
     )
-  }
 
-  test("keep the number of input frames the same as the output") {
+  test("keep the number of input frames the same as the output"):
     val services =
       List(Service("default").r, Service("variant").r)
 
@@ -86,5 +82,3 @@ object FacetedFrameSuite extends FunSuite {
         .selectFrames(FacetedFrame.fixed(services).nel),
       services
     )
-  }
-}

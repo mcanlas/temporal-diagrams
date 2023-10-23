@@ -8,7 +8,7 @@ import com.htmlism.temporaldiagrams.v2.BrightEncoder
 
 sealed trait OuroborosDsl
 
-object OuroborosDsl {
+object OuroborosDsl:
   case class Type(name: String) extends OuroborosDsl
 
   case class Encoding(src: String, dest: String, name: String) extends OuroborosDsl
@@ -16,9 +16,9 @@ object OuroborosDsl {
   case class Output(language: String, namespace: String) extends OuroborosDsl
 
   implicit val demoBrightEncoder: BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] =
-    new BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] {
+    new BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl]:
       def encodeBrightly(x: OuroborosDsl, isBright: Boolean): NonEmptyChain[PlantUml] =
-        x match {
+        x match
           case Type(s) =>
             NonEmptyChain
               .one(PlantUml.Component(s, None, None))
@@ -30,6 +30,3 @@ object OuroborosDsl {
           case Output(s, namespace) =>
             NonEmptyChain
               .one(PlantUml.Database(s, Some(s + "_" + namespace), None))
-        }
-    }
-}

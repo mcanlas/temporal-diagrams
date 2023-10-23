@@ -38,5 +38,8 @@ lazy val mermaid =
 lazy val canary213 =
   module("canary213")
     .dependsOn(core, plantUml, mermaid)
-    .settings(scalaVersion := "2.13.12")
+    .settings(
+      scalaVersion := "2.13.12",
+      scalacOptions --= Seq("-indent", "-rewrite")
+    )
     .disablePublishing

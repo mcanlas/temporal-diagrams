@@ -5,10 +5,10 @@ import weaver.*
 
 import com.htmlism.temporaldiagrams.syntax.*
 
-object HighlightSuite extends FunSuite {
+object HighlightSuite extends FunSuite:
   import PlantUml.*
 
-  test("Two objects with no highlights should render dimly") {
+  test("Two objects with no highlights should render dimly"):
     val foo =
       Service("foo")
 
@@ -26,9 +26,8 @@ object HighlightSuite extends FunSuite {
         Link("foo", "bar")
       )
     )
-  }
 
-  test("Two objects with one highlight should highlight one and dim the other") {
+  test("Two objects with one highlight should highlight one and dim the other"):
     val foo =
       Service("foo")
 
@@ -46,9 +45,8 @@ object HighlightSuite extends FunSuite {
         Link("foo", "bar")
       )
     )
-  }
 
-  test("Two objects with multiple highlights should highlight everything") {
+  test("Two objects with multiple highlights should highlight everything"):
     val foo =
       Service("foo")
 
@@ -70,5 +68,3 @@ object HighlightSuite extends FunSuite {
         Link("foo", "bar")
       )
     )
-  }
-}

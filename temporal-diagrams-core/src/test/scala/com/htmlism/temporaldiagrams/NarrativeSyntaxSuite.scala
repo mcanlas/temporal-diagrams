@@ -5,8 +5,8 @@ import weaver.*
 
 import com.htmlism.temporaldiagrams.syntax.*
 
-object NarrativeSyntaxSuite extends FunSuite {
-  test("A narrative should be started from a bundle of frames") {
+object NarrativeSyntaxSuite extends FunSuite:
+  test("A narrative should be started from a bundle of frames"):
     val services =
       NonEmptyList
         .of(Service("foo", None), Service("bar", None))
@@ -17,5 +17,3 @@ object NarrativeSyntaxSuite extends FunSuite {
 
     expect.same(narrative.frames, services) and
       expect.same(narrative.episodeSelectors, NonEmptyList.of(Nil))
-  }
-}

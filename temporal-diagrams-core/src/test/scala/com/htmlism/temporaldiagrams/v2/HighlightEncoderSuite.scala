@@ -5,12 +5,11 @@ import weaver.*
 
 import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
 
-object HighlightEncoderSuite extends FunSuite {
-  test("A diagram encoder can encode") {
+object HighlightEncoderSuite extends FunSuite:
+  test("A diagram encoder can encode"):
     expect.eql(Component("amazon ec2: abc"), Amazon.Ec2.ec2Encoder.encode(Amazon.Ec2("abc")))
-  }
 
-  test("A diagram encoder can encode with highlights") {
+  test("A diagram encoder can encode with highlights"):
     expect.eql(
       Component("amazon ec2: abc true"),
       Amazon
@@ -21,9 +20,8 @@ object HighlightEncoderSuite extends FunSuite {
           highlighted = true
         )
     )
-  }
 
-  test("A diagram encoder is contravariant") {
+  test("A diagram encoder is contravariant"):
     val repeatEncoder =
       Amazon.Ec2.ec2Encoder.contramap((s: String) => Amazon.Ec2(s"$s $s"))
 
@@ -34,5 +32,3 @@ object HighlightEncoderSuite extends FunSuite {
       Component("amazon ec2: twin twin true"),
       repeatEncoder.encodeWithHighlights("twin", highlighted = true)
     )
-  }
-}

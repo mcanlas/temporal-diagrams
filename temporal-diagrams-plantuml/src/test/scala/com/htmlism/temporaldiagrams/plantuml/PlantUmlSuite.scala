@@ -7,8 +7,8 @@ import weaver.*
 
 import com.htmlism.temporaldiagrams.v2.*
 
-object PlantUmlSuite extends FunSuite {
-  test("Can render one component") {
+object PlantUmlSuite extends FunSuite:
+  test("Can render one component"):
     expect.eql(
       NonEmptyChain.of("@startuml", "", "component asdf", "", "@enduml"),
       PlantUml.render(
@@ -17,9 +17,8 @@ object PlantUmlSuite extends FunSuite {
         )
       )
     )
-  }
 
-  test("Can render horizontally") {
+  test("Can render horizontally"):
     expect.eql(
       NonEmptyChain.of("@startuml", "", "left to right direction", "", "component asdf", "", "@enduml"),
       PlantUml.renderHorizontally(
@@ -28,9 +27,8 @@ object PlantUmlSuite extends FunSuite {
         )
       )
     )
-  }
 
-  test("Can render many components, AND lexicographically sorts them") {
+  test("Can render many components, AND lexicographically sorts them"):
     val xs =
       NonEmptyChain
         .of[PlantUml](
@@ -42,27 +40,23 @@ object PlantUmlSuite extends FunSuite {
       NonEmptyChain.of("@startuml", "", "component bar", "", "component foo", "", "@enduml"),
       PlantUml.render(xs)
     )
-  }
 
-  test("Can render the left to right directive") {
+  test("Can render the left to right directive"):
     expect.eql(
       NonEmptyChain.one("left to right direction"),
       DiagramEncoder[PlantUml].encode(
         PlantUml.LeftToRightDirection
       )
     )
-  }
 
-  test("Can derive a non-empty chain highlight encoder from an elemental highlight encoder") {
-    implicit val elementEncoder: HighlightEncoder[PlantUml, NecTestDsl] = {
-      new HighlightEncoder[PlantUml, NecTestDsl] {
+  test("Can derive a non-empty chain highlight encoder from an elemental highlight encoder"):
+    implicit val elementEncoder: HighlightEncoder[PlantUml, NecTestDsl] =
+      new HighlightEncoder[PlantUml, NecTestDsl]:
         def encode(x: NecTestDsl): PlantUml =
           PlantUml.Component(x.s, None, None)
 
         def encodeWithHighlights(x: NecTestDsl, highlighted: Boolean): PlantUml =
           PlantUml.Component(s"${x.s} with highlights", None, None)
-      }
-    }
 
     val derivedEncoder =
       implicitly[HighlightEncoder[NonEmptyChain[PlantUml], NecTestDsl]]
@@ -77,11 +71,10 @@ object PlantUmlSuite extends FunSuite {
       NonEmptyChain.one(PlantUml.Component("asdf with highlights", None, None)),
       derivedEncoder.encodeWithHighlights(x, highlighted = true)
     )
-  }
 
   case class NecTestDsl(s: String)
 
-  test("Components are rendered in an order and lexicographically") {
+  test("Components are rendered in an order and lexicographically"):
     expect.eql(
       NonEmptyChain.of(
         "@startuml",
@@ -106,9 +99,8 @@ object PlantUmlSuite extends FunSuite {
         )
         .pipe(PlantUml.render)
     )
-  }
 
-  test("Duplicate components are rendered uniquely") {
+  test("Duplicate components are rendered uniquely"):
     expect.eql(
       NonEmptyChain.of(
         "@startuml",
@@ -124,5 +116,3 @@ object PlantUmlSuite extends FunSuite {
         )
         .pipe(PlantUml.render)
     )
-  }
-}

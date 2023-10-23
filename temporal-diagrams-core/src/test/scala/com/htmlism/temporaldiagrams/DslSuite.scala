@@ -4,10 +4,10 @@ import weaver.*
 
 import com.htmlism.temporaldiagrams.syntax.*
 
-object DslSuite extends FunSuite {
+object DslSuite extends FunSuite:
   import PlantUml.*
 
-  test("support tagging") {
+  test("support tagging"):
     val foo =
       Service("foo")
 
@@ -18,9 +18,8 @@ object DslSuite extends FunSuite {
       Renderable.Tagged(List("foo-tag", "bar-tag"), foo),
       renderable
     )
-  }
 
-  test("A nameless DSL object should support simple rendering") {
+  test("A nameless DSL object should support simple rendering"):
     val foo =
       Service("foo")
 
@@ -29,9 +28,8 @@ object DslSuite extends FunSuite {
       DslEncoder
         .encodeMany[Service, PlantUml](List(foo.r))
     )
-  }
 
-  test("A named DSL object should render the same as a nameless one") {
+  test("A named DSL object should render the same as a nameless one"):
     val foo =
       Service("foo")
 
@@ -41,5 +39,3 @@ object DslSuite extends FunSuite {
       DslEncoder
         .encodeMany[Service, PlantUml](List(foo.tag("foo-id")))
     )
-  }
-}

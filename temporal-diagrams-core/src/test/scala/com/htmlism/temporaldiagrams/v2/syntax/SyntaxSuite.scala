@@ -7,8 +7,8 @@ import cats.data.NonEmptyChain
 import cats.syntax.all.*
 import weaver.*
 
-object SyntaxSuite extends FunSuite {
-  test("Domain objects from unrelated hierarchies can be bound together, with postfix syntax") {
+object SyntaxSuite extends FunSuite:
+  test("Domain objects from unrelated hierarchies can be bound together, with postfix syntax"):
     val implicitRs =
       NonEmptyChain.of[Renderable.Of[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2("").r,
@@ -16,9 +16,8 @@ object SyntaxSuite extends FunSuite {
       )
 
     expect.same(RenderableSuite.explicitRs, implicitRs)
-  }
 
-  test("Domain objects from unrelated hierarchies can be bound together, with postfix tagging") {
+  test("Domain objects from unrelated hierarchies can be bound together, with postfix tagging"):
     val tagged =
       NonEmptyChain.of[Renderable.Of[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2("").tag("hello"),
@@ -27,9 +26,8 @@ object SyntaxSuite extends FunSuite {
 
     expect.same(ListSet("hello"), tagged.head.tags) &&
     expect.same(ListSet.empty, tagged.toList(1).tags)
-  }
 
-  test("Domain objects can be lifted implicitly") {
+  test("Domain objects can be lifted implicitly"):
     val implicitRs =
       NonEmptyChain.of[Renderable.Of[NonEmptyChain[ToyDiagramLanguage]]](
         Amazon.Ec2(""),
@@ -37,5 +35,3 @@ object SyntaxSuite extends FunSuite {
       )
 
     expect.same(RenderableSuite.explicitRs, implicitRs)
-  }
-}

@@ -10,7 +10,7 @@ import cats.data.NonEmptyList
   */
 sealed trait Renderable[+A]
 
-object Renderable {
+object Renderable:
 
   /**
     * A renderable that can be targeted by tags for highlighting
@@ -34,11 +34,9 @@ object Renderable {
   case class MultiArrow(src: String, dest: String) extends Renderable[Nothing]
 
   def keys[A](x: Renderable[A]): List[String] =
-    x match {
+    x match
       case Tagged(tags, _) =>
         tags
 
       case _ =>
         Nil
-    }
-}

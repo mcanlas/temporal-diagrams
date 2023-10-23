@@ -8,7 +8,7 @@ package com.htmlism.temporaldiagrams.v2
   * @tparam A
   *   The input data type being encoded
   */
-trait BrightEncoder[D, -A] extends HighlightEncoder[D, A] {
+trait BrightEncoder[D, -A] extends HighlightEncoder[D, A]:
 
   /**
     * Implemented as one method (as opposed to two) to facilitate code sharing between bright and dim, where usually the
@@ -21,4 +21,3 @@ trait BrightEncoder[D, -A] extends HighlightEncoder[D, A] {
 
   def encodeWithHighlights(x: A, highlighted: Boolean): D =
     encodeBrightly(x, highlighted)
-}

@@ -2,7 +2,7 @@ package com.htmlism.temporaldiagrams.v2
 
 import scala.collection.immutable.ListSet
 
-package object syntax {
+package object syntax:
 
   /**
     * Postfix syntax enhancement for marking an expression as renderable
@@ -12,7 +12,7 @@ package object syntax {
     * @tparam A
     *   The type of the data being rendered
     */
-  implicit class RenderableOps[A](x: A) {
+  implicit class RenderableOps[A](x: A):
 
     /**
       * Marks an expression as renderable to `D`, without any tags
@@ -34,7 +34,6 @@ package object syntax {
 
     def tag(t: String, ts: String*): Tagged[A] =
       Tagged(x, ListSet.from(t +: ts))
-  }
 
   /**
     * Implicitly binds available highlight encoder evidence for domain objects
@@ -55,4 +54,3 @@ package object syntax {
 
   implicit def liftTaggedToRenderable[A, D](xt: Tagged[A])(implicit enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
     Renderable.OfA(xt.x, xt.tags)
-}

@@ -6,7 +6,7 @@ import cats.syntax.all.*
 /**
   * Describes an encoding bridge from DSL `A` to diagram dialect `B`
   */
-trait DslEncoder[A, B] {
+trait DslEncoder[A, B]:
   def encode(x: A): List[B]
 
   def encodeWithHighlights(x: A, highlighted: Boolean): List[B]
@@ -21,9 +21,8 @@ trait DslEncoder[A, B] {
     * Encoders opt-in to showing debug strings somewhere in the diagrams by implementing this method
     */
   protected def debug(xs: List[String]): List[B]
-}
 
-object DslEncoder {
+object DslEncoder:
   def encodeMany[A, B](xs: List[Renderable[A]])(implicit ev: DslEncoder[A, B]): List[B] =
     encodeCommon(xs)(
       _.map(_.x)
@@ -34,15 +33,13 @@ object DslEncoder {
       ev: DslEncoder[A, B]
   ): List[B] =
     encodeCommon(xs)(_.flatMap { case Renderable.Tagged(tags, x) =>
-      if ((highlights intersect tags).nonEmpty)
-        ev.encodeWithHighlights(x, highlighted = true)
-      else
-        ev.encodeWithHighlights(x, highlighted = false)
+      if (highlights intersect tags).nonEmpty then ev.encodeWithHighlights(x, highlighted = true)
+      else ev.encodeWithHighlights(x, highlighted                                         = false)
     })
 
   private def encodeCommon[A, B](xs: List[Renderable[A]])(f: List[Renderable.Tagged[A]] => List[B])(implicit
       ev: DslEncoder[A, B]
-  ): List[B] = {
+  ): List[B] =
     val srcLookup =
       xs.collect { case Renderable.Source(k, vs) => Map(k -> vs) }
         .foldLeft(Map.empty[String, NonEmptyList[String]])(_ |+| _)
@@ -75,6 +72,3 @@ object DslEncoder {
       f(tagged ++ arrows) ++ ev.debug(sourcesDebug ++ destsDebug)
 
     outs
-  }
-
-}

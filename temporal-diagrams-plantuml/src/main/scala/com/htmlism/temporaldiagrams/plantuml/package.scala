@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams
 
-package object plantuml {
-  implicit class ApplySomeOps[A](x: A) {
+package object plantuml:
+  implicit class ApplySomeOps[A](x: A):
 
     /**
       * Allow an optional value to influence some expression, in postfix syntax
@@ -19,5 +19,3 @@ package object plantuml {
       ob
         .map(f(x, _))
         .getOrElse(x)
-  }
-}

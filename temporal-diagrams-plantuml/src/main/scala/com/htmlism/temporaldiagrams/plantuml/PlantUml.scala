@@ -10,11 +10,11 @@ import com.htmlism.temporaldiagrams.v2.*
 
 sealed trait PlantUml
 
-object PlantUml {
+object PlantUml:
   implicit val plantUmlOrdering: Order[PlantUml] =
     Order.by { x =>
       val index =
-        x match {
+        x match
           case LeftToRightDirection =>
             0
 
@@ -28,7 +28,6 @@ object PlantUml {
 
           case _ =>
             2
-        }
 
       val str =
         implicitly[DiagramEncoder[PlantUml]]
@@ -45,15 +44,14 @@ object PlantUml {
   implicit def necHighlightEncoder[A](implicit
       enc: HighlightEncoder[PlantUml, A]
   ): HighlightEncoder[NonEmptyChain[PlantUml], A] =
-    new HighlightEncoder[NonEmptyChain[PlantUml], A] {
+    new HighlightEncoder[NonEmptyChain[PlantUml], A]:
       def encode(x: A): NonEmptyChain[PlantUml] =
         NonEmptyChain.one(enc.encode(x))
 
       def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyChain[PlantUml] =
         NonEmptyChain.one(enc.encodeWithHighlights(x, highlighted))
-    }
 
-  implicit val plantUmlDiagramEncoder: DiagramEncoder[PlantUml] = {
+  implicit val plantUmlDiagramEncoder: DiagramEncoder[PlantUml] =
     case LeftToRightDirection =>
       "left to right direction"
         .pipe(NonEmptyChain.one)
@@ -86,15 +84,13 @@ object PlantUml {
         .map { case SkinParamGroup.Parameter(key, value) =>
           s"  $key $value"
         }
-        .prepended {
+        .prepended:
           val stereotype =
             oStereotype.fold("")("<< " + _ + " >>")
 
           s"skinparam $base$stereotype {"
-        }
         .pipe(Chain.fromSeq)
         .pipe(NonEmptyChain.one("}").prependChain)
-  }
 
   // TODO test this
   def render(xs: NonEmptyChain[PlantUml]): NonEmptyChain[String] =
@@ -148,12 +144,11 @@ object PlantUml {
   case class Arrow(source: String, destination: String, text: Option[String]) extends PlantUml
 
   case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
-      extends PlantUml {
+      extends PlantUml:
     def and(key: String, value: String): SkinParamGroup =
       this.copy(parameters = parameters.appended(SkinParamGroup.Parameter(key, value)))
-  }
 
-  object SkinParamGroup {
+  object SkinParamGroup:
     case class Parameter(name: String, value: String)
 
     def apply(base: String): SkinParamGroup =
@@ -161,10 +156,8 @@ object PlantUml {
 
     def apply(base: String, stereotype: String): SkinParamGroup =
       SkinParamGroup(base, Nil, stereotype.some)
-  }
 
   private def asDocument(xs: NonEmptyChain[String]) =
     NonEmptyChain.of("@startuml", "") ++
       xs ++
       NonEmptyChain.of("", "@enduml")
-}

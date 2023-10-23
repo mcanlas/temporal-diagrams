@@ -2,13 +2,11 @@ package com.htmlism.temporaldiagrams
 
 import cats.data.*
 
-package object syntax {
-  implicit class ValueOps[A](x: A) {
+package object syntax:
+  implicit class ValueOps[A](x: A):
     def iff(cond: Boolean, f: A => A): A =
-      if (cond)
-        f(x)
-      else
-        x
+      if cond then f(x)
+      else x
 
     def list: List[A] =
       List(x)
@@ -21,16 +19,12 @@ package object syntax {
 
     def tag(tags: String*): Renderable.Tagged[A] =
       Renderable.Tagged(tags.toList, x)
-  }
 
   // TODO get rid of this, and all faceted frames
-  implicit class ValueOpsFaceted[A](x: Renderable.Tagged[A]) {
+  implicit class ValueOpsFaceted[A](x: Renderable.Tagged[A]):
     def f[K]: FacetedFrame[K, A] =
       FacetedFrame.fixed(x.list)
-  }
 
-  implicit class FacetedOps[K, A](xs: NonEmptyList[FacetedFrame[K, A]]) {
+  implicit class FacetedOps[K, A](xs: NonEmptyList[FacetedFrame[K, A]]):
     def start: Narrative[K, A] =
       Narrative(xs, NonEmptyList.of(Nil))
-  }
-}

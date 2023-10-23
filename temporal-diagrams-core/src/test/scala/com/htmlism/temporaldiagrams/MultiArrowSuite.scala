@@ -3,10 +3,10 @@ package com.htmlism.temporaldiagrams
 import cats.data.NonEmptyList
 import weaver.*
 
-object MultiArrowSuite extends FunSuite {
+object MultiArrowSuite extends FunSuite:
   import PlantUml.*
 
-  test("A multiarrow spec should render as a product") {
+  test("A multiarrow spec should render as a product"):
     val things =
       List(
         Renderable.Source("foo", NonEmptyList.of("foo-1", "foo-2")),
@@ -23,5 +23,3 @@ object MultiArrowSuite extends FunSuite {
         Component("foo-2 to bar-2", None, Some("Service"))
       )
     )
-  }
-}

@@ -9,16 +9,16 @@ import com.htmlism.temporaldiagrams.v2.BrightEncoder
 
 sealed trait DemoDsl
 
-object DemoDsl {
+object DemoDsl:
   case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
 
   implicit val demoBrightEncoder: BrightEncoder[NonEmptyChain[PlantUml], DemoDsl] =
-    new BrightEncoder[NonEmptyChain[PlantUml], DemoDsl] {
-      def encodeBrightly(x: DemoDsl, isBright: Boolean): NonEmptyChain[PlantUml] = {
-        x match {
+    new BrightEncoder[NonEmptyChain[PlantUml], DemoDsl]:
+      def encodeBrightly(x: DemoDsl, isBright: Boolean): NonEmptyChain[PlantUml] =
+        x match
           case ClusterService(n, oDep, asCluster) =>
-            if (asCluster)
+            if asCluster then
               NonEmptyChain
                 .of(1, 2, 3, 4)
                 .flatMap { i =>
@@ -53,9 +53,6 @@ object DemoDsl {
               .applySome(oDep) { (a, d) =>
                 a.appendChain(Chain.one(PlantUml.Arrow(d, n + "_queue", None)))
               }
-        }
-      }
-    }
 
   private val queueSkin =
     PlantUml
@@ -67,7 +64,7 @@ object DemoDsl {
       .and("borderThickness", "2")
 
   private def skin(isBright: Boolean) =
-    if (isBright)
+    if isBright then
       PlantUml
         .SkinParamGroup("component", "Service")
         .and("fontStyle", "bold")
@@ -86,15 +83,12 @@ object DemoDsl {
 
   case class ConfigBasket(fooStyle: ConfigBasket.ServiceAppearance, barStyle: ConfigBasket.ServiceAppearance)
 
-  object ConfigBasket {
+  object ConfigBasket:
     sealed trait ServiceAppearance
 
-    object ServiceAppearance {
+    object ServiceAppearance:
       case object AsSingleton extends ServiceAppearance
 
       case object AsCluster extends ServiceAppearance
 
       case object WithBuffer extends ServiceAppearance
-    }
-  }
-}

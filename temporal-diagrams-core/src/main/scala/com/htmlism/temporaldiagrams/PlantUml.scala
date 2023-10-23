@@ -4,14 +4,14 @@ import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.syntax.*
 
-object PlantUml {
+object PlantUml:
   def render(xs: List[PlantUml]): String =
     renderWithDirection(None, xs)
 
   def renderHorizontally(xs: List[PlantUml]): String =
     renderWithDirection("left to right direction".some, xs)
 
-  private def renderWithDirection(direction: Option[String], xs: List[PlantUml]) = {
+  private def renderWithDirection(direction: Option[String], xs: List[PlantUml]) =
     val singletons =
       xs.collect { case x: Singleton => x }
 
@@ -27,7 +27,6 @@ object PlantUml {
     ("@startuml" :: direction.toList ::: (singletons ::: skins ::: entities ::: relationships)
       .flatMap(consumeOne) ::: List("@enduml"))
       .mkString("\n\n")
-  }
 
   sealed trait Singleton extends PlantUml
 
@@ -37,24 +36,22 @@ object PlantUml {
 
   sealed trait SkinParam extends PlantUml
 
-  object SkinParam {
+  object SkinParam:
     case class Single(key: String, value: String) extends SkinParam
 
-    case class Bundle(entity: String, stereotype: Option[String], xs: List[Single]) extends SkinParam {
+    case class Bundle(entity: String, stereotype: Option[String], xs: List[Single]) extends SkinParam:
       def and(key: String, value: String): Bundle =
         this.copy(xs = xs appended Single(key, value))
-    }
 
     def build(entity: String): Bundle =
       Bundle(entity, None, Nil)
 
     def build(entity: String, stereotype: String): Bundle =
       Bundle(entity, stereotype.some, Nil)
-  }
 
   sealed trait Entity extends PlantUml
 
-  private def oneThing(thing: String, name: String, title: Option[String], tag: Option[String]) = {
+  private def oneThing(thing: String, name: String, title: Option[String], tag: Option[String]) =
     val maybeTitle =
       title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
 
@@ -63,10 +60,9 @@ object PlantUml {
 
     (thing :: maybeTitle ::: name :: maybeTag)
       .mkString(" ")
-  }
 
   private def consumeOne(x: PlantUml): List[String] =
-    x match {
+    x match
       case Title(str) =>
         s"title $str".list
 
@@ -83,7 +79,7 @@ object PlantUml {
 
       case Link(src, dest, length, weight, direction, oColor, oComment, withRank, oStereotype) =>
         val (segment, style) =
-          weight match {
+          weight match
             case Link.Weight.Solid =>
               "-" -> Nil
 
@@ -92,19 +88,16 @@ object PlantUml {
 
             case Link.Weight.Bold =>
               "-" -> List("bold")
-          }
 
         val styles =
-          style ++ oColor.map(s => "#" + s).toList ++ (if (withRank) Nil else List("norank"))
+          style ++ oColor.map(s => "#" + s).toList ++ (if withRank then Nil else List("norank"))
 
         val stylesStr =
-          if (styles.isEmpty)
-            ""
-          else
-            "[" + styles.mkString(",") + "]"
+          if styles.isEmpty then ""
+          else "[" + styles.mkString(",") + "]"
 
         val (left, right) =
-          direction match {
+          direction match
             case Link.Direction.Forwards =>
               "" -> ">"
 
@@ -113,7 +106,6 @@ object PlantUml {
 
             case Link.Direction.Bidirectional =>
               "<" -> ">"
-          }
 
         val remainingLength =
           segment * (length - 1)
@@ -138,7 +130,7 @@ object PlantUml {
         val header =
           oneThing("database", name, title, tag)
 
-        xs match {
+        xs match
           case Nil =>
             header.list
 
@@ -150,7 +142,6 @@ object PlantUml {
               "}"
 
             open :: xs.flatMap(consumeOne) appended close
-        }
 
       case Package(title, xs) =>
         s"package \"$title\" {" :: xs.flatMap(consumeOne).map("  " + _).mkString("\n\n").list appended "}"
@@ -172,19 +163,16 @@ object PlantUml {
           .map { case SkinParam.Single(k, v) => s"  $k $v" } appended "}")
           .mkString("\n")
           .list
-    }
 
   case class Interface(name: String, title: Option[String]) extends Entity
 
-  case class Component(name: String, title: Option[String], tag: Option[String]) extends Entity {
+  case class Component(name: String, title: Option[String], tag: Option[String]) extends Entity:
     def of(stereotype: String): Component =
       this.copy(tag = stereotype.some)
-  }
 
-  object Component {
+  object Component:
     def apply(name: String): Component =
       Component(name, None, None)
-  }
 
   case class Link(
       src: String,
@@ -198,26 +186,23 @@ object PlantUml {
       stereotype: Option[String]
   ) extends PlantUml
 
-  object Link {
+  object Link:
     sealed trait Weight
 
-    object Weight {
+    object Weight:
       case object Solid  extends Weight
       case object Dotted extends Weight
       case object Bold   extends Weight
-    }
 
     sealed trait Direction
 
-    object Direction {
+    object Direction:
       case object Forwards      extends Direction
       case object Backwards     extends Direction
       case object Bidirectional extends Direction
-    }
 
     def apply(src: String, dest: String): Link =
       Link(src, dest, 2, Weight.Solid, Direction.Forwards, None, None, influencesRank = true, None)
-  }
 
   case class Queue(name: String, title: Option[String], tag: Option[String]) extends Entity
 
@@ -228,6 +213,5 @@ object PlantUml {
   case class Actor(name: String, title: Option[String], tag: Option[String]) extends Entity
 
   case class UseCase(name: String, title: Option[String], tag: Option[String]) extends Entity
-}
 
 sealed trait PlantUml

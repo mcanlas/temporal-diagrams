@@ -10,7 +10,7 @@ import cats.data.NonEmptyChain
   * @tparam D
   *   The target diagram language
   */
-sealed trait Renderable[D] {
+sealed trait Renderable[D]:
 
   /**
     * Renders this object into target language `D`
@@ -25,9 +25,8 @@ sealed trait Renderable[D] {
     *   style
     */
   def renderWithHighlight(tag: String): D
-}
 
-object Renderable {
+object Renderable:
 
   /**
     * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
@@ -36,13 +35,12 @@ object Renderable {
     * @tparam D
     *   The target diagram language
     */
-  trait Of[D] extends Renderable[D] {
+  trait Of[D] extends Renderable[D]:
 
     /**
       * Returns a list of tags associated with this renderable object
       */
     def tags: ListSet[String]
-  }
 
   /**
     * @tparam D
@@ -50,13 +48,12 @@ object Renderable {
     * @tparam A
     *   The source domain language
     */
-  case class OfA[D, A](x: A, tags: ListSet[String])(implicit enc: HighlightEncoder[D, A]) extends Of[D] {
+  case class OfA[D, A](x: A, tags: ListSet[String])(implicit enc: HighlightEncoder[D, A]) extends Of[D]:
     def render: D =
       enc.encode(x)
 
     def renderWithHighlight(tag: String): D =
       enc.encodeWithHighlights(x, tags.contains(tag))
-  }
 
   def renderMany[D: Semigroup](xs: NonEmptyChain[Renderable[D]]): D =
     xs
@@ -78,4 +75,3 @@ object Renderable {
 //          ListSet.empty
       }
       .pipe(ListSet.from)
-}

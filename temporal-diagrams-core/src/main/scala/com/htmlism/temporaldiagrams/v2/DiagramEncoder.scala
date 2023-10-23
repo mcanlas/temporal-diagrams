@@ -10,7 +10,7 @@ import cats.data.NonEmptyChain
   *   The diagram language to encode from
   */
 
-trait DiagramEncoder[A] {
+trait DiagramEncoder[A]:
 
   /**
     * The default encoding for a given data structure
@@ -19,20 +19,17 @@ trait DiagramEncoder[A] {
     *   The data structure being encoded
     */
   def encode(x: A): NonEmptyChain[String]
-}
 
-object DiagramEncoder {
+object DiagramEncoder:
 
   /**
     * @tparam D
     *   The target diagram language to encode to
     */
   implicit def encoderContravariant[D]: Contravariant[DiagramEncoder] =
-    new Contravariant[DiagramEncoder] {
+    new Contravariant[DiagramEncoder]:
       def contramap[A, B](fa: DiagramEncoder[A])(f: B => A): DiagramEncoder[B] =
         (x: B) => fa.encode(f(x))
-    }
 
   def apply[A: DiagramEncoder]: DiagramEncoder[A] =
     implicitly[DiagramEncoder[A]]
-}

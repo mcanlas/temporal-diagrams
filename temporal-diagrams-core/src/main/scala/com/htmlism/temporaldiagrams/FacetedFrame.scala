@@ -12,7 +12,7 @@ import cats.data.NonEmptyList
   */
 sealed trait FacetedFrame[K, +A]
 
-object FacetedFrame {
+object FacetedFrame:
   def from[K: Ordering, A](
       frameId: String,
       x: (K, List[Renderable.Tagged[A]]),
@@ -24,16 +24,14 @@ object FacetedFrame {
     Fixed(x)
 
   case class WithKeys[K: Ordering, +A](frameId: String, xs: NonEmptyList[(K, List[Renderable.Tagged[A]])])
-      extends FacetedFrame[K, A] {
+      extends FacetedFrame[K, A]:
     def select(thatId: String, thatK: K): FacetedFrame[K, A] =
-      if (frameId == thatId)
+      if frameId == thatId then
         xs
           .find(kv => Ordering[K].equiv(kv._1, thatK))
           .map(_._2)
           .fold(this: FacetedFrame[K, A])(Fixed(_))
-      else
-        this
-  }
+      else this
 
   case class Fixed[K, +A](x: List[Renderable.Tagged[A]]) extends FacetedFrame[K, A]
 
@@ -54,20 +52,17 @@ object FacetedFrame {
       .flatMap(pickDefaults)
 
   private def refineKeysFrames[K, A](id: String, k: K)(x: FacetedFrame[K, A]) =
-    x match {
+    x match
       case wk: WithKeys[K, A] =>
         wk.select(id, k)
 
       case _ =>
         x
-    }
 
   private def pickDefaults[K, A](x: FacetedFrame[K, A]) =
-    x match {
+    x match
       case wk: WithKeys[K, A] =>
         wk.xs.head._2
 
       case Fixed(r) =>
         r
-    }
-}

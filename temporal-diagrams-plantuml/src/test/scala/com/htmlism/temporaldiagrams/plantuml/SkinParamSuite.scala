@@ -5,8 +5,8 @@ import weaver.*
 
 import com.htmlism.temporaldiagrams.v2.DiagramEncoder
 
-object SkinParamSuite extends FunSuite {
-  test("Can render skin params") {
+object SkinParamSuite extends FunSuite:
+  test("Can render skin params"):
     expect.eql(
       NonEmptyChain.of(
         "skinparam asdf {",
@@ -16,9 +16,8 @@ object SkinParamSuite extends FunSuite {
         PlantUml.SkinParamGroup("asdf")
       )
     )
-  }
 
-  test("Has a builder method") {
+  test("Has a builder method"):
     expect.eql(
       NonEmptyChain.of(
         "skinparam asdf {",
@@ -31,9 +30,8 @@ object SkinParamSuite extends FunSuite {
           .and("key", "value")
       )
     )
-  }
 
-  test("A skin param has an optional stereotype") {
+  test("A skin param has an optional stereotype"):
     expect.eql(
       NonEmptyChain.of(
         "skinparam asdf<< stereo >> {",
@@ -43,5 +41,3 @@ object SkinParamSuite extends FunSuite {
         PlantUml.SkinParamGroup("asdf", "stereo")
       )
     )
-  }
-}

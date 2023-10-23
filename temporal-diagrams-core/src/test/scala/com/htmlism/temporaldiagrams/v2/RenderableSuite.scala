@@ -5,7 +5,7 @@ import scala.collection.immutable.ListSet
 import cats.data.NonEmptyChain
 import weaver.FunSuite
 
-object RenderableSuite extends FunSuite {
+object RenderableSuite extends FunSuite:
   val explicitRs: NonEmptyChain[Renderable[NonEmptyChain[ToyDiagramLanguage]]] =
     NonEmptyChain.of[Renderable[NonEmptyChain[ToyDiagramLanguage]]](
       Renderable.OfA[NonEmptyChain[ToyDiagramLanguage], Amazon.Ec2](Amazon.Ec2(""), ListSet.empty),
@@ -20,7 +20,7 @@ object RenderableSuite extends FunSuite {
 
   test(
     "Domain objects from unrelated hierarchies can be bound together, and can render to their shared target language"
-  ) {
+  ):
     expect.eql(
       NonEmptyChain.of[ToyDiagramLanguage](
         ToyDiagramLanguage.Component("amazon ec2: "),
@@ -28,16 +28,14 @@ object RenderableSuite extends FunSuite {
       ),
       Renderable.renderMany(explicitRs)
     )
-  }
 
-  test("Renderables have tags") {
+  test("Renderables have tags"):
     expect.same(
       ListSet("amazon", "google"),
       Renderable.allTags(renderablesWithTags)
     )
-  }
 
-  test("Can render with highlights") {
+  test("Can render with highlights"):
     expect.same(
       NonEmptyChain.of[ToyDiagramLanguage](
         ToyDiagramLanguage.Component("amazon ec2: foo true"),
@@ -46,5 +44,3 @@ object RenderableSuite extends FunSuite {
       Renderable
         .renderManyWithTag(renderablesWithTags, "amazon")
     )
-  }
-}

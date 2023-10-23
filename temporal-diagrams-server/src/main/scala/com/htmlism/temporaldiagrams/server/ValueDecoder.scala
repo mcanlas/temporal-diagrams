@@ -5,7 +5,7 @@ import cats.syntax.all.*
 
 // a named kleisli for `A => Either[String, B]`
 // the error channel is linear (as is the case with flatmap refinements
-trait ValueDecoder[A] {
+trait ValueDecoder[A]:
   self: ValueDecoder[A] =>
   def decode(s: String): Either[String, A]
 
@@ -15,9 +15,8 @@ trait ValueDecoder[A] {
       self
         .decode(s)
         .flatMap(f)
-}
 
-object ValueDecoder {
+object ValueDecoder:
   implicit val stringDecoder: ValueDecoder[String] =
     (s: String) => s.asRight
 
@@ -25,11 +24,9 @@ object ValueDecoder {
     (s: String) => util.Try(s.toInt).toEither.leftMap(_.toString)
 
   implicit val functor: Functor[ValueDecoder] =
-    new Functor[ValueDecoder] {
+    new Functor[ValueDecoder]:
       def map[A, B](fa: ValueDecoder[A])(f: A => B): ValueDecoder[B] =
         (s: String) => fa.decode(s).map(f)
-    }
 
   def apply[A](implicit ev: ValueDecoder[A]): ValueDecoder[A] =
     ev
-}

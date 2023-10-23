@@ -5,8 +5,8 @@ import cats.data.*
 case class Narrative[K, A](
     frames: NonEmptyList[FacetedFrame[K, A]],
     episodeSelectors: NonEmptyList[List[(String, K)]]
-) {
-  def next(selectors: (String, K)*): Narrative[K, A] = {
+):
+  def next(selectors: (String, K)*): Narrative[K, A] =
     val previously =
       episodeSelectors.last
 
@@ -16,13 +16,10 @@ case class Narrative[K, A](
       selectors.toList ::: previously
 
     copy(episodeSelectors = episodeSelectors.append(nextEpisodeSelectors))
-  }
 
-  def reset(selectors: (String, K)*): Narrative[K, A] = {
+  def reset(selectors: (String, K)*): Narrative[K, A] =
     copy(episodeSelectors = episodeSelectors.append(selectors.toList))
-  }
 
   def episodes: NonEmptyList[List[Renderable.Tagged[A]]] =
     episodeSelectors
       .map(FacetedFrame.selectFrames(frames, _*))
-}
