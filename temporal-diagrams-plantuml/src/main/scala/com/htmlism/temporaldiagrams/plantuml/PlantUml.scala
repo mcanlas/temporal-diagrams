@@ -11,7 +11,7 @@ import com.htmlism.temporaldiagrams.v2.*
 sealed trait PlantUml
 
 object PlantUml:
-  implicit val plantUmlOrdering: Order[PlantUml] =
+  given Order[PlantUml] =
     Order.by { x =>
       val index =
         x match
@@ -36,12 +36,12 @@ object PlantUml:
       index -> str
     }
 
-  implicit def necEncoder[A](using A: DiagramEncoder[A]): DiagramEncoder[NonEmptyChain[A]] =
+  given [A](using A: DiagramEncoder[A]): DiagramEncoder[NonEmptyChain[A]] =
     (xs: NonEmptyChain[A]) =>
       A.encode(xs.head)
         .appendChain(xs.tail.flatMap(x => "" +: A.encode(x).toChain))
 
-  implicit def necHighlightEncoder[A](using
+  given [A](using
       enc: HighlightEncoder[PlantUml, A]
   ): HighlightEncoder[NonEmptyChain[PlantUml], A] =
     new HighlightEncoder[NonEmptyChain[PlantUml], A]:
@@ -51,7 +51,7 @@ object PlantUml:
       def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyChain[PlantUml] =
         NonEmptyChain.one(enc.encodeWithHighlights(x, highlighted))
 
-  implicit val plantUmlDiagramEncoder: DiagramEncoder[PlantUml] =
+  given DiagramEncoder[PlantUml] =
     case LeftToRightDirection =>
       "left to right direction"
         .pipe(NonEmptyChain.one)

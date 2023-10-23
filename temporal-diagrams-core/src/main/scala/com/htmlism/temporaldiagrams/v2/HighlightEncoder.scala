@@ -42,7 +42,7 @@ object HighlightEncoder:
     * @tparam D
     *   The target diagram language to encode to
     */
-  implicit def encoderContravariant[D]: Contravariant[HighlightEncoder[D, *]] =
+  given [D]: Contravariant[HighlightEncoder[D, *]] =
     new Contravariant[HighlightEncoder[D, *]]:
       def contramap[A, B](fa: HighlightEncoder[D, A])(f: B => A): HighlightEncoder[D, B] =
         new HighlightEncoder[D, B]:

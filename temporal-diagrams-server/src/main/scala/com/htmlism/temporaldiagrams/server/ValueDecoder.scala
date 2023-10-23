@@ -17,13 +17,13 @@ trait ValueDecoder[A]:
         .flatMap(f)
 
 object ValueDecoder:
-  implicit val stringDecoder: ValueDecoder[String] =
+  given ValueDecoder[String] =
     (s: String) => s.asRight
 
-  implicit val intDecoder: ValueDecoder[Int] =
+  given ValueDecoder[Int] =
     (s: String) => util.Try(s.toInt).toEither.leftMap(_.toString)
 
-  implicit val functor: Functor[ValueDecoder] =
+  given Functor[ValueDecoder] =
     new Functor[ValueDecoder]:
       def map[A, B](fa: ValueDecoder[A])(f: A => B): ValueDecoder[B] =
         (s: String) => fa.decode(s).map(f)

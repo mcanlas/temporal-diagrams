@@ -11,7 +11,7 @@ case class Service(name: String, dependency: Option[String]) extends ToyDsl
 object Service:
   import PlantUml.*
 
-  implicit val servicePlantUmlEncoder: DslEncoder[Service, PlantUml] =
+  given DslEncoder[Service, PlantUml] =
     new DslEncoder[Service, PlantUml]:
       def encodeWithHighlights(x: Service, highlighted: Boolean): List[PlantUml] =
         if highlighted then renderFlatMonoid(x, "Service".some)

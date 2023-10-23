@@ -15,14 +15,14 @@ sealed trait KeyValuePairsDecoder[A]:
           .decode(xs, n +: ns)
 
 object KeyValuePairsDecoder:
-  implicit val functor: Functor[KeyValuePairsDecoder] =
+  given Functor[KeyValuePairsDecoder] =
     new Functor[KeyValuePairsDecoder]:
       def map[A, B](fa: KeyValuePairsDecoder[A])(f: A => B): KeyValuePairsDecoder[B] =
         new KeyValuePairsDecoder[B]:
           def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, B] =
             fa.decode(xs, ns).map(f)
 
-  implicit val semigroupal: Semigroupal[KeyValuePairsDecoder] =
+  given Semigroupal[KeyValuePairsDecoder] =
     new Semigroupal[KeyValuePairsDecoder]:
       def product[A, B](fa: KeyValuePairsDecoder[A], fb: KeyValuePairsDecoder[B]): KeyValuePairsDecoder[(A, B)] =
         new KeyValuePairsDecoder[(A, B)]:

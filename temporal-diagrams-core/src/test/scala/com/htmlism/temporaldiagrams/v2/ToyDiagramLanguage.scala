@@ -10,7 +10,7 @@ object ToyDiagramLanguage:
 
   case class Arrow(s: String) extends ToyDiagramLanguage
 
-  implicit val toyEncoder: DiagramEncoder[ToyDiagramLanguage] =
+  given DiagramEncoder[ToyDiagramLanguage] =
     (x: ToyDiagramLanguage) =>
       val str =
         x match
@@ -21,10 +21,10 @@ object ToyDiagramLanguage:
 
       NonEmptyChain.one(str)
 
-  implicit val toyEq: Eq[ToyDiagramLanguage] =
+  given Eq[ToyDiagramLanguage] =
     Eq.fromUniversalEquals
 
-  implicit def necHighlightEncoder[A](using
+  given [A](using
       enc: HighlightEncoder[ToyDiagramLanguage, A]
   ): HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], A] =
     new HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], A]:

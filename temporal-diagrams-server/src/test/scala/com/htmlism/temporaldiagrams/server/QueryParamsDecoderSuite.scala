@@ -49,7 +49,7 @@ object QueryParamsDecoderSuite extends FunSuite:
         "foo" -> List("bar")
       )
 
-    implicit val dec: KeyValuePairsDecoder[String] =
+    given KeyValuePairsDecoder[String] =
       "foo".as[String]
 
     all(
@@ -83,7 +83,7 @@ object QueryParamsDecoderSuite extends FunSuite:
         "two.age"  -> List("456")
       )
 
-    implicit val dec: KeyValuePairsDecoder[(Person, Person)] =
+    given KeyValuePairsDecoder[(Person, Person)] =
       (
         "one".namespaces[Person],
         "two".namespaces[Person]
@@ -99,7 +99,7 @@ object QueryParamsDecoderSuite extends FunSuite:
         "bar" -> List("bar")
       )
 
-    implicit val dec: KeyValuePairsDecoder[(Int, Int)] =
+    given KeyValuePairsDecoder[(Int, Int)] =
       (
         "foo".as[Int],
         "bar".as[Int]
@@ -123,6 +123,6 @@ object QueryParamsDecoderSuite extends FunSuite:
 case class Person(name: String, age: Int)
 
 object Person:
-  implicit val dec: KeyValuePairsDecoder[Person] =
+  given KeyValuePairsDecoder[Person] =
     ("name".as[String], "age".as[Int])
       .mapN(Person.apply)

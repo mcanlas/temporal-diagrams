@@ -15,7 +15,7 @@ object OuroborosDsl:
 
   case class Output(language: String, namespace: String) extends OuroborosDsl
 
-  implicit val demoBrightEncoder: BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] =
+  given BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] =
     new BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl]:
       def encodeBrightly(x: OuroborosDsl, isBright: Boolean): NonEmptyChain[PlantUml] =
         x match

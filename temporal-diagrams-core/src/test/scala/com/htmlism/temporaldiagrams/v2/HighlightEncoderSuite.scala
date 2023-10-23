@@ -7,14 +7,15 @@ import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
 
 object HighlightEncoderSuite extends FunSuite:
   test("A diagram encoder can encode"):
-    expect.eql(Component("amazon ec2: abc"), Amazon.Ec2.ec2Encoder.encode(Amazon.Ec2("abc")))
+    expect.eql(
+      Component("amazon ec2: abc"),
+      summon[HighlightEncoder[ToyDiagramLanguage, Amazon.Ec2]].encode(Amazon.Ec2("abc"))
+    )
 
   test("A diagram encoder can encode with highlights"):
     expect.eql(
       Component("amazon ec2: abc true"),
-      Amazon
-        .Ec2
-        .ec2Encoder
+      summon[HighlightEncoder[ToyDiagramLanguage, Amazon.Ec2]]
         .encodeWithHighlights(
           Amazon.Ec2("abc"),
           highlighted = true
@@ -23,7 +24,7 @@ object HighlightEncoderSuite extends FunSuite:
 
   test("A diagram encoder is contravariant"):
     val repeatEncoder =
-      Amazon.Ec2.ec2Encoder.contramap((s: String) => Amazon.Ec2(s"$s $s"))
+      summon[HighlightEncoder[ToyDiagramLanguage, Amazon.Ec2]].contramap((s: String) => Amazon.Ec2(s"$s $s"))
 
     expect.eql(
       Component("amazon ec2: twin twin"),

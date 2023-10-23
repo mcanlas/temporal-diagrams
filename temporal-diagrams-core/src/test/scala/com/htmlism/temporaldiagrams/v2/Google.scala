@@ -9,7 +9,7 @@ object Google:
 
   object Compute:
     // differs from amazon encoder, which is not nec
-    implicit val computeNecEncoder: HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], Compute] =
+    given HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], Compute] =
       new HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], Compute]:
         def encode(x: Compute): NonEmptyChain[ToyDiagramLanguage] =
           NonEmptyChain.of(Component(s"google compute: ${x.s}"))

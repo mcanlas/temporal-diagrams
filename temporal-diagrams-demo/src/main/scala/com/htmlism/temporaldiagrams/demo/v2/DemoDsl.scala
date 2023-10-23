@@ -13,7 +13,7 @@ object DemoDsl:
   case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
 
-  implicit val demoBrightEncoder: BrightEncoder[NonEmptyChain[PlantUml], DemoDsl] =
+  given BrightEncoder[NonEmptyChain[PlantUml], DemoDsl] =
     new BrightEncoder[NonEmptyChain[PlantUml], DemoDsl]:
       def encodeBrightly(x: DemoDsl, isBright: Boolean): NonEmptyChain[PlantUml] =
         x match
