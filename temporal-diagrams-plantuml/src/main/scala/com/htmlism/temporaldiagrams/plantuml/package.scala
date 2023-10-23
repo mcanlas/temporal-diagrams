@@ -1,8 +1,7 @@
 package com.htmlism.temporaldiagrams
 
 package object plantuml:
-  implicit class ApplySomeOps[A](x: A):
-
+  extension [A](x: A)
     /**
       * Allow an optional value to influence some expression, in postfix syntax
       *

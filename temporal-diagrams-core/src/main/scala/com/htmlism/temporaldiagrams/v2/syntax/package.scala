@@ -12,7 +12,7 @@ package object syntax:
     * @tparam A
     *   The type of the data being rendered
     */
-  implicit class RenderableOps[A](x: A):
+  extension [A](x: A)
 
     /**
       * Marks an expression as renderable to `D`, without any tags

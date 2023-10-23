@@ -9,7 +9,7 @@ import cats.syntax.all.*
 import com.htmlism.temporaldiagrams.demo.FilePrinterAlg
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
-import com.htmlism.temporaldiagrams.v2.syntax.RenderableOps
+import com.htmlism.temporaldiagrams.v2.syntax.*
 
 object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO]) with IOApp.Simple:
   val diagram =
