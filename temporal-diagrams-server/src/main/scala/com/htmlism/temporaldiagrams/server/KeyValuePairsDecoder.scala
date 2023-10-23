@@ -4,7 +4,8 @@ import cats.*
 import cats.data.*
 import cats.syntax.all.*
 
-sealed trait KeyValuePairsDecoder[A] { self: KeyValuePairsDecoder[A] =>
+sealed trait KeyValuePairsDecoder[A]:
+  self: KeyValuePairsDecoder[A] =>
   def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, A]
 
   def withNamespace(n: String): KeyValuePairsDecoder[A] =
@@ -12,7 +13,6 @@ sealed trait KeyValuePairsDecoder[A] { self: KeyValuePairsDecoder[A] =>
       def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, A] =
         self
           .decode(xs, n +: ns)
-}
 
 object KeyValuePairsDecoder:
   implicit val functor: Functor[KeyValuePairsDecoder] =

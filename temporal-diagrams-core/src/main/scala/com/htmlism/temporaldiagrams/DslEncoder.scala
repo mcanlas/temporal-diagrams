@@ -52,10 +52,10 @@ object DslEncoder:
       xs
         .collect { case Renderable.MultiArrow(src, dest) => src -> dest }
         .flatMap { case (srcAlias, destAlias) =>
-          (for {
+          (for
             xs <- srcLookup.getOrElse(srcAlias, NonEmptyList.one(srcAlias))
             ys <- destLookup.getOrElse(destAlias, NonEmptyList.one(destAlias))
-          } yield ev.renderArrow(xs, ys)).toList
+          yield ev.renderArrow(xs, ys)).toList
         }
         .flatten
 

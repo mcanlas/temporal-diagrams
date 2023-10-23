@@ -11,7 +11,7 @@ object ToyDiagramLanguage:
   case class Arrow(s: String) extends ToyDiagramLanguage
 
   implicit val toyEncoder: DiagramEncoder[ToyDiagramLanguage] =
-    (x: ToyDiagramLanguage) => {
+    (x: ToyDiagramLanguage) =>
       val str =
         x match
           case Component(s) =>
@@ -20,7 +20,6 @@ object ToyDiagramLanguage:
             s"arrow($s)"
 
       NonEmptyChain.one(str)
-    }
 
   implicit val toyEq: Eq[ToyDiagramLanguage] =
     Eq.fromUniversalEquals
