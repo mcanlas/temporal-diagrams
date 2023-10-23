@@ -36,12 +36,12 @@ object PlantUml:
       index -> str
     }
 
-  implicit def necEncoder[A](implicit A: DiagramEncoder[A]): DiagramEncoder[NonEmptyChain[A]] =
+  implicit def necEncoder[A](using A: DiagramEncoder[A]): DiagramEncoder[NonEmptyChain[A]] =
     (xs: NonEmptyChain[A]) =>
       A.encode(xs.head)
         .appendChain(xs.tail.flatMap(x => "" +: A.encode(x).toChain))
 
-  implicit def necHighlightEncoder[A](implicit
+  implicit def necHighlightEncoder[A](using
       enc: HighlightEncoder[PlantUml, A]
   ): HighlightEncoder[NonEmptyChain[PlantUml], A] =
     new HighlightEncoder[NonEmptyChain[PlantUml], A]:

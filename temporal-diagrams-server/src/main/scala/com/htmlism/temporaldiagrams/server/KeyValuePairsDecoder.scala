@@ -42,7 +42,7 @@ object KeyValuePairsDecoder:
                   case Validated.Invalid(errx) =>
                     (errx |+| erry).invalid
 
-  case class One[A](key: String)(implicit A: ValueDecoder[A]) extends KeyValuePairsDecoder[A]:
+  case class One[A](key: String)(using A: ValueDecoder[A]) extends KeyValuePairsDecoder[A]:
     def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, A] =
       val fullKey =
         (ns :+ key)

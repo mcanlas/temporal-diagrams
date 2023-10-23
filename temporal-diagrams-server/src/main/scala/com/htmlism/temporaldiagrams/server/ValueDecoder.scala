@@ -28,5 +28,5 @@ object ValueDecoder:
       def map[A, B](fa: ValueDecoder[A])(f: A => B): ValueDecoder[B] =
         (s: String) => fa.decode(s).map(f)
 
-  def apply[A](implicit ev: ValueDecoder[A]): ValueDecoder[A] =
+  def apply[A](using ev: ValueDecoder[A]): ValueDecoder[A] =
     ev

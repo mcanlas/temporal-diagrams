@@ -9,7 +9,7 @@ trait FilePrinterAlg[F[_]]:
 
 object FilePrinterAlg:
 
-  def apply[F[_]](implicit F: Sync[F]): FilePrinterAlg[F] =
+  def apply[F[_]](using F: Sync[F]): FilePrinterAlg[F] =
     new FilePrinterAlg[F]:
 
       def print(dest: String)(s: String): F[Unit] =

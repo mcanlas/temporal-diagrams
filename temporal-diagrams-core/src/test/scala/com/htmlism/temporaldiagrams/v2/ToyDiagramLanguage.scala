@@ -25,7 +25,7 @@ object ToyDiagramLanguage:
   implicit val toyEq: Eq[ToyDiagramLanguage] =
     Eq.fromUniversalEquals
 
-  implicit def necHighlightEncoder[A](implicit
+  implicit def necHighlightEncoder[A](using
       enc: HighlightEncoder[ToyDiagramLanguage, A]
   ): HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], A] =
     new HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], A]:

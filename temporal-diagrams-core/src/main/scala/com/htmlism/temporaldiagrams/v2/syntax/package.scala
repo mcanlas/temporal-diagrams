@@ -20,7 +20,7 @@ package object syntax:
       * @tparam D
       *   The target diagram language
       */
-    def r[D](implicit enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+    def r[D](using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
       Renderable.OfA(x, ListSet.empty)
 
     /**
@@ -49,8 +49,8 @@ package object syntax:
     * @tparam D
     *   Target diagram language
     */
-  implicit def liftToRenderable[A, D](x: A)(implicit enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+  implicit def liftToRenderable[A, D](x: A)(using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
     Renderable.OfA(x, ListSet.empty)
 
-  implicit def liftTaggedToRenderable[A, D](xt: Tagged[A])(implicit enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+  implicit def liftTaggedToRenderable[A, D](xt: Tagged[A])(using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
     Renderable.OfA(xt.x, xt.tags)

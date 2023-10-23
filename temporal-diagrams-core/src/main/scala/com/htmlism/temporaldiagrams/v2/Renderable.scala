@@ -48,7 +48,7 @@ object Renderable:
     * @tparam A
     *   The source domain language
     */
-  case class OfA[D, A](x: A, tags: ListSet[String])(implicit enc: HighlightEncoder[D, A]) extends Of[D]:
+  case class OfA[D, A](x: A, tags: ListSet[String])(using enc: HighlightEncoder[D, A]) extends Of[D]:
     def render: D =
       enc.encode(x)
 

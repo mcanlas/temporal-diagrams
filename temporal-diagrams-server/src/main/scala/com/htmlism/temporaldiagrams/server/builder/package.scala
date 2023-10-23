@@ -5,5 +5,5 @@ package object builder:
     def as[A: ValueDecoder]: KeyValuePairsDecoder[A] =
       KeyValuePairsDecoder.One(key)
 
-    def namespaces[A](implicit A: KeyValuePairsDecoder[A]): KeyValuePairsDecoder[A] =
+    def namespaces[A](using A: KeyValuePairsDecoder[A]): KeyValuePairsDecoder[A] =
       A.withNamespace(key)

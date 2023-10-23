@@ -23,13 +23,13 @@ trait DslEncoder[A, B]:
   protected def debug(xs: List[String]): List[B]
 
 object DslEncoder:
-  def encodeMany[A, B](xs: List[Renderable[A]])(implicit ev: DslEncoder[A, B]): List[B] =
+  def encodeMany[A, B](xs: List[Renderable[A]])(using ev: DslEncoder[A, B]): List[B] =
     encodeCommon(xs)(
       _.map(_.x)
         .flatMap(ev.encode)
     )
 
-  def encodeManyWithHighlights[A, B](xs: List[Renderable[A]], highlights: String*)(implicit
+  def encodeManyWithHighlights[A, B](xs: List[Renderable[A]], highlights: String*)(using
       ev: DslEncoder[A, B]
   ): List[B] =
     encodeCommon(xs)(_.flatMap { case Renderable.Tagged(tags, x) =>
@@ -37,7 +37,7 @@ object DslEncoder:
       else ev.encodeWithHighlights(x, highlighted                                         = false)
     })
 
-  private def encodeCommon[A, B](xs: List[Renderable[A]])(f: List[Renderable.Tagged[A]] => List[B])(implicit
+  private def encodeCommon[A, B](xs: List[Renderable[A]])(f: List[Renderable.Tagged[A]] => List[B])(using
       ev: DslEncoder[A, B]
   ): List[B] =
     val srcLookup =
