@@ -1,6 +1,3 @@
-- flip publishing
-- upgrade to 3.0
-- 2.13 to feature list
 - diagram the framework itself
 - multi arrows in v2
 - encode heterogeneous payloads

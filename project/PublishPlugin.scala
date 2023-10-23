@@ -28,12 +28,16 @@ object PublishPlugin extends AutoPlugin {
     )
   )
 
+  override val projectSettings: Seq[Setting[?]] = Seq(
+    publish / skip := true
+  )
+
   object ThingsToAutoImport {
 
     implicit class PublishOps(p: Project) {
-      def disablePublishing: Project =
+      def enablePublishing: Project =
         p
-          .settings(publish / skip := true)
+          .settings(publish / skip := false)
     }
   }
 }
