@@ -32,4 +32,4 @@ object DiagramEncoder:
         (x: B) => fa.encode(f(x))
 
   def apply[A: DiagramEncoder]: DiagramEncoder[A] =
-    implicitly[DiagramEncoder[A]]
+    summon[DiagramEncoder[A]]

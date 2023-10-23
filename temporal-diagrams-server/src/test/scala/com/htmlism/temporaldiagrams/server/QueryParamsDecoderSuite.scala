@@ -9,14 +9,14 @@ import com.htmlism.temporaldiagrams.server.builder.*
 object QueryParamsDecoderSuite extends FunSuite:
   test("a value decoder already exists for string"):
     val dec =
-      implicitly[ValueDecoder[String]]
+      summon[ValueDecoder[String]]
 
     exists(dec.decode("foo")):
       expect.eql("foo", _)
 
   test("a value decoder is a functor"):
     val dec =
-      implicitly[ValueDecoder[String]]
+      summon[ValueDecoder[String]]
         .map(_.length)
 
     exists(dec.decode("foo")):
@@ -24,7 +24,7 @@ object QueryParamsDecoderSuite extends FunSuite:
 
   test("a value decoder can compose fallibility via emap"):
     val dec =
-      implicitly[ValueDecoder[String]]
+      summon[ValueDecoder[String]]
         .emap(_.asRight)
 
     exists(dec.decode("foo")):

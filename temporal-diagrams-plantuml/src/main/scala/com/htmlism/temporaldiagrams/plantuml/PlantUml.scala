@@ -30,7 +30,7 @@ object PlantUml:
             2
 
       val str =
-        implicitly[DiagramEncoder[PlantUml]]
+        summon[DiagramEncoder[PlantUml]]
           .encode(x)
 
       index -> str

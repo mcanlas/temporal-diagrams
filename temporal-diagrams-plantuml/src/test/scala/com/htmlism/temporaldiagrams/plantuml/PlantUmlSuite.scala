@@ -59,7 +59,7 @@ object PlantUmlSuite extends FunSuite:
           PlantUml.Component(s"${x.s} with highlights", None, None)
 
     val derivedEncoder =
-      implicitly[HighlightEncoder[NonEmptyChain[PlantUml], NecTestDsl]]
+      summon[HighlightEncoder[NonEmptyChain[PlantUml], NecTestDsl]]
 
     val x =
       NecTestDsl("asdf")
