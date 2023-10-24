@@ -36,6 +36,12 @@ object PlantUml:
       index -> str
     }
 
+  /**
+    * Handles the string encoding of multiple diagram components, based off the encoding of a single element/ADT
+    *
+    * @tparam A
+    *   The target diagram language
+    */
   given [A](using A: DiagramEncoder[A]): DiagramEncoder[Chain[A]] =
     (xs: Chain[A]) =>
       xs.uncons match
@@ -46,6 +52,13 @@ object PlantUml:
         case None =>
           Chain.empty
 
+  /**
+    * If a domain language is 1:1 with PlantUML declarations, this automatically promotes the encoder to be monoidal, a
+    * requirement for diagram rendering
+    *
+    * @tparam A
+    *   The input domain language
+    */
   given [A](using
       enc: HighlightEncoder[PlantUml, A]
   ): HighlightEncoder[Chain[PlantUml], A] =
