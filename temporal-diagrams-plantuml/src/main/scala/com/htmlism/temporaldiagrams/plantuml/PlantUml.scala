@@ -90,19 +90,19 @@ object PlantUml:
 
         case Component(name, oAlias, oStereotype) =>
           s"component $name"
-            .applySome(oAlias)((s, a) => s + s" as $a")
+            .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
             .applySome(oStereotype)((s, st) => s + s" << $st >>")
             .pipe(Chain(_))
 
         case Queue(name, oAlias, oStereotype) =>
           s"queue $name"
-            .applySome(oAlias)((s, a) => s + s" as $a")
+            .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
             .applySome(oStereotype)((s, st) => s + s" << $st >>")
             .pipe(Chain(_))
 
         case Database(name, oAlias, oStereotype) =>
           s"database $name"
-            .applySome(oAlias)((s, a) => s + s" as $a")
+            .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
             .applySome(oStereotype)((s, st) => s + s" << $st >>")
             .pipe(Chain(_))
 
@@ -123,6 +123,10 @@ object PlantUml:
               s"skinparam $base$stereotype {"
             .pipe(Chain.fromSeq)
             .pipe(_ ++ Chain("}"))
+
+  private def quoteHyphens(s: String) =
+    if s.contains("-") then s"\"$s\""
+    else s
 
   // TODO test this
   def render(xs: Chain[PlantUml]): Chain[String] =
