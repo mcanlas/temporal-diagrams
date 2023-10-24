@@ -81,7 +81,7 @@ object PlantUml:
               if s.isEmpty then ""
               else "  " + s
             }
-            .prepend(s"package $name {")
+            .prepend(s"package ${quoteHyphens(name)} {")
             .append("}")
 
         case LeftToRightDirection =>
@@ -124,6 +124,7 @@ object PlantUml:
             .pipe(Chain.fromSeq)
             .pipe(_ ++ Chain("}"))
 
+  // TODO test
   private def quoteHyphens(s: String) =
     if s.contains("-") then s"\"$s\""
     else s
