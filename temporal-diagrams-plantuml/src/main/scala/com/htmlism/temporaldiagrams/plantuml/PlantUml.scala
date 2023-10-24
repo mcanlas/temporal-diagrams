@@ -197,11 +197,11 @@ object PlantUml:
     def apply(base: String, stereotype: String): SkinParamGroup =
       SkinParamGroup(base, Nil, stereotype.some)
 
-  case class Package(name: String, xs: NonEmptyList[Entity]) extends Entity
+  case class Package(name: String, xs: List[Entity]) extends Entity
 
   object Package:
-    def apply(name: String, x: Entity, xs: Entity*): Package =
-      Package(name, NonEmptyList(x, xs.toList))
+    def apply(name: String, xs: Entity*): Package =
+      Package(name, xs.toList)
 
   private def asDocument(xs: Chain[String]) =
     Chain("@startuml", "") ++
