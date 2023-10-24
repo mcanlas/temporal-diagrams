@@ -8,14 +8,14 @@ import cats.data.Kleisli
 import cats.effect.*
 import cats.syntax.all.*
 
-import com.htmlism.temporaldiagrams.demo.FilePrinterAlg
+import com.htmlism.temporaldiagrams.demo.FilePrinter
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax.*
 
-object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinterAlg[IO]) with IOApp.Simple
+object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinter[IO]) with IOApp.Simple
 
-class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]):
+class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   private val toProducer =
     Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[Chain[PlantUml]]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>

@@ -6,12 +6,12 @@ import cats.data.Chain
 import cats.effect.*
 import cats.syntax.all.*
 
-import com.htmlism.temporaldiagrams.demo.FilePrinterAlg
+import com.htmlism.temporaldiagrams.demo.FilePrinter
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax.*
 
-object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO]) with IOApp.Simple:
+object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) with IOApp.Simple:
   val diagram =
     Chain(
       OuroborosDsl.Type("User.Config"),
@@ -42,7 +42,7 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinterAlg[IO
     )
       .map(_.r)
 
-class WriteOuroborosDiagram[F[_]](out: FilePrinterAlg[F]):
+class WriteOuroborosDiagram[F[_]](out: FilePrinter[F]):
   def run: F[Unit] =
     out.print("ouroboros.puml")(
       Renderable

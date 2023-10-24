@@ -4,20 +4,18 @@ import java.io.PrintWriter
 
 import cats.effect.*
 
-trait FilePrinterAlg[F[_]]:
+trait FilePrinter[F[_]]:
   def print(dest: String)(s: String): F[Unit]
 
-object FilePrinterAlg:
+object FilePrinter:
 
-  def apply[F[_]](using F: Sync[F]): FilePrinterAlg[F] =
-    new FilePrinterAlg[F]:
-
+  def apply[F[_]](using F: Sync[F]): FilePrinter[F] =
+    new FilePrinter[F]:
       def print(dest: String)(s: String): F[Unit] =
         Resource
           .fromAutoCloseable:
             F.delay:
               new PrintWriter(dest)
-          .use { pw =>
+          .use: pw =>
             F.delay:
               pw.println(s)
-          }
