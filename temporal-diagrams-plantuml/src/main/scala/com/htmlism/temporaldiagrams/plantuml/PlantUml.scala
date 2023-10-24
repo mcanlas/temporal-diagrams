@@ -69,46 +69,60 @@ object PlantUml:
       def encodeWithHighlights(x: A, highlighted: Boolean): Chain[PlantUml] =
         Chain(enc.encodeWithHighlights(x, highlighted))
 
-  given DiagramEncoder[PlantUml] =
-    case LeftToRightDirection =>
-      "left to right direction"
-        .pipe(Chain(_))
+  given DiagramEncoder[PlantUml] with
+    def encode(x: PlantUml): Chain[String] =
+      x match
+        case Package(name, xs) =>
+          xs
+            .iterator
+            .pipe(Chain.fromIterableOnce)
+            .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
+            .map { s =>
+              if s.isEmpty then ""
+              else "  " + s
+            }
+            .prepend(s"package $name {")
+            .append("}")
 
-    case Component(name, oAlias, oStereotype) =>
-      s"component $name"
-        .applySome(oAlias)((s, a) => s + s" as $a")
-        .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(Chain(_))
+        case LeftToRightDirection =>
+          "left to right direction"
+            .pipe(Chain(_))
 
-    case Queue(name, oAlias, oStereotype) =>
-      s"queue $name"
-        .applySome(oAlias)((s, a) => s + s" as $a")
-        .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(Chain(_))
+        case Component(name, oAlias, oStereotype) =>
+          s"component $name"
+            .applySome(oAlias)((s, a) => s + s" as $a")
+            .applySome(oStereotype)((s, st) => s + s" << $st >>")
+            .pipe(Chain(_))
 
-    case Database(name, oAlias, oStereotype) =>
-      s"database $name"
-        .applySome(oAlias)((s, a) => s + s" as $a")
-        .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(Chain(_))
+        case Queue(name, oAlias, oStereotype) =>
+          s"queue $name"
+            .applySome(oAlias)((s, a) => s + s" as $a")
+            .applySome(oStereotype)((s, st) => s + s" << $st >>")
+            .pipe(Chain(_))
 
-    case Arrow(src, dest, oText) =>
-      s"$src --> $dest"
-        .applySome(oText)((s, t) => s"$s : $t")
-        .pipe(Chain(_))
+        case Database(name, oAlias, oStereotype) =>
+          s"database $name"
+            .applySome(oAlias)((s, a) => s + s" as $a")
+            .applySome(oStereotype)((s, st) => s + s" << $st >>")
+            .pipe(Chain(_))
 
-    case SkinParamGroup(base, parameters, oStereotype) =>
-      parameters
-        .map { case SkinParamGroup.Parameter(key, value) =>
-          s"  $key $value"
-        }
-        .prepended:
-          val stereotype =
-            oStereotype.fold("")("<< " + _ + " >>")
+        case Arrow(src, dest, oText) =>
+          s"$src --> $dest"
+            .applySome(oText)((s, t) => s"$s : $t")
+            .pipe(Chain(_))
 
-          s"skinparam $base$stereotype {"
-        .pipe(Chain.fromSeq)
-        .pipe(_ ++ Chain("}"))
+        case SkinParamGroup(base, parameters, oStereotype) =>
+          parameters
+            .map { case SkinParamGroup.Parameter(key, value) =>
+              s"  $key $value"
+            }
+            .prepended:
+              val stereotype =
+                oStereotype.fold("")("<< " + _ + " >>")
+
+              s"skinparam $base$stereotype {"
+            .pipe(Chain.fromSeq)
+            .pipe(_ ++ Chain("}"))
 
   // TODO test this
   def render(xs: Chain[PlantUml]): Chain[String] =
@@ -174,6 +188,12 @@ object PlantUml:
 
     def apply(base: String, stereotype: String): SkinParamGroup =
       SkinParamGroup(base, Nil, stereotype.some)
+
+  case class Package(name: String, xs: NonEmptyList[PlantUml]) extends PlantUml
+
+  object Package:
+    def apply(name: String, x: PlantUml, xs: PlantUml*): Package =
+      Package(name, NonEmptyList(x, xs.toList))
 
   private def asDocument(xs: Chain[String]) =
     Chain("@startuml", "") ++
