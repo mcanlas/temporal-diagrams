@@ -42,12 +42,11 @@ object HighlightEncoder:
     * @tparam D
     *   The target diagram language to encode to
     */
-  given [D]: Contravariant[HighlightEncoder[D, *]] =
-    new Contravariant[HighlightEncoder[D, *]]:
-      def contramap[A, B](fa: HighlightEncoder[D, A])(f: B => A): HighlightEncoder[D, B] =
-        new HighlightEncoder[D, B]:
-          def encode(x: B): D =
-            fa.encode(f(x))
+  given [D]: Contravariant[HighlightEncoder[D, *]] with
+    def contramap[A, B](fa: HighlightEncoder[D, A])(f: B => A): HighlightEncoder[D, B] =
+      new HighlightEncoder[D, B]:
+        def encode(x: B): D =
+          fa.encode(f(x))
 
-          def encodeWithHighlights(x: B, highlighted: Boolean): D =
-            fa.encodeWithHighlights(f(x), highlighted)
+        def encodeWithHighlights(x: B, highlighted: Boolean): D =
+          fa.encodeWithHighlights(f(x), highlighted)

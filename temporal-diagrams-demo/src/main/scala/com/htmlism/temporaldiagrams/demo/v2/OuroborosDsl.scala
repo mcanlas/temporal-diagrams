@@ -15,15 +15,14 @@ object OuroborosDsl:
 
   case class Output(language: String, namespace: String) extends OuroborosDsl
 
-  given BrightEncoder[Chain[PlantUml], OuroborosDsl] =
-    new BrightEncoder[Chain[PlantUml], OuroborosDsl]:
-      def encodeBrightly(x: OuroborosDsl, isBright: Boolean): Chain[PlantUml] =
-        x match
-          case Type(s) =>
-            Chain(PlantUml.Component(s, None, None))
+  given BrightEncoder[Chain[PlantUml], OuroborosDsl] with
+    def encodeBrightly(x: OuroborosDsl, isBright: Boolean): Chain[PlantUml] =
+      x match
+        case Type(s) =>
+          Chain(PlantUml.Component(s, None, None))
 
-          case Encoding(src, dest, name) =>
-            Chain(PlantUml.Arrow(src, dest, name.some))
+        case Encoding(src, dest, name) =>
+          Chain(PlantUml.Arrow(src, dest, name.some))
 
-          case Output(s, namespace) =>
-            Chain(PlantUml.Database(s, Some(s + "_" + namespace), None))
+        case Output(s, namespace) =>
+          Chain(PlantUml.Database(s, Some(s + "_" + namespace), None))

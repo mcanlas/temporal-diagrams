@@ -26,10 +26,9 @@ object DiagramEncoder:
     * @tparam D
     *   The target diagram language to encode to
     */
-  given [D]: Contravariant[DiagramEncoder] =
-    new Contravariant[DiagramEncoder]:
-      def contramap[A, B](fa: DiagramEncoder[A])(f: B => A): DiagramEncoder[B] =
-        (x: B) => fa.encode(f(x))
+  given [D]: Contravariant[DiagramEncoder] with
+    def contramap[A, B](fa: DiagramEncoder[A])(f: B => A): DiagramEncoder[B] =
+      (x: B) => fa.encode(f(x))
 
   def apply[A: DiagramEncoder]: DiagramEncoder[A] =
     summon[DiagramEncoder[A]]

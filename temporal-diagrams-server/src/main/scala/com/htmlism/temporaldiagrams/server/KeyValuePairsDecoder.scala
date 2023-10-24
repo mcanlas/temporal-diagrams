@@ -15,32 +15,30 @@ sealed trait KeyValuePairsDecoder[A]:
           .decode(xs, n +: ns)
 
 object KeyValuePairsDecoder:
-  given Functor[KeyValuePairsDecoder] =
-    new Functor[KeyValuePairsDecoder]:
-      def map[A, B](fa: KeyValuePairsDecoder[A])(f: A => B): KeyValuePairsDecoder[B] =
-        new KeyValuePairsDecoder[B]:
-          def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, B] =
-            fa.decode(xs, ns).map(f)
+  given Functor[KeyValuePairsDecoder] with
+    def map[A, B](fa: KeyValuePairsDecoder[A])(f: A => B): KeyValuePairsDecoder[B] =
+      new KeyValuePairsDecoder[B]:
+        def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, B] =
+          fa.decode(xs, ns).map(f)
 
-  given Semigroupal[KeyValuePairsDecoder] =
-    new Semigroupal[KeyValuePairsDecoder]:
-      def product[A, B](fa: KeyValuePairsDecoder[A], fb: KeyValuePairsDecoder[B]): KeyValuePairsDecoder[(A, B)] =
-        new KeyValuePairsDecoder[(A, B)]:
-          def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, (A, B)] =
-            fa.decode(xs, ns) match
-              case Validated.Valid(x) =>
-                fb.decode(xs, ns) match
-                  case Validated.Valid(y) =>
-                    (x, y).valid
-                  case Validated.Invalid(err) =>
-                    err.invalid
+  given Semigroupal[KeyValuePairsDecoder] with
+    def product[A, B](fa: KeyValuePairsDecoder[A], fb: KeyValuePairsDecoder[B]): KeyValuePairsDecoder[(A, B)] =
+      new KeyValuePairsDecoder[(A, B)]:
+        def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, (A, B)] =
+          fa.decode(xs, ns) match
+            case Validated.Valid(x) =>
+              fb.decode(xs, ns) match
+                case Validated.Valid(y) =>
+                  (x, y).valid
+                case Validated.Invalid(err) =>
+                  err.invalid
 
-              case Validated.Invalid(erry) =>
-                fb.decode(xs, ns) match
-                  case Validated.Valid(_) =>
-                    erry.invalid
-                  case Validated.Invalid(errx) =>
-                    (errx |+| erry).invalid
+            case Validated.Invalid(erry) =>
+              fb.decode(xs, ns) match
+                case Validated.Valid(_) =>
+                  erry.invalid
+                case Validated.Invalid(errx) =>
+                  (errx |+| erry).invalid
 
   case class One[A](key: String)(using A: ValueDecoder[A]) extends KeyValuePairsDecoder[A]:
     def decode(xs: Map[String, List[String]], ns: Chain[String]): ValidatedNec[String, A] =

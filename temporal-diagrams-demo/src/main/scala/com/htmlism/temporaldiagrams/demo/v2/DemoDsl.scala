@@ -12,42 +12,41 @@ object DemoDsl:
   case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
 
-  given BrightEncoder[Chain[PlantUml], DemoDsl] =
-    new BrightEncoder[Chain[PlantUml], DemoDsl]:
-      def encodeBrightly(x: DemoDsl, isBright: Boolean): Chain[PlantUml] =
-        x match
-          case ClusterService(n, oDep, asCluster) =>
-            if asCluster then
-              Chain(1, 2, 3, 4)
-                .flatMap { i =>
-                  Chain[PlantUml](
-                    PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
-                    skin(isBright)
-                  )
-                    .applySome(oDep) { (a, d) =>
-                      a.append(PlantUml.Arrow(d + i.toString, n, None))
-                    }
-                }
-            else
-              Chain[PlantUml](
-                PlantUml.Component(n, None, Option.when(isBright)("Service")),
-                skin(isBright)
-              )
-                .applySome(oDep) { (a, d) =>
-                  a.append(PlantUml.Arrow(d, n, None))
-                }
-
-          case Buffered(n, oDep) =>
+  given BrightEncoder[Chain[PlantUml], DemoDsl] with
+    def encodeBrightly(x: DemoDsl, isBright: Boolean): Chain[PlantUml] =
+      x match
+        case ClusterService(n, oDep, asCluster) =>
+          if asCluster then
+            Chain(1, 2, 3, 4)
+              .flatMap { i =>
+                Chain[PlantUml](
+                  PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
+                  skin(isBright)
+                )
+                  .applySome(oDep) { (a, d) =>
+                    a.append(PlantUml.Arrow(d + i.toString, n, None))
+                  }
+              }
+          else
             Chain[PlantUml](
               PlantUml.Component(n, None, Option.when(isBright)("Service")),
-              skin(isBright),
-              PlantUml.Queue(n + "_queue", None, None),
-              PlantUml.Arrow(n + "_queue", n, None),
-              queueSkin
+              skin(isBright)
             )
               .applySome(oDep) { (a, d) =>
-                a.append(PlantUml.Arrow(d, n + "_queue", None))
+                a.append(PlantUml.Arrow(d, n, None))
               }
+
+        case Buffered(n, oDep) =>
+          Chain[PlantUml](
+            PlantUml.Component(n, None, Option.when(isBright)("Service")),
+            skin(isBright),
+            PlantUml.Queue(n + "_queue", None, None),
+            PlantUml.Arrow(n + "_queue", n, None),
+            queueSkin
+          )
+            .applySome(oDep) { (a, d) =>
+              a.append(PlantUml.Arrow(d, n + "_queue", None))
+            }
 
   private val queueSkin =
     PlantUml

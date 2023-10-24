@@ -49,13 +49,12 @@ object PlantUmlSuite extends FunSuite:
     )
 
   test("Can derive a non-empty chain highlight encoder from an elemental highlight encoder"):
-    given HighlightEncoder[PlantUml, NecTestDsl] =
-      new HighlightEncoder[PlantUml, NecTestDsl]:
-        def encode(x: NecTestDsl): PlantUml =
-          PlantUml.Component(x.s, None, None)
+    given HighlightEncoder[PlantUml, NecTestDsl] with
+      def encode(x: NecTestDsl): PlantUml =
+        PlantUml.Component(x.s, None, None)
 
-        def encodeWithHighlights(x: NecTestDsl, highlighted: Boolean): PlantUml =
-          PlantUml.Component(s"${x.s} with highlights", None, None)
+      def encodeWithHighlights(x: NecTestDsl, highlighted: Boolean): PlantUml =
+        PlantUml.Component(s"${x.s} with highlights", None, None)
 
     val derivedEncoder =
       summon[HighlightEncoder[Chain[PlantUml], NecTestDsl]]

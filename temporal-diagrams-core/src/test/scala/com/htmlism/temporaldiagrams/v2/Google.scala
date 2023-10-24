@@ -9,10 +9,9 @@ object Google:
 
   object Compute:
     // differs from amazon encoder, which is not nec
-    given HighlightEncoder[Chain[ToyDiagramLanguage], Compute] =
-      new HighlightEncoder[Chain[ToyDiagramLanguage], Compute]:
-        def encode(x: Compute): Chain[ToyDiagramLanguage] =
-          Chain(Component(s"google compute: ${x.s}"))
+    given HighlightEncoder[Chain[ToyDiagramLanguage], Compute] with
+      def encode(x: Compute): Chain[ToyDiagramLanguage] =
+        Chain(Component(s"google compute: ${x.s}"))
 
-        def encodeWithHighlights(x: Compute, highlighted: Boolean): Chain[ToyDiagramLanguage] =
-          Chain(Component(s"google compute: ${x.s} ${highlighted.toString}"))
+      def encodeWithHighlights(x: Compute, highlighted: Boolean): Chain[ToyDiagramLanguage] =
+        Chain(Component(s"google compute: ${x.s} ${highlighted.toString}"))
