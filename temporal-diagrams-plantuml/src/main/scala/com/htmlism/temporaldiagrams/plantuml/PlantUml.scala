@@ -36,48 +36,53 @@ object PlantUml:
       index -> str
     }
 
-  given [A](using A: DiagramEncoder[A]): DiagramEncoder[NonEmptyChain[A]] =
-    (xs: NonEmptyChain[A]) =>
-      A.encode(xs.head)
-        .appendChain(xs.tail.flatMap(x => "" +: A.encode(x).toChain))
+  given [A](using A: DiagramEncoder[A]): DiagramEncoder[Chain[A]] =
+    (xs: Chain[A]) =>
+      xs.uncons match
+        case Some(head, tail) =>
+          A.encode(head)
+            .concat(tail.flatMap(x => "" +: A.encode(x)))
+
+        case None =>
+          Chain.empty
 
   given [A](using
       enc: HighlightEncoder[PlantUml, A]
-  ): HighlightEncoder[NonEmptyChain[PlantUml], A] =
-    new HighlightEncoder[NonEmptyChain[PlantUml], A]:
-      def encode(x: A): NonEmptyChain[PlantUml] =
-        NonEmptyChain.one(enc.encode(x))
+  ): HighlightEncoder[Chain[PlantUml], A] =
+    new HighlightEncoder[Chain[PlantUml], A]:
+      def encode(x: A): Chain[PlantUml] =
+        Chain(enc.encode(x))
 
-      def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyChain[PlantUml] =
-        NonEmptyChain.one(enc.encodeWithHighlights(x, highlighted))
+      def encodeWithHighlights(x: A, highlighted: Boolean): Chain[PlantUml] =
+        Chain(enc.encodeWithHighlights(x, highlighted))
 
   given DiagramEncoder[PlantUml] =
     case LeftToRightDirection =>
       "left to right direction"
-        .pipe(NonEmptyChain.one)
+        .pipe(Chain(_))
 
     case Component(name, oAlias, oStereotype) =>
       s"component $name"
         .applySome(oAlias)((s, a) => s + s" as $a")
         .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(NonEmptyChain.one)
+        .pipe(Chain(_))
 
     case Queue(name, oAlias, oStereotype) =>
       s"queue $name"
         .applySome(oAlias)((s, a) => s + s" as $a")
         .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(NonEmptyChain.one)
+        .pipe(Chain(_))
 
     case Database(name, oAlias, oStereotype) =>
       s"database $name"
         .applySome(oAlias)((s, a) => s + s" as $a")
         .applySome(oStereotype)((s, st) => s + s" << $st >>")
-        .pipe(NonEmptyChain.one)
+        .pipe(Chain(_))
 
     case Arrow(src, dest, oText) =>
       s"$src --> $dest"
         .applySome(oText)((s, t) => s"$s : $t")
-        .pipe(NonEmptyChain.one)
+        .pipe(Chain(_))
 
     case SkinParamGroup(base, parameters, oStereotype) =>
       parameters
@@ -90,22 +95,22 @@ object PlantUml:
 
           s"skinparam $base$stereotype {"
         .pipe(Chain.fromSeq)
-        .pipe(NonEmptyChain.one("}").prependChain)
+        .pipe(_ ++ Chain("}"))
 
   // TODO test this
-  def render(xs: NonEmptyChain[PlantUml]): NonEmptyChain[String] =
+  def render(xs: Chain[PlantUml]): Chain[String] =
     xs
       .distinct
       .sorted
-      .pipe(DiagramEncoder[NonEmptyChain[PlantUml]].encode)
+      .pipe(DiagramEncoder[Chain[PlantUml]].encode)
       .pipe(asDocument)
 
-  def renderHorizontally(xs: NonEmptyChain[PlantUml]): NonEmptyChain[String] =
+  def renderHorizontally(xs: Chain[PlantUml]): Chain[String] =
     xs
       .distinct
       .sorted
       .prepend(LeftToRightDirection)
-      .pipe(DiagramEncoder[NonEmptyChain[PlantUml]].encode)
+      .pipe(DiagramEncoder[Chain[PlantUml]].encode)
       .pipe(asDocument)
 
   case object LeftToRightDirection extends PlantUml
@@ -157,7 +162,7 @@ object PlantUml:
     def apply(base: String, stereotype: String): SkinParamGroup =
       SkinParamGroup(base, Nil, stereotype.some)
 
-  private def asDocument(xs: NonEmptyChain[String]) =
-    NonEmptyChain.of("@startuml", "") ++
+  private def asDocument(xs: Chain[String]) =
+    Chain("@startuml", "") ++
       xs ++
-      NonEmptyChain.of("", "@enduml")
+      Chain("", "@enduml")

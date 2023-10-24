@@ -1,7 +1,7 @@
 package com.htmlism.temporaldiagrams.v2
 
 import cats.Contravariant
-import cats.data.NonEmptyChain
+import cats.data.Chain
 
 /**
   * A type class to encode structures into a diagram language as strings
@@ -18,7 +18,7 @@ trait DiagramEncoder[A]:
     * @param x
     *   The data structure being encoded
     */
-  def encode(x: A): NonEmptyChain[String]
+  def encode(x: A): Chain[String]
 
 object DiagramEncoder:
 

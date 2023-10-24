@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
-import cats.data.NonEmptyChain
+import cats.data.Chain
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
@@ -15,18 +15,15 @@ object OuroborosDsl:
 
   case class Output(language: String, namespace: String) extends OuroborosDsl
 
-  given BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl] =
-    new BrightEncoder[NonEmptyChain[PlantUml], OuroborosDsl]:
-      def encodeBrightly(x: OuroborosDsl, isBright: Boolean): NonEmptyChain[PlantUml] =
+  given BrightEncoder[Chain[PlantUml], OuroborosDsl] =
+    new BrightEncoder[Chain[PlantUml], OuroborosDsl]:
+      def encodeBrightly(x: OuroborosDsl, isBright: Boolean): Chain[PlantUml] =
         x match
           case Type(s) =>
-            NonEmptyChain
-              .one(PlantUml.Component(s, None, None))
+            Chain(PlantUml.Component(s, None, None))
 
           case Encoding(src, dest, name) =>
-            NonEmptyChain
-              .one(PlantUml.Arrow(src, dest, name.some))
+            Chain(PlantUml.Arrow(src, dest, name.some))
 
           case Output(s, namespace) =>
-            NonEmptyChain
-              .one(PlantUml.Database(s, Some(s + "_" + namespace), None))
+            Chain(PlantUml.Database(s, Some(s + "_" + namespace), None))

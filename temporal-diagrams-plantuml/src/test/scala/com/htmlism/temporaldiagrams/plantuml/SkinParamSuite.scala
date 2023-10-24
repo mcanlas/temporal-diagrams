@@ -8,7 +8,7 @@ import com.htmlism.temporaldiagrams.v2.DiagramEncoder
 object SkinParamSuite extends FunSuite:
   test("Can render skin params"):
     expect.eql(
-      NonEmptyChain.of(
+      Chain(
         "skinparam asdf {",
         "}"
       ),
@@ -19,7 +19,7 @@ object SkinParamSuite extends FunSuite:
 
   test("Has a builder method"):
     expect.eql(
-      NonEmptyChain.of(
+      Chain(
         "skinparam asdf {",
         "  key value",
         "}"
@@ -33,7 +33,7 @@ object SkinParamSuite extends FunSuite:
 
   test("A skin param has an optional stereotype"):
     expect.eql(
-      NonEmptyChain.of(
+      Chain(
         "skinparam asdf<< stereo >> {",
         "}"
       ),

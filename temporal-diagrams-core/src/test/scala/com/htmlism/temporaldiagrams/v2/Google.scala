@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams.v2
 
-import cats.data.NonEmptyChain
+import cats.data.Chain
 
 import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
 
@@ -9,10 +9,10 @@ object Google:
 
   object Compute:
     // differs from amazon encoder, which is not nec
-    given HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], Compute] =
-      new HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], Compute]:
-        def encode(x: Compute): NonEmptyChain[ToyDiagramLanguage] =
-          NonEmptyChain.of(Component(s"google compute: ${x.s}"))
+    given HighlightEncoder[Chain[ToyDiagramLanguage], Compute] =
+      new HighlightEncoder[Chain[ToyDiagramLanguage], Compute]:
+        def encode(x: Compute): Chain[ToyDiagramLanguage] =
+          Chain(Component(s"google compute: ${x.s}"))
 
-        def encodeWithHighlights(x: Compute, highlighted: Boolean): NonEmptyChain[ToyDiagramLanguage] =
-          NonEmptyChain.of(Component(s"google compute: ${x.s} ${highlighted.toString}"))
+        def encodeWithHighlights(x: Compute, highlighted: Boolean): Chain[ToyDiagramLanguage] =
+          Chain(Component(s"google compute: ${x.s} ${highlighted.toString}"))

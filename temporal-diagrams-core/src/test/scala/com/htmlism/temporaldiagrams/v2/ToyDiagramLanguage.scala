@@ -19,17 +19,17 @@ object ToyDiagramLanguage:
           case Arrow(s) =>
             s"arrow($s)"
 
-      NonEmptyChain.one(str)
+      Chain(str)
 
   given Eq[ToyDiagramLanguage] =
     Eq.fromUniversalEquals
 
   given [A](using
       enc: HighlightEncoder[ToyDiagramLanguage, A]
-  ): HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], A] =
-    new HighlightEncoder[NonEmptyChain[ToyDiagramLanguage], A]:
-      def encode(x: A): NonEmptyChain[ToyDiagramLanguage] =
-        NonEmptyChain.one(enc.encode(x))
+  ): HighlightEncoder[Chain[ToyDiagramLanguage], A] =
+    new HighlightEncoder[Chain[ToyDiagramLanguage], A]:
+      def encode(x: A): Chain[ToyDiagramLanguage] =
+        Chain(enc.encode(x))
 
-      def encodeWithHighlights(x: A, highlighted: Boolean): NonEmptyChain[ToyDiagramLanguage] =
-        NonEmptyChain.one(enc.encodeWithHighlights(x, highlighted))
+      def encodeWithHighlights(x: A, highlighted: Boolean): Chain[ToyDiagramLanguage] =
+        Chain(enc.encodeWithHighlights(x, highlighted))

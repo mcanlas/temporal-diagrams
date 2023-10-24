@@ -10,9 +10,9 @@ import com.htmlism.temporaldiagrams.v2.*
 object PlantUmlSuite extends FunSuite:
   test("Can render one component"):
     expect.eql(
-      NonEmptyChain.of("@startuml", "", "component asdf", "", "@enduml"),
+      Chain("@startuml", "", "component asdf", "", "@enduml"),
       PlantUml.render(
-        NonEmptyChain.one(
+        Chain(
           PlantUml.Component("asdf", None, None)
         )
       )
@@ -20,9 +20,9 @@ object PlantUmlSuite extends FunSuite:
 
   test("Can render horizontally"):
     expect.eql(
-      NonEmptyChain.of("@startuml", "", "left to right direction", "", "component asdf", "", "@enduml"),
+      Chain("@startuml", "", "left to right direction", "", "component asdf", "", "@enduml"),
       PlantUml.renderHorizontally(
-        NonEmptyChain.one(
+        Chain(
           PlantUml.Component("asdf", None, None)
         )
       )
@@ -30,20 +30,19 @@ object PlantUmlSuite extends FunSuite:
 
   test("Can render many components, AND lexicographically sorts them"):
     val xs =
-      NonEmptyChain
-        .of[PlantUml](
-          PlantUml.Component("foo", None, None),
-          PlantUml.Component("bar", None, None)
-        )
+      Chain[PlantUml](
+        PlantUml.Component("foo", None, None),
+        PlantUml.Component("bar", None, None)
+      )
 
     expect.eql(
-      NonEmptyChain.of("@startuml", "", "component bar", "", "component foo", "", "@enduml"),
+      Chain("@startuml", "", "component bar", "", "component foo", "", "@enduml"),
       PlantUml.render(xs)
     )
 
   test("Can render the left to right directive"):
     expect.eql(
-      NonEmptyChain.one("left to right direction"),
+      Chain("left to right direction"),
       DiagramEncoder[PlantUml].encode(
         PlantUml.LeftToRightDirection
       )
@@ -59,16 +58,16 @@ object PlantUmlSuite extends FunSuite:
           PlantUml.Component(s"${x.s} with highlights", None, None)
 
     val derivedEncoder =
-      summon[HighlightEncoder[NonEmptyChain[PlantUml], NecTestDsl]]
+      summon[HighlightEncoder[Chain[PlantUml], NecTestDsl]]
 
     val x =
       NecTestDsl("asdf")
 
     expect.eql(
-      NonEmptyChain.one(PlantUml.Component("asdf", None, None)),
+      Chain(PlantUml.Component("asdf", None, None)),
       derivedEncoder.encode(x)
     ) and expect.eql(
-      NonEmptyChain.one(PlantUml.Component("asdf with highlights", None, None)),
+      Chain(PlantUml.Component("asdf with highlights", None, None)),
       derivedEncoder.encodeWithHighlights(x, highlighted = true)
     )
 
@@ -76,7 +75,7 @@ object PlantUmlSuite extends FunSuite:
 
   test("Components are rendered in an order and lexicographically"):
     expect.eql(
-      NonEmptyChain.of(
+      Chain(
         "@startuml",
         "",
         "left to right direction",
@@ -90,29 +89,27 @@ object PlantUmlSuite extends FunSuite:
         "",
         "@enduml"
       ),
-      NonEmptyChain
-        .of(
-          PlantUml.Arrow("src", "dest", None),
-          PlantUml.Component("asdf", None, None),
-          PlantUml.SkinParamGroup("foo"),
-          PlantUml.LeftToRightDirection
-        )
+      Chain(
+        PlantUml.Arrow("src", "dest", None),
+        PlantUml.Component("asdf", None, None),
+        PlantUml.SkinParamGroup("foo"),
+        PlantUml.LeftToRightDirection
+      )
         .pipe(PlantUml.render)
     )
 
   test("Duplicate components are rendered uniquely"):
     expect.eql(
-      NonEmptyChain.of(
+      Chain(
         "@startuml",
         "",
         "component asdf",
         "",
         "@enduml"
       ),
-      NonEmptyChain
-        .of(
-          PlantUml.Component("asdf", None, None),
-          PlantUml.Component("asdf", None, None)
-        )
+      Chain(
+        PlantUml.Component("asdf", None, None),
+        PlantUml.Component("asdf", None, None)
+      )
         .pipe(PlantUml.render)
     )

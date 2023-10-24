@@ -2,7 +2,6 @@ package com.htmlism.temporaldiagrams
 package demo.v2
 
 import cats.data.Chain
-import cats.data.NonEmptyChain
 
 import com.htmlism.temporaldiagrams.plantuml.*
 import com.htmlism.temporaldiagrams.v2.BrightEncoder
@@ -13,45 +12,41 @@ object DemoDsl:
   case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
 
-  given BrightEncoder[NonEmptyChain[PlantUml], DemoDsl] =
-    new BrightEncoder[NonEmptyChain[PlantUml], DemoDsl]:
-      def encodeBrightly(x: DemoDsl, isBright: Boolean): NonEmptyChain[PlantUml] =
+  given BrightEncoder[Chain[PlantUml], DemoDsl] =
+    new BrightEncoder[Chain[PlantUml], DemoDsl]:
+      def encodeBrightly(x: DemoDsl, isBright: Boolean): Chain[PlantUml] =
         x match
           case ClusterService(n, oDep, asCluster) =>
             if asCluster then
-              NonEmptyChain
-                .of(1, 2, 3, 4)
+              Chain(1, 2, 3, 4)
                 .flatMap { i =>
-                  NonEmptyChain
-                    .of[PlantUml](
-                      PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
-                      skin(isBright)
-                    )
+                  Chain[PlantUml](
+                    PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
+                    skin(isBright)
+                  )
                     .applySome(oDep) { (a, d) =>
-                      a.appendChain(Chain.one(PlantUml.Arrow(d + i.toString, n, None)))
+                      a.append(PlantUml.Arrow(d + i.toString, n, None))
                     }
                 }
             else
-              NonEmptyChain
-                .of[PlantUml](
-                  PlantUml.Component(n, None, Option.when(isBright)("Service")),
-                  skin(isBright)
-                )
+              Chain[PlantUml](
+                PlantUml.Component(n, None, Option.when(isBright)("Service")),
+                skin(isBright)
+              )
                 .applySome(oDep) { (a, d) =>
-                  a.appendChain(Chain.one(PlantUml.Arrow(d, n, None)))
+                  a.append(PlantUml.Arrow(d, n, None))
                 }
 
           case Buffered(n, oDep) =>
-            NonEmptyChain
-              .of[PlantUml](
-                PlantUml.Component(n, None, Option.when(isBright)("Service")),
-                skin(isBright),
-                PlantUml.Queue(n + "_queue", None, None),
-                PlantUml.Arrow(n + "_queue", n, None),
-                queueSkin
-              )
+            Chain[PlantUml](
+              PlantUml.Component(n, None, Option.when(isBright)("Service")),
+              skin(isBright),
+              PlantUml.Queue(n + "_queue", None, None),
+              PlantUml.Arrow(n + "_queue", n, None),
+              queueSkin
+            )
               .applySome(oDep) { (a, d) =>
-                a.appendChain(Chain.one(PlantUml.Arrow(d, n + "_queue", None)))
+                a.append(PlantUml.Arrow(d, n + "_queue", None))
               }
 
   private val queueSkin =

@@ -3,8 +3,8 @@ package com.htmlism.temporaldiagrams.demo.v2
 import scala.util.chaining.*
 
 import cats.*
+import cats.data.Chain
 import cats.data.Kleisli
-import cats.data.NonEmptyChain
 import cats.effect.*
 import cats.syntax.all.*
 
@@ -17,7 +17,7 @@ object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinterAlg[IO])
 
 class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]):
   private val toProducer =
-    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[NonEmptyChain[PlantUml]]]:
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[Chain[PlantUml]]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
         DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo")
 
@@ -28,7 +28,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]):
         DemoDsl.Buffered("foo", None).tag("foo")
 
   private val toConsumer =
-    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[NonEmptyChain[PlantUml]]]:
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[Chain[PlantUml]]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
         DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar")
 
@@ -39,11 +39,10 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]):
         DemoDsl.Buffered("bar", "foo".some).tag("bar")
 
   val stackGivenCfg =
-    NonEmptyChain
-      .of(
-        toProducer.local[DemoDsl.ConfigBasket](_.fooStyle),
-        toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
-      )
+    Chain(
+      toProducer.local[DemoDsl.ConfigBasket](_.fooStyle),
+      toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
+    )
       .traverse(_.run)
 
   val z =
@@ -68,7 +67,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]):
     cfgs
       .zipWithIndex
       .traverse { case (cfg, n) =>
-        val renders: NonEmptyChain[Renderable[NonEmptyChain[PlantUml]]] =
+        val renders: Chain[Renderable[Chain[PlantUml]]] =
           stackGivenCfg(cfg)
             .map(_.extract)
 
@@ -76,16 +75,16 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]):
       }
       .void
 
-  private def printNormalDiagram(renders: NonEmptyChain[Renderable[NonEmptyChain[PlantUml]]], n: Int) =
+  private def printNormalDiagram(renders: Chain[Renderable[Chain[PlantUml]]], n: Int) =
     val str =
       renders
-        .pipe(Renderable.renderMany[NonEmptyChain[PlantUml]])
+        .pipe(Renderable.renderMany[Chain[PlantUml]])
         .pipe(PlantUml.render)
         .mkString_("\n")
 
     out.print(s"v2-$n.puml")(str)
 
-  private def printHighlightDiagrams(renders: NonEmptyChain[Renderable[NonEmptyChain[PlantUml]]], n: Int) =
+  private def printHighlightDiagrams(renders: Chain[Renderable[Chain[PlantUml]]], n: Int) =
     val tags =
       Renderable
         .allTags(renders)
@@ -94,7 +93,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinterAlg[F]):
     tags.traverse_ { t =>
       val str =
         renders
-          .pipe(Renderable.renderManyWithTag[NonEmptyChain[PlantUml]](_, t))
+          .pipe(Renderable.renderManyWithTag[Chain[PlantUml]](_, t))
           .pipe(PlantUml.render)
           .mkString_("\n")
 

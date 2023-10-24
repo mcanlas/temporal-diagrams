@@ -3,8 +3,9 @@ package com.htmlism.temporaldiagrams.v2
 import scala.collection.immutable.ListSet
 import scala.util.chaining.*
 
-import cats.Semigroup
-import cats.data.NonEmptyChain
+import cats.Monoid
+import cats.data.Chain
+import cats.syntax.all.*
 
 /**
   * @tparam D
@@ -55,17 +56,19 @@ object Renderable:
     def renderWithHighlight(tag: String): D =
       enc.encodeWithHighlights(x, tags.contains(tag))
 
-  def renderMany[D: Semigroup](xs: NonEmptyChain[Renderable[D]]): D =
+  // monoid for adt's that are multi arrow and don't have any dsl
+  def renderMany[D: Monoid](xs: Chain[Renderable[D]]): D =
     xs
       .map(_.render)
-      .reduce
+      .fold
 
-  def renderManyWithTag[D: Semigroup](xs: NonEmptyChain[Renderable[D]], tag: String): D =
+  // monoid for adt's that are multi arrow and don't have any dsl
+  def renderManyWithTag[D: Monoid](xs: Chain[Renderable[D]], tag: String): D =
     xs
       .map(_.renderWithHighlight(tag))
-      .reduce
+      .fold
 
-  def allTags(xs: NonEmptyChain[Renderable[?]]): ListSet[String] =
+  def allTags(xs: Chain[Renderable[?]]): ListSet[String] =
     xs
       .iterator
       .flatMap { case x: Of[?] =>
