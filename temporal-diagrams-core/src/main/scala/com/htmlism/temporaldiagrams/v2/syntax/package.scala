@@ -26,14 +26,16 @@ package object syntax:
     /**
       * Marks an expression as renderable to `D`, with the specified tags
       *
+      * @tparam D
+      *   The target diagram language
+      *
       * @param t
       *   A required tag
       * @param ts
       *   Optional, additional tags
       */
-
-    def tag(t: String, ts: String*): Tagged[A] =
-      Tagged(x, ListSet.from(t +: ts))
+    def tag[D](t: String, ts: String*)(using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+      Renderable.OfA(x, ListSet.from(t +: ts))
 
   /**
     * Implicitly binds available highlight encoder evidence for domain objects
@@ -51,6 +53,3 @@ package object syntax:
     */
   implicit def liftToRenderable[A, D](x: A)(using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
     Renderable.OfA(x, ListSet.empty)
-
-  implicit def liftTaggedToRenderable[A, D](xt: Tagged[A])(using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
-    Renderable.OfA(xt.x, xt.tags)
