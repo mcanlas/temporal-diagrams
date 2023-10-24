@@ -147,6 +147,9 @@ object PlantUml:
 
   case object LeftToRightDirection extends PlantUml
 
+  // something that can be nested in a package; or is global in scope, like an arrow
+  sealed trait Entity extends PlantUml
+
   /**
     * A building block in component diagrams
     *
@@ -158,11 +161,11 @@ object PlantUml:
     * @param stereotype
     *   Optional. A tag to share styling among components of the same stereotype
     */
-  case class Component(name: String, alias: Option[String], stereotype: Option[String]) extends PlantUml
+  case class Component(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
-  case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends PlantUml
+  case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
-  case class Database(name: String, alias: Option[String], stereotype: Option[String]) extends PlantUml
+  case class Database(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   /**
     * A directed line from the source to the destination
@@ -194,10 +197,10 @@ object PlantUml:
     def apply(base: String, stereotype: String): SkinParamGroup =
       SkinParamGroup(base, Nil, stereotype.some)
 
-  case class Package(name: String, xs: NonEmptyList[PlantUml]) extends PlantUml
+  case class Package(name: String, xs: NonEmptyList[Entity]) extends Entity
 
   object Package:
-    def apply(name: String, x: PlantUml, xs: PlantUml*): Package =
+    def apply(name: String, x: Entity, xs: Entity*): Package =
       Package(name, NonEmptyList(x, xs.toList))
 
   private def asDocument(xs: Chain[String]) =
