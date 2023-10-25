@@ -20,7 +20,7 @@ package object syntax:
       * @tparam D
       *   The target diagram language
       */
-    def r[D](using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+    def r[D](using enc: HighlightEncoder[D, A]): Renderable.OfA[A, D] =
       Renderable.OfA(x, ListSet.empty)
 
     /**
@@ -34,5 +34,5 @@ package object syntax:
       * @param ts
       *   Optional, additional tags
       */
-    def tag[D](t: String, ts: String*)(using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
+    def tag[D](t: String, ts: String*)(using enc: HighlightEncoder[D, A]): Renderable.OfA[A, D] =
       Renderable.OfA(x, ListSet.from(t +: ts))
