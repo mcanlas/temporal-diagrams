@@ -84,31 +84,31 @@ object PlantUml:
             .append("}")
 
         case LeftToRightDirection =>
-          "left to right direction"
-            .pipe(Chain(_))
+          Chain:
+            "left to right direction"
 
         case Component(name, oAlias, oStereotype) =>
-          s"component $name"
-            .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
-            .applySome(oStereotype)((s, st) => s + s" << $st >>")
-            .pipe(Chain(_))
+          Chain:
+            s"component $name"
+              .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
+              .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
         case Queue(name, oAlias, oStereotype) =>
-          s"queue $name"
-            .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
-            .applySome(oStereotype)((s, st) => s + s" << $st >>")
-            .pipe(Chain(_))
+          Chain:
+            s"queue $name"
+              .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
+              .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
         case Database(name, oAlias, oStereotype) =>
-          s"database $name"
-            .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
-            .applySome(oStereotype)((s, st) => s + s" << $st >>")
-            .pipe(Chain(_))
+          Chain:
+            s"database $name"
+              .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
+              .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
         case Arrow(src, dest, oText) =>
-          s"$src --> $dest"
-            .applySome(oText)((s, t) => s"$s : $t")
-            .pipe(Chain(_))
+          Chain:
+            s"$src --> $dest"
+              .applySome(oText)((s, t) => s"$s : $t")
 
         case SkinParamGroup(base, parameters, oStereotype) =>
           parameters
