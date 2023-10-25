@@ -74,8 +74,7 @@ object PlantUml:
       x match
         case Package(name, xs) =>
           xs
-            .iterator
-            .pipe(Chain.fromIterableOnce)
+            .pipe(Chain.fromSeq)
             .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
             .map { s =>
               if s.isEmpty then ""
