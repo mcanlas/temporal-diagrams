@@ -20,17 +20,8 @@ object SyntaxSuite extends FunSuite:
     val tagged =
       Chain[Renderable.Of[Chain[ToyDiagramLanguage]]](
         Amazon.Ec2("").tag("hello"),
-        Google.Compute("")
+        Google.Compute("").r
       )
 
     expect.same(ListSet("hello"), tagged.toList(0).tags) &&
     expect.same(ListSet.empty, tagged.toList(1).tags)
-
-  test("Domain objects can be lifted implicitly"):
-    val implicitRs =
-      Chain[Renderable.Of[Chain[ToyDiagramLanguage]]](
-        Amazon.Ec2(""),
-        Google.Compute("")
-      )
-
-    expect.same(RenderableSuite.explicitRs, implicitRs)

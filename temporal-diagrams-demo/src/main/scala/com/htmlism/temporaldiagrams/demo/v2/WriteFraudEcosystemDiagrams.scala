@@ -16,39 +16,39 @@ import com.htmlism.temporaldiagrams.v2.syntax.*
 object WriteFraudEcosystemDiagrams extends WriteFraudEcosystemDiagrams[IO](FilePrinter[IO]) with IOApp.Simple
 
 class WriteFraudEcosystemDiagrams[F[_]: Applicative](out: FilePrinter[F]):
-  def storage(name: String) =
+  def storage(name: String, tag: String) =
     Kleisli.fromFunction[Id, FraudEcosystemDsl.PersistenceStyle][Renderable[Chain[PlantUml]]]:
       case FraudEcosystemDsl.PersistenceStyle.DynamoDb =>
-        FraudEcosystemDsl.DynamoDb(name)
+        FraudEcosystemDsl.DynamoDb(name).tag(tag)
 
       case FraudEcosystemDsl.PersistenceStyle.MySql =>
-        FraudEcosystemDsl.MySql(name)
+        FraudEcosystemDsl.MySql(name).tag(tag)
 
   def queueConsumer(name: String) =
     Kleisli.fromFunction[Id, FraudEcosystemDsl.QueueConsumerStyle][Renderable[Chain[PlantUml]]]:
       case FraudEcosystemDsl.QueueConsumerStyle.Lambda =>
-        FraudEcosystemDsl.Lambda(name)
+        FraudEcosystemDsl.Lambda(name).tag("sad-path")
 
       case FraudEcosystemDsl.QueueConsumerStyle.EcsService =>
-        FraudEcosystemDsl.EcsService(name)
+        FraudEcosystemDsl.EcsService(name).tag("sad-path")
 
       case FraudEcosystemDsl.QueueConsumerStyle.Flink =>
-        FraudEcosystemDsl.Flink(name)
+        FraudEcosystemDsl.Flink(name).tag("sad-path")
 
-  val pure =
+  val pure: Chain[Kleisli[Id, FraudEcosystemDsl.Config, Renderable[Chain[PlantUml]]]] =
     Chain[Renderable[Chain[PlantUml]]](
-      FraudEcosystemDsl.EcsService("edge"),
-      FraudEcosystemDsl.EcsService("fraud_service"),
-      FraudEcosystemDsl.Link("edge", "forwards requests to", "fraud_service"),
-      FraudEcosystemDsl.Link("fraud_service", "writes to", "user_activity"),
-      FraudEcosystemDsl.Link("fraud_service", "writes to", "fraud_history")
+      FraudEcosystemDsl.EcsService("edge").tag("happy-path", "sad-path"),
+      FraudEcosystemDsl.EcsService("fraud_service").tag("happy-path", "sad-path"),
+      FraudEcosystemDsl.Link("edge", "forwards requests to", "fraud_service").r,
+      FraudEcosystemDsl.Link("fraud_service", "writes to", "user_activity").r,
+      FraudEcosystemDsl.Link("fraud_service", "writes to", "fraud_history").r
     )
       .map(Kleisli.pure[Id, FraudEcosystemDsl.Config, Renderable[Chain[PlantUml]]])
 
   val stackGivenCfg =
     Chain(
-      storage("user_activity").local[FraudEcosystemDsl.Config](_.happyPathStorage),
-      storage("fraud_history").local[FraudEcosystemDsl.Config](_.sadPathStorage),
+      storage("user_activity", "happy-path").local[FraudEcosystemDsl.Config](_.happyPathStorage),
+      storage("fraud_history", "sad-path").local[FraudEcosystemDsl.Config](_.sadPathStorage),
       queueConsumer("fraud_consumer").local[FraudEcosystemDsl.Config](_.queueConsumerStyle)
     )
       .concat(pure)

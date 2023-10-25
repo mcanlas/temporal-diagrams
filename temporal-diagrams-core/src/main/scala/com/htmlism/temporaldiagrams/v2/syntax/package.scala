@@ -36,20 +36,3 @@ package object syntax:
       */
     def tag[D](t: String, ts: String*)(using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
       Renderable.OfA(x, ListSet.from(t +: ts))
-
-  /**
-    * Implicitly binds available highlight encoder evidence for domain objects
-    *
-    * Useful for collating disparate input languages together targeting the same diagram language
-    *
-    * @param x
-    *   Input domain data
-    * @param enc
-    *   Evidence that `A` can be encoded into `D`
-    * @tparam A
-    *   Input domain type
-    * @tparam D
-    *   Target diagram language
-    */
-  implicit def liftToRenderable[A, D](x: A)(using enc: HighlightEncoder[D, A]): Renderable.OfA[D, A] =
-    Renderable.OfA(x, ListSet.empty)
