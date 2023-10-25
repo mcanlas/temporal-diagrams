@@ -10,6 +10,11 @@ import cats.Contravariant
   * @tparam A
   *   The input data type being encoded
   */
+// if read as a function "from input A to target domain D" you might hate this ordering of type parameters
+// but something about the flipping of positions prevents the `contramap` evidence lookup from working
+// HighlightEncoder\[(.*?), (.*?)\]
+// HighlightEncoder[$2, $1]
+// https://github.com/mcanlas/scala3-sandbox/blob/main/contra/src/main/scala/ContraVariantSandboxApp.scala
 trait HighlightEncoder[D, -A]:
 
   /**
