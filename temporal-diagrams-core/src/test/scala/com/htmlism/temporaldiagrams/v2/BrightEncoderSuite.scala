@@ -7,7 +7,7 @@ import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
 object BrightEncoderSuite extends FunSuite:
   test("A bright encoder's default encoding is equal to its bright encoding"):
     val enc =
-      new BrightEncoder[Amazon.Ec2, ToyDiagramLanguage]:
+      new BrightEncoder[ToyDiagramLanguage, Amazon.Ec2]:
         def encodeBrightly(x: Amazon.Ec2, isBright: Boolean): ToyDiagramLanguage =
           ToyDiagramLanguage.Component(isBright.toString)
 
