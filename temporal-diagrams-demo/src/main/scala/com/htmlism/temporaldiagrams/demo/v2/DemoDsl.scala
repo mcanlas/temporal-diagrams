@@ -12,7 +12,7 @@ object DemoDsl:
   case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
 
-  given BrightEncoder[Chain[PlantUml], DemoDsl] with
+  given BrightEncoder[DemoDsl, Chain[PlantUml]] with
     def encodeBrightly(x: DemoDsl, isBright: Boolean): Chain[PlantUml] =
       x match
         case ClusterService(n, oDep, asCluster) =>

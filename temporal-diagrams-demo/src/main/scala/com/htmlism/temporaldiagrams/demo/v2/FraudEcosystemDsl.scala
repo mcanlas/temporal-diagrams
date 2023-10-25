@@ -31,7 +31,7 @@ object FraudEcosystemDsl:
       queueConsumerStyle: QueueConsumerStyle
   )
 
-  given BrightEncoder[Chain[PlantUml], FraudEcosystemDsl] with
+  given BrightEncoder[FraudEcosystemDsl, Chain[PlantUml]] with
     def encodeBrightly(x: FraudEcosystemDsl, isBright: Boolean): Chain[PlantUml] =
       x match
         case EcsService(name) =>

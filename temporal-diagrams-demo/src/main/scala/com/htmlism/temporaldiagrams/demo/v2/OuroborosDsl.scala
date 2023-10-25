@@ -15,7 +15,7 @@ object OuroborosDsl:
 
   case class Output(language: String, namespace: String) extends OuroborosDsl
 
-  given BrightEncoder[Chain[PlantUml], OuroborosDsl] with
+  given BrightEncoder[OuroborosDsl, Chain[PlantUml]] with
     def encodeBrightly(x: OuroborosDsl, isBright: Boolean): Chain[PlantUml] =
       x match
         case Type(s) =>
