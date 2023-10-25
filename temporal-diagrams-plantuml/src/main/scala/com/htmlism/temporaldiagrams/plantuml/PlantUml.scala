@@ -99,11 +99,25 @@ object PlantUml:
               .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
               .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
-        case Database(name, oAlias, oStereotype) =>
-          Chain:
+        case Database(name, oAlias, oStereotype, xs) =>
+          val slug =
             s"database $name"
               .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
               .applySome(oStereotype)((s, st) => s + s" << $st >>")
+
+          if xs.isEmpty then
+            Chain:
+              slug
+          else
+            xs
+              .pipe(Chain.fromSeq)
+              .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
+              .map { s =>
+                if s.isEmpty then ""
+                else "  " + s
+              }
+              .prepend(s"$slug {")
+              .append("}")
 
         case Arrow(src, dest, oText) =>
           Chain:
@@ -164,7 +178,7 @@ object PlantUml:
 
   case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
-  case class Database(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+  case class Database(name: String, alias: Option[String], stereotype: Option[String], xs: List[Entity]) extends Entity
 
   /**
     * A directed line from the source to the destination

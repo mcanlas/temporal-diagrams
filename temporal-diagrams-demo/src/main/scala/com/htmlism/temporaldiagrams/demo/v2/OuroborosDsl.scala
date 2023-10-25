@@ -25,4 +25,4 @@ object OuroborosDsl:
           Chain(PlantUml.Arrow(src, dest, name.some))
 
         case Output(s, namespace) =>
-          Chain(PlantUml.Database(s, Some(s + "_" + namespace), None))
+          Chain(PlantUml.Database(s, Some(s + "_" + namespace), None, Nil))

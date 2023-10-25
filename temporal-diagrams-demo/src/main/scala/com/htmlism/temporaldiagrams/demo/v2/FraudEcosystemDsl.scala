@@ -48,11 +48,11 @@ object FraudEcosystemDsl:
 
         case MySql(name) =>
           Chain:
-            PlantUml.Database(name, None, Option.when(isBright)("MySQL"))
+            PlantUml.Database(name, None, Option.when(isBright)("MySQL"), Nil)
 
         case DynamoDb(name) =>
           Chain:
-            PlantUml.Database(name, None, Option.when(isBright)("DynamoDB"))
+            PlantUml.Database(name, None, Option.when(isBright)("DynamoDB"), Nil)
 
         case Flink(name) =>
           Chain:
