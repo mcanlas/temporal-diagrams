@@ -56,6 +56,10 @@ object Renderable:
     def renderWithHighlight(tag: String): D =
       enc.encodeWithHighlights(x, tags.contains(tag))
 
+    // TODO test
+    def withTag(tag: String): OfA[A, D] =
+      copy(tags = tags + tag)
+
   // monoid for adt's that are multi arrow and don't have any dsl
   def renderMany[D: Monoid](xs: Chain[Renderable[D]]): D =
     xs

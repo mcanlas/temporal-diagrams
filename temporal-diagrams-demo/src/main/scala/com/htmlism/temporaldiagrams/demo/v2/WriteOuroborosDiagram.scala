@@ -37,18 +37,26 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
         val mermaid =
           if showMermaid then
             Chain[Renderable[Chain[PlantUml]]](
-              OuroborosDsl.Type(w("TemporalDiagrams.Mermaid"), diagramEncoder).r,
-              OuroborosDsl.Output(w("Mermaid"), None).r,
-              OuroborosDsl.Link(w("UserDsl"), w("TemporalDiagrams.Mermaid")).r,
-              OuroborosDsl.Link(w("TemporalDiagrams.Mermaid"), w("Mermaid")).r
+              OuroborosDsl.Type(w("TemporalDiagrams.Mermaid"), diagramEncoder).tag("mermaid"),
+              OuroborosDsl.Output(w("Mermaid"), None).tag("mermaid"),
+              OuroborosDsl.Link(w("UserDsl"), w("TemporalDiagrams.Mermaid")).tag("mermaid"),
+              OuroborosDsl.Link(w("TemporalDiagrams.Mermaid"), w("Mermaid")).tag("mermaid")
             )
           else Chain.empty
 
         Chain[Renderable[Chain[PlantUml]]](
-          OuroborosDsl.Type(w("UserDsl.Config"), configWrap).r,
-          OuroborosDsl.Type(w("UserDsl"), highlightEncoder).r,
-          OuroborosDsl.Type(w("TemporalDiagrams.PlantUml"), diagramEncoder).r,
-          OuroborosDsl.Output(w("PlantUml"), last).r,
+          OuroborosDsl
+            .Type(w("UserDsl.Config"), configWrap)
+            .tag("mermaid", "function"),
+          OuroborosDsl
+            .Type(w("UserDsl"), highlightEncoder)
+            .tag("mermaid", "function", "highlight"),
+          OuroborosDsl
+            .Type(w("TemporalDiagrams.PlantUml"), diagramEncoder)
+            .tag("highlight", "diagram"),
+          OuroborosDsl
+            .Output(w("PlantUml"), last)
+            .tag("diagram"),
           OuroborosDsl.Link(w("UserDsl.Config"), w("UserDsl")).r,
           OuroborosDsl.Link(w("UserDsl"), w("TemporalDiagrams.PlantUml")).r,
           OuroborosDsl.Link(w("TemporalDiagrams.PlantUml"), w("PlantUml")).r
