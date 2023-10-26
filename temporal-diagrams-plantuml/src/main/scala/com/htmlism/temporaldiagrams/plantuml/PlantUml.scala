@@ -121,7 +121,7 @@ object PlantUml:
 
         case Arrow(src, dest, oText) =>
           Chain:
-            s"$src --> $dest"
+            s"${safeQuote(src)} --> ${safeQuote(dest)}"
               .applySome(oText)((s, t) => s"$s : $t")
 
         case SkinParamGroup(base, parameters, oStereotype) =>
