@@ -49,7 +49,7 @@ object OuroborosDsl:
         case Link(src, dest) =>
           Chain:
             PlantUml
-              .Link(safe(src), safe(dest), 2, None)
+              .Link(safe(src), safe(dest), 2, PlantUml.Link.Direction.Forwards, None)
 
   private def safe(s: String) =
     s

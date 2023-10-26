@@ -89,7 +89,7 @@ object PlantUmlSuite extends FunSuite:
         "@enduml"
       ),
       Chain(
-        PlantUml.Link("src", "dest", 2, None),
+        PlantUml.Link("src", "dest", 2, PlantUml.Link.Direction.Forwards, None),
         PlantUml.Component("asdf", None, None),
         PlantUml.SkinParamGroup("foo"),
         PlantUml.LeftToRightDirection

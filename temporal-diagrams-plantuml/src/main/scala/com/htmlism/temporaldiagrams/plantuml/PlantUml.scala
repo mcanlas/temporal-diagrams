@@ -119,12 +119,23 @@ object PlantUml:
               .prepend(s"$slug {")
               .append("}")
 
-        case Link(src, dest, length, oText) =>
+        case Link(src, dest, length, dir, oText) =>
           val body =
             "-" * length
 
+          val (leftHead, rightHead) =
+            dir match
+              case Link.Direction.Forwards =>
+                "" -> ">"
+
+              case Link.Direction.Backwards =>
+                "<" -> ""
+
+              case Link.Direction.Bidirectional =>
+                "<" -> ">"
+
           Chain:
-            s"${safeQuote(src)} $body> ${safeQuote(dest)}"
+            s"${safeQuote(src)} $leftHead$body$rightHead ${safeQuote(dest)}"
               .applySome(oText)((s, t) => s"$s : $t")
 
         case SkinParamGroup(base, parameters, oStereotype) =>
@@ -197,7 +208,15 @@ object PlantUml:
     * @param text
     *   Optional text written along the link
     */
-  case class Link(source: String, destination: String, length: Int, text: Option[String]) extends PlantUml
+  // TODO test
+  case class Link(source: String, destination: String, length: Int, direction: Link.Direction, text: Option[String])
+      extends PlantUml
+
+  object Link:
+    enum Direction:
+      case Forwards
+      case Backwards
+      case Bidirectional
 
   case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
       extends PlantUml:

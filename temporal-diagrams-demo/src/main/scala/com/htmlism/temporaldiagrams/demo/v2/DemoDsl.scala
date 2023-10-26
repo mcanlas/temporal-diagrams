@@ -24,7 +24,7 @@ object DemoDsl:
                   skin(isBright)
                 )
                   .applySome(oDep) { (a, d) =>
-                    a.append(PlantUml.Link(d + i.toString, n, 2, None))
+                    a.append(PlantUml.Link(d + i.toString, n, 2, PlantUml.Link.Direction.Forwards, None))
                   }
               }
           else
@@ -33,7 +33,7 @@ object DemoDsl:
               skin(isBright)
             )
               .applySome(oDep) { (a, d) =>
-                a.append(PlantUml.Link(d, n, 2, None))
+                a.append(PlantUml.Link(d, n, 2, PlantUml.Link.Direction.Forwards, None))
               }
 
         case Buffered(n, oDep) =>
@@ -41,11 +41,11 @@ object DemoDsl:
             PlantUml.Component(n, None, Option.when(isBright)("Service")),
             skin(isBright),
             PlantUml.Queue(n + "_queue", None, None),
-            PlantUml.Link(n + "_queue", n, 2, None),
+            PlantUml.Link(n + "_queue", n, 2, PlantUml.Link.Direction.Forwards, None),
             queueSkin
           )
             .applySome(oDep) { (a, d) =>
-              a.append(PlantUml.Link(d, n + "_queue", 2, None))
+              a.append(PlantUml.Link(d, n + "_queue", 2, PlantUml.Link.Direction.Forwards, None))
             }
 
   private val queueSkin =
