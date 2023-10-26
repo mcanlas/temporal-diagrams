@@ -26,11 +26,11 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
               None -> None -> None -> None
 
             case Some(OuroborosDsl.Config.Encoder.ConfigToBusinessDsl) =>
-              Some("Config => UserDsl") -> Some("Config => UserDsl") -> None -> None
+              Some("Config => YourDsl") -> Some("Config => YourDsl") -> None -> None
 
             case Some(OuroborosDsl.Config.Encoder.Highlight) =>
-              None -> Some("HighlightEncoder[UserDsl, PlantUml]") -> Some(
-                "HighlightEncoder[UserDsl, PlantUml]"
+              None -> Some("HighlightEncoder[YourDsl, PlantUml]") -> Some(
+                "HighlightEncoder[YourDsl, PlantUml]"
               ) -> None
 
             case Some(OuroborosDsl.Config.Encoder.Diagram) =>
@@ -41,7 +41,7 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
             Chain[Renderable[Chain[PlantUml]]](
               OuroborosDsl.Type(w("TemporalDiagrams.Mermaid"), diagramEncoder).tag("mermaid", "foreign"),
               OuroborosDsl.Output(w("Mermaid"), None).tag("mermaid", "foreign"),
-              OuroborosDsl.Link(w("UserDsl"), w("TemporalDiagrams.Mermaid")).tag("mermaid"),
+              OuroborosDsl.Link(w("YourDsl"), w("TemporalDiagrams.Mermaid")).tag("mermaid"),
               OuroborosDsl.Link(w("TemporalDiagrams.Mermaid"), w("Mermaid")).tag("mermaid")
             )
           else Chain.empty
@@ -61,10 +61,10 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
 
         Chain[Renderable[Chain[PlantUml]]](
           OuroborosDsl
-            .Type(w("UserDsl.Config"), configWrap)
+            .Type(w("YourDsl.Config"), configWrap)
             .tag("mermaid", "function"),
           OuroborosDsl
-            .Type(w("UserDsl"), highlightEncoder)
+            .Type(w("YourDsl"), highlightEncoder)
             .tag("mermaid", "function", "highlight", "one-render"),
           OuroborosDsl
             .Type(w("TemporalDiagrams.PlantUml"), diagramEncoder)
@@ -72,8 +72,8 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
           OuroborosDsl
             .Output(w("PlantUml"), last)
             .tag("diagram", "foreign", "one-render"),
-          OuroborosDsl.Link(w("UserDsl.Config"), w("UserDsl")).r,
-          OuroborosDsl.Link(w("UserDsl"), w("TemporalDiagrams.PlantUml")).r,
+          OuroborosDsl.Link(w("YourDsl.Config"), w("YourDsl")).r,
+          OuroborosDsl.Link(w("YourDsl"), w("TemporalDiagrams.PlantUml")).r,
           OuroborosDsl.Link(w("TemporalDiagrams.PlantUml"), w("PlantUml")).r
         ) ++ mermaid ++ foreign
 
