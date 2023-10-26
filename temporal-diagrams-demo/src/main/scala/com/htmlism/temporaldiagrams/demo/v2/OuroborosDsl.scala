@@ -1,6 +1,6 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
-import cats.data.Chain
+import cats.data.*
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
@@ -9,20 +9,49 @@ import com.htmlism.temporaldiagrams.v2.BrightEncoder
 sealed trait OuroborosDsl
 
 object OuroborosDsl:
-  case class Type(name: String) extends OuroborosDsl
+  case class Config(variants: NonEmptyChain[Config.Variant], showMermaid: Boolean)
 
-  case class Encoding(src: String, dest: String, name: String) extends OuroborosDsl
+  object Config:
+    case class Variant(namespace: String, encoder: Option[Encoder])
 
-  case class Output(language: String, namespace: String) extends OuroborosDsl
+    enum Encoder:
+      case ConfigToBusinessDsl
+      case Highlight
+      case Diagram
+
+  case class Type(name: String, encoder: Option[String]) extends OuroborosDsl
+
+  case class Output(name: String, encoder: Option[String]) extends OuroborosDsl
+
+  case class Link(src: String, dest: String) extends OuroborosDsl
 
   given BrightEncoder[Chain[PlantUml], OuroborosDsl] with
     def encodeBrightly(x: OuroborosDsl, isBright: Boolean): Chain[PlantUml] =
       x match
-        case Type(s) =>
-          Chain(PlantUml.Component(s, None, None))
+        case Type(name, oEncoder) =>
+          Chain(
+            PlantUml
+              .Component(name, safe(name).some, None)
+              .applySome(oEncoder): (c, e) =>
+                PlantUml.Package(e, c)
+          )
 
-        case Encoding(src, dest, name) =>
-          Chain(PlantUml.Arrow(src, dest, name.some))
+        case Output(name, oEncoder) =>
+          Chain(
+            PlantUml
+              .Database(name, safe(name).some, None, Nil)
+              .applySome(oEncoder): (c, e) =>
+                PlantUml.Package(e, c)
+          )
 
-        case Output(s, namespace) =>
-          Chain(PlantUml.Database(s, Some(s + "_" + namespace), None, Nil))
+        case Link(src, dest) =>
+          Chain:
+            PlantUml
+              .Arrow(safe(src), safe(dest), None)
+
+  private def safe(s: String) =
+    s
+      .replaceAll("-", "_")
+      .replaceAll(" ", "_")
+      .replaceAll("\\(", "_")
+      .replaceAll("\\)", "_")

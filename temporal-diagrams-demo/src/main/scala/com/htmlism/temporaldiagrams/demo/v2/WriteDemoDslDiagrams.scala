@@ -3,8 +3,7 @@ package com.htmlism.temporaldiagrams.demo.v2
 import scala.util.chaining.*
 
 import cats.*
-import cats.data.Chain
-import cats.data.Kleisli
+import cats.data.*
 import cats.effect.*
 import cats.syntax.all.*
 

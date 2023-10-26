@@ -80,7 +80,7 @@ object PlantUml:
               if s.isEmpty then ""
               else "  " + s
             }
-            .prepend(s"package ${quoteHyphens(name)} {")
+            .prepend(s"package ${safeQuote(name)} {")
             .append("}")
 
         case LeftToRightDirection =>
@@ -89,20 +89,20 @@ object PlantUml:
 
         case Component(name, oAlias, oStereotype) =>
           Chain:
-            s"component $name"
-              .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
+            s"component ${safeQuote(name)}"
+              .applySome(oAlias)((s, a) => s + s" as ${safeQuote(a)}")
               .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
         case Queue(name, oAlias, oStereotype) =>
           Chain:
-            s"queue $name"
-              .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
+            s"queue ${safeQuote(name)}"
+              .applySome(oAlias)((s, a) => s + s" as ${safeQuote(a)}")
               .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
         case Database(name, oAlias, oStereotype, xs) =>
           val slug =
-            s"database $name"
-              .applySome(oAlias)((s, a) => s + s" as ${quoteHyphens(a)}")
+            s"database ${safeQuote(name)}"
+              .applySome(oAlias)((s, a) => s + s" as ${safeQuote(a)}")
               .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
           if xs.isEmpty then
@@ -138,8 +138,8 @@ object PlantUml:
             .pipe(_ ++ Chain("}"))
 
   // TODO test
-  private def quoteHyphens(s: String) =
-    if s.contains("-") then s"\"$s\""
+  private def safeQuote(s: String) =
+    if s.contains("-") || s.contains(" ") then s"\"$s\""
     else s
 
   // TODO test this
