@@ -72,7 +72,7 @@ object FraudEcosystemDsl:
 
         case Link(src, comment, dest) =>
           Chain:
-            PlantUml.Arrow(src, dest, comment.some)
+            PlantUml.Link(src, dest, 2, comment.some)
 
   private def red(name: String, stereotype: String) =
     PlantUml

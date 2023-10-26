@@ -21,7 +21,7 @@ object PlantUml:
           case _: SkinParamGroup =>
             1
 
-          case _: Arrow =>
+          case _: Link =>
             // if arrows refer to a component that isn't defined, they will implicitly create their own;
             // so allow components to take priority
             10
@@ -119,9 +119,12 @@ object PlantUml:
               .prepend(s"$slug {")
               .append("}")
 
-        case Arrow(src, dest, oText) =>
+        case Link(src, dest, length, oText) =>
+          val body =
+            "-" * length
+
           Chain:
-            s"${safeQuote(src)} --> ${safeQuote(dest)}"
+            s"${safeQuote(src)} $body> ${safeQuote(dest)}"
               .applySome(oText)((s, t) => s"$s : $t")
 
         case SkinParamGroup(base, parameters, oStereotype) =>
@@ -181,20 +184,20 @@ object PlantUml:
   case class Database(name: String, alias: Option[String], stereotype: Option[String], xs: List[Entity]) extends Entity
 
   /**
-    * A directed line from the source to the destination
+    * A link from the source to the destination
     *
     * In terms of "gravity", the source is always first. In top-down diagrams, the source is on the top and the
     * destination is on the bottom. In left-to-right diagrams, the source is on the left and the destination is on the
     * right.
     *
     * @param source
-    *   The base side of the arrow, where it originates
+    *   The base side of the link, where it originates
     * @param destination
-    *   The tip side of the arrow, where it stops
+    *   The tip side of the link, where it stops
     * @param text
-    *   Optional text written along the arrow
+    *   Optional text written along the link
     */
-  case class Arrow(source: String, destination: String, text: Option[String]) extends PlantUml
+  case class Link(source: String, destination: String, length: Int, text: Option[String]) extends PlantUml
 
   case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
       extends PlantUml:
