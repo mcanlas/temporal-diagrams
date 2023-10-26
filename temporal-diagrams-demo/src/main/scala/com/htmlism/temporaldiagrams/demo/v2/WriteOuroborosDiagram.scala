@@ -40,10 +40,9 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
               OuroborosDsl.Type(w("TemporalDiagrams.Mermaid"), diagramEncoder).r,
               OuroborosDsl.Output(w("Mermaid"), None).r,
               OuroborosDsl.Link(w("UserDsl"), w("TemporalDiagrams.Mermaid")).r,
-              OuroborosDsl.Link(w("TemporalDiagrams.Mermaid"), w("Mermaid")).r,
+              OuroborosDsl.Link(w("TemporalDiagrams.Mermaid"), w("Mermaid")).r
             )
-          else
-            Chain.empty
+          else Chain.empty
 
         Chain[Renderable[Chain[PlantUml]]](
           OuroborosDsl.Type(w("UserDsl.Config"), configWrap).r,

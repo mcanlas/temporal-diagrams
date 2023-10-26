@@ -31,17 +31,19 @@ object OuroborosDsl:
         case Type(name, oEncoder) =>
           Chain(
             PlantUml
-              .Component(name, safe(name).some, None)
+              .Component(name, safe(name).some, Option.when(isBright)("Type"))
               .applySome(oEncoder): (c, e) =>
-                PlantUml.Package(e, c)
+                PlantUml.Package(e, c),
+            if isBright then blue("component", "Type") else white("component")
           )
 
         case Output(name, oEncoder) =>
           Chain(
             PlantUml
-              .Database(name, safe(name).some, None, Nil)
+              .Database(name, safe(name).some, Option.when(isBright)("Text file"), Nil)
               .applySome(oEncoder): (c, e) =>
-                PlantUml.Package(e, c)
+                PlantUml.Package(e, c),
+            if isBright then red("database", "Text file") else white("database")
           )
 
         case Link(src, dest) =>
@@ -55,3 +57,30 @@ object OuroborosDsl:
       .replaceAll(" ", "_")
       .replaceAll("\\(", "_")
       .replaceAll("\\)", "_")
+
+  private def red(name: String, stereotype: String) =
+    PlantUml
+      .SkinParamGroup(name, stereotype)
+      .and("fontStyle", "bold")
+      .and("fontColor", "white")
+      .and("backgroundColor", "#bc4f4f")
+      .and("borderColor", "#642a2a")
+      .and("borderThickness", "2")
+
+  private def blue(name: String, stereotype: String) =
+    PlantUml
+      .SkinParamGroup(name, stereotype)
+      .and("fontStyle", "bold")
+      .and("fontColor", "white")
+      .and("backgroundColor", "#586ba4")
+      .and("borderColor", "#223336")
+      .and("borderThickness", "2")
+
+  private def white(name: String) =
+    PlantUml
+      .SkinParamGroup(name)
+      .and("fontStyle", "bold")
+      .and("fontColor", "#AAA")
+      .and("backgroundColor", "white")
+      .and("borderColor", "#AAA")
+      .and("borderThickness", "2")
