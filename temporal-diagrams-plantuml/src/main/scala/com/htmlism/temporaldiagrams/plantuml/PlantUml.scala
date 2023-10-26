@@ -138,6 +138,10 @@ object PlantUml:
             s"${safeQuote(src)} $leftHead$body$rightHead ${safeQuote(dest)}"
               .applySome(oText)((s, t) => s"$s : $t")
 
+        case SkinParam(key, value) =>
+          Chain:
+            s"skinparam $key $value"
+
         case SkinParamGroup(base, parameters, oStereotype) =>
           parameters
             .map { case SkinParamGroup.Parameter(key, value) =>
@@ -217,6 +221,9 @@ object PlantUml:
       case Forwards
       case Backwards
       case Bidirectional
+
+  // TODO test
+  case class SkinParam(key: String, value: String) extends PlantUml
 
   case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
       extends PlantUml:
