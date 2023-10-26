@@ -9,7 +9,7 @@ import com.htmlism.temporaldiagrams.v2.BrightEncoder
 sealed trait OuroborosDsl
 
 object OuroborosDsl:
-  case class Config(variants: NonEmptyChain[Config.Variant], showMermaid: Boolean)
+  case class Config(variants: NonEmptyChain[Config.Variant], showMermaid: Boolean, showForeign: Boolean)
 
   object Config:
     case class Variant(namespace: String, encoder: Option[Encoder])

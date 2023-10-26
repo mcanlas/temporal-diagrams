@@ -13,7 +13,7 @@ import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax.*
 
 object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) with IOApp.Simple:
-  def variant(showMermaid: Boolean) =
+  def variant(showMermaid: Boolean, showForeign: Boolean) =
     Kleisli.fromFunction[Id, OuroborosDsl.Config.Variant][Chain[Renderable[Chain[PlantUml]]]]:
       case OuroborosDsl.Config.Variant(namespace, oEncoder) =>
         def w(s: String) =
@@ -39,10 +39,23 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
         val mermaid =
           if showMermaid then
             Chain[Renderable[Chain[PlantUml]]](
-              OuroborosDsl.Type(w("TemporalDiagrams.Mermaid"), diagramEncoder).tag("mermaid"),
-              OuroborosDsl.Output(w("Mermaid"), None).tag("mermaid"),
+              OuroborosDsl.Type(w("TemporalDiagrams.Mermaid"), diagramEncoder).tag("mermaid", "foreign"),
+              OuroborosDsl.Output(w("Mermaid"), None).tag("mermaid", "foreign"),
               OuroborosDsl.Link(w("UserDsl"), w("TemporalDiagrams.Mermaid")).tag("mermaid"),
               OuroborosDsl.Link(w("TemporalDiagrams.Mermaid"), w("Mermaid")).tag("mermaid")
+            )
+          else Chain.empty
+
+        val foreign =
+          if showForeign then
+            Chain[Renderable[Chain[PlantUml]]](
+              OuroborosDsl
+                .Type(w("ForeignDsl"), highlightEncoder)
+                .tag("foreign"),
+              OuroborosDsl.Link(w("ForeignDsl"), w("TemporalDiagrams.PlantUml")).r,
+              OuroborosDsl
+                .Link(w("ForeignDsl"), w("TemporalDiagrams.Mermaid"))
+                .tag("mermaid", "foreign")
             )
           else Chain.empty
 
@@ -55,14 +68,14 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
             .tag("mermaid", "function", "highlight"),
           OuroborosDsl
             .Type(w("TemporalDiagrams.PlantUml"), diagramEncoder)
-            .tag("highlight", "diagram"),
+            .tag("highlight", "diagram", "foreign"),
           OuroborosDsl
             .Output(w("PlantUml"), last)
-            .tag("diagram"),
+            .tag("diagram", "foreign"),
           OuroborosDsl.Link(w("UserDsl.Config"), w("UserDsl")).r,
           OuroborosDsl.Link(w("UserDsl"), w("TemporalDiagrams.PlantUml")).r,
           OuroborosDsl.Link(w("TemporalDiagrams.PlantUml"), w("PlantUml")).r
-        ) ++ mermaid
+        ) ++ mermaid ++ foreign
 
   val cfgs =
     List[OuroborosDsl.Config](
@@ -70,60 +83,77 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", None)
         ),
-        showMermaid = false
+        showMermaid = false,
+        showForeign = false
       ),
       OuroborosDsl.Config(
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", OuroborosDsl.Config.Encoder.ConfigToBusinessDsl.some)
         ),
-        showMermaid = false
+        showMermaid = false,
+        showForeign = false
       ),
       OuroborosDsl.Config(
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", OuroborosDsl.Config.Encoder.Diagram.some)
         ),
-        showMermaid = false
+        showMermaid = false,
+        showForeign = false
       ),
       OuroborosDsl.Config(
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", OuroborosDsl.Config.Encoder.Highlight.some)
         ),
-        showMermaid = false
+        showMermaid = false,
+        showForeign = false
       ),
       OuroborosDsl.Config(
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", None),
           OuroborosDsl.Config.Variant("variant", None)
         ),
-        showMermaid = false
+        showMermaid = false,
+        showForeign = false
       ),
       OuroborosDsl.Config(
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", OuroborosDsl.Config.Encoder.ConfigToBusinessDsl.some),
           OuroborosDsl.Config.Variant("variant", OuroborosDsl.Config.Encoder.ConfigToBusinessDsl.some)
         ),
-        showMermaid = false
+        showMermaid = false,
+        showForeign = false
       ),
       OuroborosDsl.Config(
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", OuroborosDsl.Config.Encoder.Diagram.some),
           OuroborosDsl.Config.Variant("variant", OuroborosDsl.Config.Encoder.Diagram.some)
         ),
-        showMermaid = false
+        showMermaid = false,
+        showForeign = false
       ),
       OuroborosDsl.Config(
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", OuroborosDsl.Config.Encoder.Highlight.some),
           OuroborosDsl.Config.Variant("variant", OuroborosDsl.Config.Encoder.Highlight.some)
         ),
-        showMermaid = false
+        showMermaid = false,
+        showForeign = false
       ),
       OuroborosDsl.Config(
         NonEmptyChain.of(
           OuroborosDsl.Config.Variant("", None),
           OuroborosDsl.Config.Variant("variant", None)
         ),
-        showMermaid = true
+        showMermaid = true,
+        showForeign = false
+      ),
+      OuroborosDsl.Config(
+        NonEmptyChain.of(
+          OuroborosDsl.Config.Variant("", None),
+          OuroborosDsl.Config.Variant("variant", None)
+        ),
+        showMermaid = true,
+        showForeign = true
       )
     )
 
@@ -140,7 +170,7 @@ class WriteOuroborosDiagram[F[_]: Applicative](out: FilePrinter[F]):
               .toChain
               .flatMap: v =>
                 WriteOuroborosDiagram
-                  .variant(cfg.showMermaid)
+                  .variant(cfg.showMermaid, cfg.showForeign)
                   .run(v)
                   .extract
 
