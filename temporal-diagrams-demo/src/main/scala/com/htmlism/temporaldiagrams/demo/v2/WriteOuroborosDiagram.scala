@@ -26,13 +26,15 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
               None -> None -> None -> None
 
             case Some(OuroborosDsl.Config.Encoder.ConfigToBusinessDsl) =>
-              Some("FunctionEncoder") -> Some("FunctionEncoder") -> None -> None
+              Some("Config => UserDsl") -> Some("Config => UserDsl") -> None -> None
 
             case Some(OuroborosDsl.Config.Encoder.Highlight) =>
-              None -> Some("HighlightEncoder") -> Some("HighlightEncoder") -> None
+              None -> Some("HighlightEncoder[UserDsl, PlantUml]") -> Some(
+                "HighlightEncoder[UserDsl, PlantUml]"
+              ) -> None
 
             case Some(OuroborosDsl.Config.Encoder.Diagram) =>
-              None -> None -> Some("DiagramEncoder") -> Some("DiagramEncoder")
+              None -> None -> Some("DiagramEncoder[PlantUml]") -> Some("DiagramEncoder[PlantUml]")
 
         val mermaid =
           if showMermaid then
