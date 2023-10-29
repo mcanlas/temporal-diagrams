@@ -1,4 +1,6 @@
-- diagram the framework itself
+- smithy
+- https://ballerina.io
+- - diagram the framework itself
 - multi arrows in v2
 - encode heterogeneous payloads
 - highlight framework orthogonal to encoding; not a function of the target language
