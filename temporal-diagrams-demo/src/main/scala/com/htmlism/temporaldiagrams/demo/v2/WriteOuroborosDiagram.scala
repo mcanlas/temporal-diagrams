@@ -177,7 +177,8 @@ class WriteOuroborosDiagram[F[_]: Applicative](out: FilePrinter[F]):
     val str =
       renders
         .pipe(Renderable.renderMany[Chain[PlantUml]])
-        .pipe(PlantUml.renderHorizontally)
+        .prepend(PlantUml.LeftToRightDirection)
+        .pipe(PlantUml.render)
         .mkString_("\n")
 
     out.print(s"ouroboros-$n.puml")(str)
@@ -192,7 +193,8 @@ class WriteOuroborosDiagram[F[_]: Applicative](out: FilePrinter[F]):
       val str =
         renders
           .pipe(Renderable.renderManyWithTag[Chain[PlantUml]](_, t))
-          .pipe(PlantUml.renderHorizontally)
+          .prepend(PlantUml.LeftToRightDirection)
+          .pipe(PlantUml.render)
           .mkString_("\n")
 
       out.print(s"ouroboros-$n-$t.puml")(str)

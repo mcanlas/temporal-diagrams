@@ -168,14 +168,6 @@ object PlantUml:
       .pipe(DiagramEncoder[Chain[PlantUml]].encode)
       .pipe(asDocument)
 
-  def renderHorizontally(xs: Chain[PlantUml]): Chain[String] =
-    xs
-      .distinct
-      .sorted
-      .prepend(LeftToRightDirection)
-      .pipe(DiagramEncoder[Chain[PlantUml]].encode)
-      .pipe(asDocument)
-
   case object LeftToRightDirection extends PlantUml
 
   // something that can be nested in a package; or is global in scope, like an arrow

@@ -18,16 +18,6 @@ object PlantUmlSuite extends FunSuite:
       )
     )
 
-  test("Can render horizontally"):
-    expect.eql(
-      Chain("@startuml", "", "left to right direction", "", "component asdf", "", "@enduml"),
-      PlantUml.renderHorizontally(
-        Chain(
-          PlantUml.Component("asdf", None, None)
-        )
-      )
-    )
-
   test("Can render many components, AND lexicographically sorts them"):
     val xs =
       Chain[PlantUml](
