@@ -90,19 +90,19 @@ object PlantUml:
         case Component(name, oAlias, oStereotype) =>
           Chain:
             s"component ${safeQuote(name)}"
-              .applySome(oAlias)((s, a) => s + s" as ${safeQuote(a)}")
+              .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
               .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
         case Queue(name, oAlias, oStereotype) =>
           Chain:
             s"queue ${safeQuote(name)}"
-              .applySome(oAlias)((s, a) => s + s" as ${safeQuote(a)}")
+              .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
               .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
         case Database(name, oAlias, oStereotype, xs) =>
           val slug =
             s"database ${safeQuote(name)}"
-              .applySome(oAlias)((s, a) => s + s" as ${safeQuote(a)}")
+              .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
               .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
           if xs.isEmpty then
@@ -159,6 +159,11 @@ object PlantUml:
   private def safeQuote(s: String) =
     if s.contains("-") || s.contains(" ") then s"\"$s\""
     else s
+
+  private def id(s: String) =
+    s
+      .replace("-", "_")
+      .replace(" ", "_")
 
   // TODO test this
   def render(xs: Chain[PlantUml]): Chain[String] =
