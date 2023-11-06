@@ -156,6 +156,13 @@ object PlantUml:
             .pipe(_ ++ Chain("}"))
 
   // TODO test
+  case class Diagram(parameters: Set[PlantUml], entities: Set[PlantUml], links: Set[Link])
+
+  object Diagram:
+    def apply(xs: PlantUml*): Diagram =
+      Diagram(Set.empty, Set.empty, Set.empty)
+
+  // TODO test
   private def safeQuote(s: String) =
     if s.contains("-") || s.contains(" ") then s"\"$s\""
     else s
