@@ -2,7 +2,7 @@ package com.htmlism.temporaldiagrams.plantuml
 
 import scala.util.chaining.*
 
-import cats.Order
+import cats.*
 import cats.data.*
 import cats.syntax.all.*
 
@@ -156,7 +156,7 @@ object PlantUml:
             .pipe(_ ++ Chain("}"))
 
   // TODO test
-  case class Diagram(parameters: Set[PlantUml], entities: Set[PlantUml], links: Set[Link])
+  case class Diagram(parameters: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link])
 
   object Diagram:
     def apply(xs: PlantUml*): Diagram =
@@ -180,7 +180,12 @@ object PlantUml:
       .pipe(DiagramEncoder[Chain[PlantUml]].encode)
       .pipe(asDocument)
 
-  case object LeftToRightDirection extends PlantUml
+  /**
+    * Something that isn't a link and isn't an entity
+    */
+  sealed trait Directive extends PlantUml
+
+  case object LeftToRightDirection extends Directive
 
   // something that can be nested in a package; or is global in scope, like an arrow
   sealed trait Entity extends PlantUml
@@ -227,10 +232,10 @@ object PlantUml:
       case Bidirectional
 
   // TODO test
-  case class SkinParam(key: String, value: String) extends PlantUml
+  case class SkinParam(key: String, value: String) extends Directive
 
   case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
-      extends PlantUml:
+      extends Directive:
     def and(key: String, value: String): SkinParamGroup =
       this.copy(parameters = parameters.appended(SkinParamGroup.Parameter(key, value)))
 
