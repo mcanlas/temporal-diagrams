@@ -180,6 +180,10 @@ object PlantUml:
       .pipe(DiagramEncoder[Chain[PlantUml]].encode)
       .pipe(asDocument)
 
+  // TODO test
+  def renderBasket(x: PlantUml.Diagram): Chain[String] =
+    Chain.empty
+
   /**
     * Something that isn't a link and isn't an entity
     */
