@@ -182,7 +182,11 @@ object PlantUml:
 
   // TODO test
   def renderBasket(x: PlantUml.Diagram): Chain[String] =
-    Chain.empty
+    Chain(x.parameters, x.entities, x.links)
+      .map(_.toList)
+      .map(Chain.fromSeq)
+      .map(_.sorted)
+      .flatMap(DiagramEncoder[Chain[PlantUml]].encode)
 
   /**
     * Something that isn't a link and isn't an entity
