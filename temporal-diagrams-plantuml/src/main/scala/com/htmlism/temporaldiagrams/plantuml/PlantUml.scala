@@ -185,8 +185,8 @@ object PlantUml:
     Chain(x.parameters, x.entities, x.links)
       .map(_.toList)
       .map(Chain.fromSeq)
-      .map(_.sorted)
-      .flatMap(DiagramEncoder[Chain[PlantUml]].encode)
+      .map(DiagramEncoder[Chain[PlantUml]].encode)
+      .flatMap(_.sorted)
 
   /**
     * Something that isn't a link and isn't an entity
