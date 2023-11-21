@@ -119,6 +119,11 @@ object PlantUml:
               .prepend(s"$slug {")
               .append("}")
 
+        case Interface(name, oAlias) =>
+          Chain:
+            s"interface ${safeQuote(name)}"
+              .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
+
         case Link(src, dest, length, dir, oText) =>
           val body =
             "-" * length
@@ -214,6 +219,9 @@ object PlantUml:
   case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   case class Database(name: String, alias: Option[String], stereotype: Option[String], xs: List[Entity]) extends Entity
+
+  // TODO
+  case class Interface(name: String, alias: Option[String]) extends Entity
 
   /**
     * A link from the source to the destination
