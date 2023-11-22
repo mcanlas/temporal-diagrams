@@ -165,7 +165,11 @@ object PlantUml:
 
   object Diagram:
     def apply(xs: PlantUml*): Diagram =
-      Diagram(Set.empty, Set.empty, Set.empty)
+      Diagram(
+        xs.collect { case x: PlantUml.Directive => x }.toSet,
+        xs.collect { case x: PlantUml.Entity => x }.toSet,
+        xs.collect { case x: PlantUml.Link => x }.toSet
+      )
 
   // TODO test
   private def safeQuote(s: String) =
