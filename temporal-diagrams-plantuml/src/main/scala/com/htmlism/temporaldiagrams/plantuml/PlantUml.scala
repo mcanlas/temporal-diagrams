@@ -161,11 +161,11 @@ object PlantUml:
             .pipe(_ ++ Chain("}"))
 
   // TODO test
-  case class Diagram(parameters: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link])
+  case class ComponentDiagram(parameters: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link])
 
-  object Diagram:
-    def apply(xs: PlantUml*): Diagram =
-      Diagram(
+  object ComponentDiagram:
+    def apply(xs: PlantUml*): ComponentDiagram =
+      ComponentDiagram(
         xs.collect { case x: PlantUml.Directive => x }.toSet,
         xs.collect { case x: PlantUml.Entity => x }.toSet,
         xs.collect { case x: PlantUml.Link => x }.toSet
@@ -190,7 +190,7 @@ object PlantUml:
       .pipe(asDocument)
 
   // TODO test
-  def renderBasket(x: PlantUml.Diagram): Chain[String] =
+  def renderBasket(x: PlantUml.ComponentDiagram): Chain[String] =
     Chain(x.parameters, x.entities, x.links)
       .map(_.toList)
       .map(Chain.fromSeq)
