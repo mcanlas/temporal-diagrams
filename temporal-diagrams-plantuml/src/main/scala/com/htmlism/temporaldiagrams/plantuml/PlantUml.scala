@@ -83,10 +83,6 @@ object PlantUml:
             .prepend(s"package ${safeQuote(name)} {")
             .append("}")
 
-        case LeftToRightDirection =>
-          Chain:
-            "left to right direction"
-
         case Component(name, oAlias, oStereotype) =>
           Chain:
             s"component ${safeQuote(name)}"
@@ -143,22 +139,8 @@ object PlantUml:
             s"${safeQuote(src)} $leftHead$body$rightHead ${safeQuote(dest)}"
               .applySome(oText)((s, t) => s"$s : $t")
 
-        case SkinParam(key, value) =>
-          Chain:
-            s"skinparam $key $value"
-
-        case SkinParamGroup(base, parameters, oStereotype) =>
-          parameters
-            .map { case SkinParamGroup.Parameter(key, value) =>
-              s"  $key $value"
-            }
-            .prepended:
-              val stereotype =
-                oStereotype.fold("")("<< " + _ + " >>")
-
-              s"skinparam $base$stereotype {"
-            .pipe(Chain.fromSeq)
-            .pipe(_ ++ Chain("}"))
+        case x: Directive =>
+          DiagramEncoder[PlantUml.Directive].encode(x)
 
   // TODO test
   case class ComponentDiagram(parameters: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link])
@@ -217,6 +199,31 @@ object PlantUml:
     * Something that isn't a link and isn't an entity
     */
   sealed trait Directive extends PlantUml
+
+  object Directive:
+    given DiagramEncoder[Directive] with
+      def encode(x: Directive): Chain[String] =
+        x match
+          case LeftToRightDirection =>
+            Chain:
+              "left to right direction"
+
+          case SkinParam(key, value) =>
+            Chain:
+              s"skinparam $key $value"
+
+          case SkinParamGroup(base, parameters, oStereotype) =>
+            parameters
+              .map { case SkinParamGroup.Parameter(key, value) =>
+                s"  $key $value"
+              }
+              .prepended:
+                val stereotype =
+                  oStereotype.fold("")("<< " + _ + " >>")
+
+                s"skinparam $base$stereotype {"
+              .pipe(Chain.fromSeq)
+              .pipe(_ ++ Chain("}"))
 
   case object LeftToRightDirection extends Directive
 
