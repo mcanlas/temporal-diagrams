@@ -72,53 +72,8 @@ object PlantUml:
   given DiagramEncoder[PlantUml] with
     def encode(x: PlantUml): Chain[String] =
       x match
-        case Package(name, xs) =>
-          xs
-            .pipe(Chain.fromSeq)
-            .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
-            .map { s =>
-              if s.isEmpty then ""
-              else "  " + s
-            }
-            .prepend(s"package ${safeQuote(name)} {")
-            .append("}")
-
-        case Component(name, oAlias, oStereotype) =>
-          Chain:
-            s"component ${safeQuote(name)}"
-              .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
-              .applySome(oStereotype)((s, st) => s + s" << $st >>")
-
-        case Queue(name, oAlias, oStereotype) =>
-          Chain:
-            s"queue ${safeQuote(name)}"
-              .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
-              .applySome(oStereotype)((s, st) => s + s" << $st >>")
-
-        case Database(name, oAlias, oStereotype, xs) =>
-          val slug =
-            s"database ${safeQuote(name)}"
-              .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
-              .applySome(oStereotype)((s, st) => s + s" << $st >>")
-
-          if xs.isEmpty then
-            Chain:
-              slug
-          else
-            xs
-              .pipe(Chain.fromSeq)
-              .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
-              .map { s =>
-                if s.isEmpty then ""
-                else "  " + s
-              }
-              .prepend(s"$slug {")
-              .append("}")
-
-        case Interface(name, oAlias) =>
-          Chain:
-            s"interface ${safeQuote(name)}"
-              .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
+        case x: Entity =>
+          DiagramEncoder[PlantUml.Entity].encode(x)
 
         case x: Link =>
           DiagramEncoder[PlantUml.Link].encode(x)
@@ -213,6 +168,58 @@ object PlantUml:
 
   // something that can be nested in a package; or is global in scope, like an arrow
   sealed trait Entity extends PlantUml
+
+  object Entity:
+    given DiagramEncoder[Entity] with
+      def encode(x: Entity): Chain[String] =
+        x match
+          case Package(name, xs) =>
+            xs
+              .pipe(Chain.fromSeq)
+              .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
+              .map { s =>
+                if s.isEmpty then ""
+                else "  " + s
+              }
+              .prepend(s"package ${safeQuote(name)} {")
+              .append("}")
+
+          case Component(name, oAlias, oStereotype) =>
+            Chain:
+              s"component ${safeQuote(name)}"
+                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
+                .applySome(oStereotype)((s, st) => s + s" << $st >>")
+
+          case Queue(name, oAlias, oStereotype) =>
+            Chain:
+              s"queue ${safeQuote(name)}"
+                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
+                .applySome(oStereotype)((s, st) => s + s" << $st >>")
+
+          case Database(name, oAlias, oStereotype, xs) =>
+            val slug =
+              s"database ${safeQuote(name)}"
+                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
+                .applySome(oStereotype)((s, st) => s + s" << $st >>")
+
+            if xs.isEmpty then
+              Chain:
+                slug
+            else
+              xs
+                .pipe(Chain.fromSeq)
+                .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
+                .map { s =>
+                  if s.isEmpty then ""
+                  else "  " + s
+                }
+                .prepend(s"$slug {")
+                .append("}")
+
+          case Interface(name, oAlias) =>
+            Chain:
+              s"interface ${safeQuote(name)}"
+                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
 
   /**
     * A building block in component diagrams
