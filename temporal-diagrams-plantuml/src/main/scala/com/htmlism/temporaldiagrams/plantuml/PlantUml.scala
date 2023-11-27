@@ -164,6 +164,18 @@ object PlantUml:
   case class ComponentDiagram(parameters: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link])
 
   object ComponentDiagram:
+    given Monoid[ComponentDiagram] =
+      new Monoid[ComponentDiagram]:
+        def empty: ComponentDiagram =
+          ComponentDiagram(Set.empty, Set.empty, Set.empty)
+
+        def combine(x: ComponentDiagram, y: ComponentDiagram): ComponentDiagram =
+          ComponentDiagram(
+            x.parameters ++ y.parameters,
+            x.entities ++ y.entities,
+            x.links ++ y.links
+          )
+
     def apply(xs: PlantUml*): ComponentDiagram =
       ComponentDiagram(
         xs.collect { case x: PlantUml.Directive => x }.toSet,
