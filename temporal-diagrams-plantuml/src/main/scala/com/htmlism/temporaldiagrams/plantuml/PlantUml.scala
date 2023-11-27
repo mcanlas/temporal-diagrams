@@ -176,6 +176,10 @@ object PlantUml:
             x.links ++ y.links
           )
 
+    /**
+      * A sequence-builder-style factory method for constructing [[ComponentDiagram]] where the user doesn't need to
+      * keep track of the different diagram parts
+      */
     def apply(xs: PlantUml*): ComponentDiagram =
       ComponentDiagram(
         xs.collect { case x: PlantUml.Directive => x }.toSet,
