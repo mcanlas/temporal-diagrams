@@ -120,24 +120,8 @@ object PlantUml:
             s"interface ${safeQuote(name)}"
               .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
 
-        case Link(src, dest, length, dir, oText) =>
-          val body =
-            "-" * length
-
-          val (leftHead, rightHead) =
-            dir match
-              case Link.Direction.Forwards =>
-                "" -> ">"
-
-              case Link.Direction.Backwards =>
-                "<" -> ""
-
-              case Link.Direction.Bidirectional =>
-                "<" -> ">"
-
-          Chain:
-            s"${safeQuote(src)} $leftHead$body$rightHead ${safeQuote(dest)}"
-              .applySome(oText)((s, t) => s"$s : $t")
+        case x: Link =>
+          DiagramEncoder[PlantUml.Link].encode(x)
 
         case x: Directive =>
           DiagramEncoder[PlantUml.Directive].encode(x)
@@ -273,6 +257,28 @@ object PlantUml:
       case Forwards
       case Backwards
       case Bidirectional
+
+    given DiagramEncoder[Link] with
+      def encode(x: Link): Chain[String] =
+        x match
+          case Link(src, dest, length, dir, oText) =>
+            val body =
+              "-" * length
+
+            val (leftHead, rightHead) =
+              dir match
+                case Link.Direction.Forwards =>
+                  "" -> ">"
+
+                case Link.Direction.Backwards =>
+                  "<" -> ""
+
+                case Link.Direction.Bidirectional =>
+                  "<" -> ">"
+
+            Chain:
+              s"${safeQuote(src)} $leftHead$body$rightHead ${safeQuote(dest)}"
+                .applySome(oText)((s, t) => s"$s : $t")
 
   // TODO test
   case class SkinParam(key: String, value: String) extends Directive
