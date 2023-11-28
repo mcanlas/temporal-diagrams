@@ -159,7 +159,7 @@ object PlantUml:
           case Package(name, xs) =>
             xs
               .pipe(Chain.fromSeq)
-              .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
+              .pipe(summon[DiagramEncoder[Chain[PlantUml.Entity]]].encode)
               .map { s =>
                 if s.isEmpty then ""
                 else "  " + s
