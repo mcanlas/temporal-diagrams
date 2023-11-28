@@ -52,23 +52,6 @@ object PlantUml:
         case None =>
           Chain.empty
 
-  /**
-    * If a domain language is 1:1 with PlantUML declarations, this automatically promotes the encoder to be monoidal, a
-    * requirement for diagram rendering
-    *
-    * @tparam A
-    *   The input domain language
-    */
-  given [A](using
-      enc: HighlightEncoder[PlantUml, A]
-  ): HighlightEncoder[Chain[PlantUml], A] =
-    new HighlightEncoder[Chain[PlantUml], A]:
-      def encode(x: A): Chain[PlantUml] =
-        Chain(enc.encode(x))
-
-      def encodeWithHighlights(x: A, highlighted: Boolean): Chain[PlantUml] =
-        Chain(enc.encodeWithHighlights(x, highlighted))
-
   given DiagramEncoder[PlantUml] with
     def encode(x: PlantUml): Chain[String] =
       x match
