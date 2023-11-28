@@ -2,6 +2,7 @@ package com.htmlism.temporaldiagrams.plantuml
 
 import scala.util.chaining.*
 
+import cats.Order.*
 import cats.*
 import cats.data.*
 import cats.syntax.all.*
@@ -111,11 +112,15 @@ object PlantUml:
 
   // TODO test
   def renderBasket(x: PlantUml.ComponentDiagram): Chain[String] =
-    Chain(x.parameters, x.entities, x.links)
-      .map(_.toList)
+    Chain(
+      x.parameters.toList.map(Directive.directiveEncoder.encode).sorted,
+      x.entities.toList.map(Entity.entityEncoder.encode).sorted,
+      x.links.toList.map(Link.linkEncoder.encode).sorted
+    )
       .map(Chain.fromSeq)
-      .map(DiagramEncoder[Chain[PlantUml]].encode)
-      .flatMap(_.sorted)
+      .map(_.flatten)
+      .flatten
+      .pipe(asDocument)
 
   /**
     * Something that isn't a link and isn't an entity
@@ -123,7 +128,7 @@ object PlantUml:
   sealed trait Directive extends PlantUml
 
   object Directive:
-    given DiagramEncoder[Directive] with
+    given directiveEncoder: DiagramEncoder[Directive] with
       def encode(x: Directive): Chain[String] =
         x match
           case LeftToRightDirection =>
@@ -153,7 +158,7 @@ object PlantUml:
   sealed trait Entity extends PlantUml
 
   object Entity:
-    given DiagramEncoder[Entity] with
+    given entityEncoder: DiagramEncoder[Entity] with
       def encode(x: Entity): Chain[String] =
         x match
           case Package(name, xs) =>
@@ -248,7 +253,7 @@ object PlantUml:
       case Backwards
       case Bidirectional
 
-    given DiagramEncoder[Link] with
+    given linkEncoder: DiagramEncoder[Link] with
       def encode(x: Link): Chain[String] =
         x match
           case Link(src, dest, length, dir, oText) =>
