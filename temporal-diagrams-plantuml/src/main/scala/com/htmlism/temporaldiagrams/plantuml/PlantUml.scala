@@ -92,9 +92,12 @@ object PlantUml:
         xs.collect { case x: PlantUml.Link => x }.toSet
       )
 
+  private val quoteTriggers =
+    List("-", " ", "\\n")
+
   // TODO test
   private def safeQuote(s: String) =
-    if s.contains("-") || s.contains(" ") then s"\"$s\""
+    if quoteTriggers.exists(s.contains) then s"\"$s\""
     else s
 
   private def id(s: String) =
