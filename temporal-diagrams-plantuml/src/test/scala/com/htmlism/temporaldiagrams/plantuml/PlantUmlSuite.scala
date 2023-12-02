@@ -12,7 +12,7 @@ object PlantUmlSuite extends FunSuite:
     expect.eql(
       Chain("@startuml", "", "component asdf", "", "@enduml"),
       PlantUml.render(
-        Chain(
+        PlantUml.ComponentDiagram(
           PlantUml.Component("asdf", None, None)
         )
       )
@@ -20,7 +20,7 @@ object PlantUmlSuite extends FunSuite:
 
   test("Can render many components, AND lexicographically sorts them"):
     val xs =
-      Chain[PlantUml](
+      PlantUml.ComponentDiagram(
         PlantUml.Component("foo", None, None),
         PlantUml.Component("bar", None, None)
       )
@@ -56,12 +56,13 @@ object PlantUmlSuite extends FunSuite:
         "",
         "@enduml"
       ),
-      Chain(
-        PlantUml.Link("src", "dest", 2, PlantUml.Link.Direction.Forwards, None),
-        PlantUml.Component("asdf", None, None),
-        PlantUml.SkinParamGroup("foo"),
-        PlantUml.LeftToRightDirection
-      )
+      PlantUml
+        .ComponentDiagram(
+          PlantUml.Link("src", "dest", 2, PlantUml.Link.Direction.Forwards, None),
+          PlantUml.Component("asdf", None, None),
+          PlantUml.SkinParamGroup("foo"),
+          PlantUml.LeftToRightDirection
+        )
         .pipe(PlantUml.render)
     )
 
@@ -74,9 +75,10 @@ object PlantUmlSuite extends FunSuite:
         "",
         "@enduml"
       ),
-      Chain(
-        PlantUml.Component("asdf", None, None),
-        PlantUml.Component("asdf", None, None)
-      )
+      PlantUml
+        .ComponentDiagram(
+          PlantUml.Component("asdf", None, None),
+          PlantUml.Component("asdf", None, None)
+        )
         .pipe(PlantUml.render)
     )

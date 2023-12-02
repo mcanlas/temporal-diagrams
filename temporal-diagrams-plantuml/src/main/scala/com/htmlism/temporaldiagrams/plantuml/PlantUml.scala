@@ -115,16 +115,16 @@ object PlantUml:
       .pipe(DiagramEncoder[Chain[PlantUml]].encode)
       .pipe(asDocument)
 
-  // TODO test
-  def renderBasket(x: PlantUml.ComponentDiagram): Chain[String] =
+  def render(x: PlantUml.ComponentDiagram): Chain[String] =
     Chain(
       x.parameters.toList.map(Directive.directiveEncoder.encode).sorted,
       x.entities.toList.map(Entity.entityEncoder.encode).sorted,
       x.links.toList.map(Link.linkEncoder.encode).sorted
     )
-      .map(Chain.fromSeq)
-      .map(_.flatten)
-      .flatten
+      .filter(_.nonEmpty)             // drop empty sections
+      .map(Chain.fromSeq)             // from list to chain
+      .flatten                        // make them one stream of bundles
+      .pipe(intersperse(_, identity)) // intersperse newlines and flatten
       .pipe(asDocument)
 
   /**
