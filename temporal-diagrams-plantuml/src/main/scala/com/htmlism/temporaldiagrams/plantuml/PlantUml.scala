@@ -44,14 +44,16 @@ object PlantUml:
     *   The target diagram language
     */
   given [A](using A: DiagramEncoder[A]): DiagramEncoder[Chain[A]] =
-    (xs: Chain[A]) =>
-      xs.uncons match
-        case Some(head, tail) =>
-          A.encode(head)
-            .concat(tail.flatMap(x => "" +: A.encode(x)))
+    (xs: Chain[A]) => intersperse(xs, A.encode)
 
-        case None =>
-          Chain.empty
+  private def intersperse[A, M: Monoid](xs: Chain[A], f: A => Chain[M]): Chain[M] =
+    xs.uncons match
+      case Some(head, tail) =>
+        f(head)
+          .concat(tail.flatMap(x => Monoid[M].empty +: f(x)))
+
+      case None =>
+        Chain.empty
 
   given DiagramEncoder[PlantUml] with
     def encode(x: PlantUml): Chain[String] =
