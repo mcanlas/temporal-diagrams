@@ -125,11 +125,14 @@ object PlantUml:
       .pipe(DiagramEncoder[Chain[PlantUml]].encode)
       .pipe(asDocument)
 
+  private def renderSubsectionSorted[A: DiagramEncoder](xs: Set[A]) =
+    xs.toList.map(summon[DiagramEncoder[A]].encode).sorted
+
   def render(x: PlantUml.ComponentDiagram): Chain[String] =
     Chain(
-      x.parameters.toList.map(Directive.directiveEncoder.encode).sorted,
-      x.entities.toList.map(Entity.entityEncoder.encode).sorted,
-      x.links.toList.map(Link.linkEncoder.encode).sorted
+      x.parameters.pipe(renderSubsectionSorted),
+      x.entities.pipe(renderSubsectionSorted),
+      x.links.pipe(renderSubsectionSorted)
     )
       .filter(_.nonEmpty)             // drop empty sections
       .map(Chain.fromSeq)             // from list to chain
