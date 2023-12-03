@@ -16,7 +16,7 @@ object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinter[IO]) wi
 
 class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   private val toProducer =
-    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[Chain[PlantUml]]]:
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[PlantUml.ComponentDiagram]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
         DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo")
 
@@ -27,7 +27,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
         DemoDsl.Buffered("foo", None).tag("foo")
 
   private val toConsumer =
-    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[Chain[PlantUml]]]:
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[PlantUml.ComponentDiagram]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
         DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar")
 
@@ -66,7 +66,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
     cfgs
       .zipWithIndex
       .traverse { case (cfg, n) =>
-        val renders: Chain[Renderable[Chain[PlantUml]]] =
+        val renders: Chain[Renderable[PlantUml.ComponentDiagram]] =
           stackGivenCfg(cfg)
             .map(_.extract)
 
@@ -74,16 +74,16 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
       }
       .void
 
-  private def printNormalDiagram(renders: Chain[Renderable[Chain[PlantUml]]], n: Int) =
+  private def printNormalDiagram(renders: Chain[Renderable[PlantUml.ComponentDiagram]], n: Int) =
     val str =
       renders
-        .pipe(Renderable.renderMany[Chain[PlantUml]])
+        .pipe(Renderable.renderMany[PlantUml.ComponentDiagram])
         .pipe(PlantUml.render)
         .mkString_("\n")
 
     out.print(s"v2-$n.puml")(str)
 
-  private def printHighlightDiagrams(renders: Chain[Renderable[Chain[PlantUml]]], n: Int) =
+  private def printHighlightDiagrams(renders: Chain[Renderable[PlantUml.ComponentDiagram]], n: Int) =
     val tags =
       Renderable
         .allTags(renders)
@@ -92,7 +92,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
     tags.traverse_ { t =>
       val str =
         renders
-          .pipe(Renderable.renderManyWithTag[Chain[PlantUml]](_, t))
+          .pipe(Renderable.renderManyWithTag[PlantUml.ComponentDiagram](_, t))
           .pipe(PlantUml.render)
           .mkString_("\n")
 

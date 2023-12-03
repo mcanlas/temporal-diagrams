@@ -94,6 +94,11 @@ object PlantUml:
         xs.collect { case x: PlantUml.Link => x }.toSet
       )
 
+    def apply[F[_]: Foldable: Functor](xs: F[PlantUml]): ComponentDiagram =
+      xs
+        .map(ComponentDiagram(_))
+        .fold
+
   private val quoteTriggers =
     List("-", " ", "\\n")
 

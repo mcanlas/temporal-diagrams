@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams
 package demo.v2
 
+import scala.util.chaining.*
+
 import cats.data.Chain
 
 import com.htmlism.temporaldiagrams.plantuml.*
@@ -12,8 +14,8 @@ object DemoDsl:
   case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
 
-  given BrightEncoder[Chain[PlantUml], DemoDsl] with
-    def encodeBrightly(x: DemoDsl, isBright: Boolean): Chain[PlantUml] =
+  given BrightEncoder[PlantUml.ComponentDiagram, DemoDsl] with
+    def encodeBrightly(x: DemoDsl, isBright: Boolean): PlantUml.ComponentDiagram =
       x match
         case ClusterService(n, oDep, asCluster) =>
           if asCluster then
@@ -27,6 +29,7 @@ object DemoDsl:
                     a.append(PlantUml.Link(d + i.toString, n, 2, PlantUml.Link.Direction.Forwards, None))
                   }
               }
+              .pipe(PlantUml.ComponentDiagram.apply(_))
           else
             Chain[PlantUml](
               PlantUml.Component(n, None, Option.when(isBright)("Service")),
@@ -35,6 +38,7 @@ object DemoDsl:
               .applySome(oDep) { (a, d) =>
                 a.append(PlantUml.Link(d, n, 2, PlantUml.Link.Direction.Forwards, None))
               }
+              .pipe(PlantUml.ComponentDiagram.apply(_))
 
         case Buffered(n, oDep) =>
           Chain[PlantUml](
@@ -47,6 +51,7 @@ object DemoDsl:
             .applySome(oDep) { (a, d) =>
               a.append(PlantUml.Link(d, n + "_queue", 2, PlantUml.Link.Direction.Forwards, None))
             }
+            .pipe(PlantUml.ComponentDiagram.apply(_))
 
   private val queueSkin =
     PlantUml
