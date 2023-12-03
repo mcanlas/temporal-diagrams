@@ -72,7 +72,7 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
           OuroborosDsl.Link(w("YourDsl.Config"), w("YourDsl")).r,
           OuroborosDsl.Link(w("YourDsl"), w("TemporalDiagrams.PlantUml")).r,
           OuroborosDsl.Link(w("TemporalDiagrams.PlantUml"), w("PlantUml")).r
-        ) ++ mermaid ++ foreign
+        ) |+| mermaid |+| foreign
 
   val cfgs =
     List[OuroborosDsl.Config](
