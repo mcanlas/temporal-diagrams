@@ -16,7 +16,7 @@ object WriteFraudEcosystemDiagrams extends WriteFraudEcosystemDiagrams[IO](FileP
 
 class WriteFraudEcosystemDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   def storage(name: String, tag: String) =
-    Kleisli.fromFunction[Id, FraudEcosystemDsl.PersistenceStyle][Renderable[Chain[PlantUml]]]:
+    Kleisli.fromFunction[Id, FraudEcosystemDsl.PersistenceStyle][Renderable[PlantUml.ComponentDiagram]]:
       case FraudEcosystemDsl.PersistenceStyle.DynamoDb =>
         FraudEcosystemDsl.DynamoDb(name).tag(tag)
 
@@ -24,7 +24,7 @@ class WriteFraudEcosystemDiagrams[F[_]: Applicative](out: FilePrinter[F]):
         FraudEcosystemDsl.MySql(name).tag(tag)
 
   def queueConsumer(name: String) =
-    Kleisli.fromFunction[Id, FraudEcosystemDsl.QueueConsumerStyle][Renderable[Chain[PlantUml]]]:
+    Kleisli.fromFunction[Id, FraudEcosystemDsl.QueueConsumerStyle][Renderable[PlantUml.ComponentDiagram]]:
       case FraudEcosystemDsl.QueueConsumerStyle.Lambda =>
         FraudEcosystemDsl.Lambda(name).tag("sad-path")
 
@@ -34,15 +34,15 @@ class WriteFraudEcosystemDiagrams[F[_]: Applicative](out: FilePrinter[F]):
       case FraudEcosystemDsl.QueueConsumerStyle.Flink =>
         FraudEcosystemDsl.Flink(name).tag("sad-path")
 
-  val pure: Chain[Kleisli[Id, FraudEcosystemDsl.Config, Renderable[Chain[PlantUml]]]] =
-    Chain[Renderable[Chain[PlantUml]]](
+  val pure: Chain[Kleisli[Id, FraudEcosystemDsl.Config, Renderable[PlantUml.ComponentDiagram]]] =
+    Chain[Renderable[PlantUml.ComponentDiagram]](
       FraudEcosystemDsl.EcsService("edge").tag("happy-path", "sad-path"),
       FraudEcosystemDsl.EcsService("fraud_service").tag("happy-path", "sad-path"),
       FraudEcosystemDsl.Link("edge", "forwards requests to", "fraud_service").r,
       FraudEcosystemDsl.Link("fraud_service", "writes to", "user_activity").r,
       FraudEcosystemDsl.Link("fraud_service", "writes to", "fraud_history").r
     )
-      .map(Kleisli.pure[Id, FraudEcosystemDsl.Config, Renderable[Chain[PlantUml]]])
+      .map(Kleisli.pure[Id, FraudEcosystemDsl.Config, Renderable[PlantUml.ComponentDiagram]])
 
   val stackGivenCfg =
     Chain(
@@ -76,7 +76,7 @@ class WriteFraudEcosystemDiagrams[F[_]: Applicative](out: FilePrinter[F]):
     cfgs
       .zipWithIndex
       .traverse { case (cfg, n) =>
-        val renders: Chain[Renderable[Chain[PlantUml]]] =
+        val renders: Chain[Renderable[PlantUml.ComponentDiagram]] =
           stackGivenCfg(cfg)
             .map(_.extract)
 
@@ -84,17 +84,17 @@ class WriteFraudEcosystemDiagrams[F[_]: Applicative](out: FilePrinter[F]):
       }
       .void
 
-  private def printNormalDiagram(renders: Chain[Renderable[Chain[PlantUml]]], n: Int) =
+  private def printNormalDiagram(renders: Chain[Renderable[PlantUml.ComponentDiagram]], n: Int) =
     val str =
       renders
-        .pipe(Renderable.renderMany[Chain[PlantUml]])
-        .prepend(PlantUml.LeftToRightDirection)
+        .pipe(Renderable.renderMany[PlantUml.ComponentDiagram])
+        .add(PlantUml.LeftToRightDirection)
         .pipe(PlantUml.render)
         .mkString_("\n")
 
     out.print(s"fraud-$n.puml")(str)
 
-  private def printHighlightDiagrams(renders: Chain[Renderable[Chain[PlantUml]]], n: Int) =
+  private def printHighlightDiagrams(renders: Chain[Renderable[PlantUml.ComponentDiagram]], n: Int) =
     val tags =
       Renderable
         .allTags(renders)
@@ -103,8 +103,8 @@ class WriteFraudEcosystemDiagrams[F[_]: Applicative](out: FilePrinter[F]):
     tags.traverse_ { t =>
       val str =
         renders
-          .pipe(Renderable.renderManyWithTag[Chain[PlantUml]](_, t))
-          .prepend(PlantUml.LeftToRightDirection)
+          .pipe(Renderable.renderManyWithTag[PlantUml.ComponentDiagram](_, t))
+          .add(PlantUml.LeftToRightDirection)
           .pipe(PlantUml.render)
           .mkString_("\n")
 

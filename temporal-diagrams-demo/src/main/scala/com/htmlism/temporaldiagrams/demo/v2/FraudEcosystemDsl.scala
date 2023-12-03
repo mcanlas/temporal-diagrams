@@ -1,6 +1,5 @@
 package com.htmlism.temporaldiagrams.demo.v2
 
-import cats.data.Chain
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.plantuml.*
@@ -31,47 +30,47 @@ object FraudEcosystemDsl:
       queueConsumerStyle: QueueConsumerStyle
   )
 
-  given BrightEncoder[Chain[PlantUml], FraudEcosystemDsl] with
-    def encodeBrightly(x: FraudEcosystemDsl, isBright: Boolean): Chain[PlantUml] =
+  given BrightEncoder[PlantUml.ComponentDiagram, FraudEcosystemDsl] with
+    def encodeBrightly(x: FraudEcosystemDsl, isBright: Boolean): PlantUml.ComponentDiagram =
       x match
         case EcsService(name) =>
-          Chain(
+          PlantUml.ComponentDiagram(
             PlantUml.Component(name, None, Option.when(isBright)("ECS Service")),
             if isBright then blue("component", "ECS Service") else white("component")
           )
 
         case Lambda(name) =>
-          Chain(
+          PlantUml.ComponentDiagram(
             PlantUml.Component(name, None, Option.when(isBright)("Lambda")),
             if isBright then red("component", "Lambda") else white("component")
           )
 
         case Kinesis(name) =>
-          Chain(
+          PlantUml.ComponentDiagram(
             PlantUml.Queue(name, None, Option.when(isBright)("Kinesis")),
             if isBright then red("queue", "Kinesis") else white("queue")
           )
 
         case MySql(name) =>
-          Chain(
+          PlantUml.ComponentDiagram(
             PlantUml.Database(name, None, Option.when(isBright)("MySQL"), Nil),
             if isBright then blue("database", "MySQL") else white("database")
           )
 
         case DynamoDb(name) =>
-          Chain(
+          PlantUml.ComponentDiagram(
             PlantUml.Database(name, None, Option.when(isBright)("DynamoDB"), Nil),
             if isBright then red("database", "DynamoDB") else white("database")
           )
 
         case Flink(name) =>
-          Chain(
+          PlantUml.ComponentDiagram(
             PlantUml.Component(name, None, Option.when(isBright)("Flink")),
             if isBright then yellow("component", "Flink") else white("component")
           )
 
         case Link(src, comment, dest) =>
-          Chain:
+          PlantUml.ComponentDiagram:
             PlantUml.Link(src, dest, 2, PlantUml.Link.Direction.Forwards, comment.some)
 
   private def red(name: String, stereotype: String) =

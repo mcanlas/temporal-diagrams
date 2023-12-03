@@ -68,7 +68,12 @@ object PlantUml:
           DiagramEncoder[PlantUml.Directive].encode(x)
 
   // TODO test
-  case class ComponentDiagram(parameters: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link])
+  case class ComponentDiagram(parameters: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link]):
+    def add(x: PlantUml): ComponentDiagram =
+      this |+| ComponentDiagram(x)
+
+    def +(x: PlantUml): ComponentDiagram =
+      this |+| ComponentDiagram(x)
 
   object ComponentDiagram:
     given Monoid[ComponentDiagram] =
