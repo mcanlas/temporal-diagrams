@@ -11,7 +11,7 @@ object DatabaseSuite extends FunSuite:
     expect.eql(
       Chain("database asdf"),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Database("asdf", None, None, Nil)
+        PlantUml.Database("asdf", None, None, Set.empty)
       )
     )
 
@@ -19,7 +19,7 @@ object DatabaseSuite extends FunSuite:
     expect.eql(
       Chain("database foo as bar"),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Database("foo", "bar".some, None, Nil)
+        PlantUml.Database("foo", "bar".some, None, Set.empty)
       )
     )
 
@@ -27,7 +27,7 @@ object DatabaseSuite extends FunSuite:
     expect.eql(
       Chain("database foo << bar >>"),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Database("foo", None, "bar".some, Nil)
+        PlantUml.Database("foo", None, "bar".some, Set.empty)
       )
     )
 

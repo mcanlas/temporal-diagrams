@@ -53,13 +53,13 @@ object FraudEcosystemDsl:
 
         case MySql(name) =>
           PlantUml.ComponentDiagram(
-            PlantUml.Database(name, None, Option.when(isBright)("MySQL"), Nil),
+            PlantUml.Database(name, None, Option.when(isBright)("MySQL"), Set.empty),
             if isBright then blue("database", "MySQL") else white("database")
           )
 
         case DynamoDb(name) =>
           PlantUml.ComponentDiagram(
-            PlantUml.Database(name, None, Option.when(isBright)("DynamoDB"), Nil),
+            PlantUml.Database(name, None, Option.when(isBright)("DynamoDB"), Set.empty),
             if isBright then red("database", "DynamoDB") else white("database")
           )
 

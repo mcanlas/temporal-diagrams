@@ -40,7 +40,7 @@ object OuroborosDsl:
         case Output(name, oEncoder) =>
           Chain(
             PlantUml
-              .Database(name, safe(name).some, Option.when(isBright)("Text file"), Nil)
+              .Database(name, safe(name).some, Option.when(isBright)("Text file"), Set.empty)
               .applySome(oEncoder): (c, e) =>
                 PlantUml.Package(e, c),
             if isBright then red("database", "Text file") else white("database")

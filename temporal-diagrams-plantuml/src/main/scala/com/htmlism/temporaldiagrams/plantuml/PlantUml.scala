@@ -214,8 +214,9 @@ object PlantUml:
                 slug
             else
               xs
+                .pipe(renderSubsectionSorted)
                 .pipe(Chain.fromSeq)
-                .pipe(summon[DiagramEncoder[Chain[PlantUml]]].encode)
+                .pipe(intersperse(_, identity))
                 .map { s =>
                   if s.isEmpty then ""
                   else "  " + s
@@ -243,7 +244,7 @@ object PlantUml:
 
   case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
-  case class Database(name: String, alias: Option[String], stereotype: Option[String], xs: List[Entity]) extends Entity
+  case class Database(name: String, alias: Option[String], stereotype: Option[String], xs: Set[Entity]) extends Entity
 
   // TODO
   case class Interface(name: String, alias: Option[String]) extends Entity
