@@ -181,8 +181,9 @@ object PlantUml:
         x match
           case Package(name, xs) =>
             xs
+              .pipe(renderSubsectionSorted)
               .pipe(Chain.fromSeq)
-              .pipe(summon[DiagramEncoder[Chain[PlantUml.Entity]]].encode)
+              .pipe(intersperse(_, identity))
               .map { s =>
                 if s.isEmpty then ""
                 else "  " + s
@@ -310,11 +311,11 @@ object PlantUml:
     def apply(base: String, stereotype: String): SkinParamGroup =
       SkinParamGroup(base, Nil, stereotype.some)
 
-  case class Package(name: String, xs: List[Entity]) extends Entity
+  case class Package(name: String, xs: Set[Entity]) extends Entity
 
   object Package:
     def apply(name: String, xs: Entity*): Package =
-      Package(name, xs.toList)
+      Package(name, xs.toSet)
 
   private def asDocument(xs: Chain[String]) =
     Chain("@startuml", "") ++

@@ -6,13 +6,13 @@ import weaver.*
 import com.htmlism.temporaldiagrams.v2.DiagramEncoder
 
 object PackageSuite extends FunSuite:
-  test("A package indents its body"):
+  test("A package sorts and indents its body"):
     expect.eql(
       Chain(
         "package outer {",
-        "  component foo",
-        "",
         "  component bar",
+        "",
+        "  component foo",
         "}"
       ),
       DiagramEncoder[PlantUml].encode(
