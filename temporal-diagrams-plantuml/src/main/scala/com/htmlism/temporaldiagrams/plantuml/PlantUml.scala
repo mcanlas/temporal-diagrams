@@ -65,12 +65,14 @@ object PlantUml:
         .fold
 
   private val quoteTriggers =
-    List("-", " ", "\\n")
+    List("-", " ", "\\")
 
-  // TODO test
   private def safeQuote(s: String) =
-    if quoteTriggers.exists(s.contains) then s"\"$s\""
-    else s
+    val encodedNewLines =
+      s.replace("\n", "\\n")
+
+    if quoteTriggers.exists(encodedNewLines.contains) then "\"" + encodedNewLines + "\""
+    else encodedNewLines
 
   private def id(s: String) =
     s

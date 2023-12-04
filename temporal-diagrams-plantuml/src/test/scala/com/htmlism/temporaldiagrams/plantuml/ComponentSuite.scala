@@ -15,6 +15,30 @@ object ComponentSuite extends FunSuite:
       )
     )
 
+  test("A component name escapes dashes"):
+    expect.eql(
+      Chain("component \"as-df\""),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Component("as-df", None, None)
+      )
+    )
+
+  test("A component name escapes spaces"):
+    expect.eql(
+      Chain("component \"as df\""),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Component("as df", None, None)
+      )
+    )
+
+  test("A component name escapes newlines"):
+    expect.eql(
+      Chain("component \"as\\ndf\""),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Component("as\ndf", None, None)
+      )
+    )
+
   test("A component has an optional override alias"):
     expect.eql(
       Chain("component foo as bar"),
