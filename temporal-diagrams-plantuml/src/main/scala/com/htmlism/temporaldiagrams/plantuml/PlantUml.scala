@@ -12,40 +12,6 @@ import com.htmlism.temporaldiagrams.v2.*
 sealed trait PlantUml
 
 object PlantUml:
-  given Order[PlantUml] =
-    Order.by { x =>
-      val index =
-        x match
-          case LeftToRightDirection =>
-            0
-
-          case _: SkinParamGroup =>
-            1
-
-          case _: Link =>
-            // if arrows refer to a component that isn't defined, they will implicitly create their own;
-            // so allow components to take priority
-            10
-
-          case _ =>
-            2
-
-      val str =
-        summon[DiagramEncoder[PlantUml]]
-          .encode(x)
-
-      index -> str
-    }
-
-  /**
-    * Handles the string encoding of multiple diagram components, based off the encoding of a single element/ADT
-    *
-    * @tparam A
-    *   The target diagram language
-    */
-  given [A](using A: DiagramEncoder[A]): DiagramEncoder[Chain[A]] =
-    (xs: Chain[A]) => intersperse(xs, A.encode)
-
   private def intersperse[A, M: Monoid](xs: Chain[A], f: A => Chain[M]): Chain[M] =
     xs.uncons match
       case Some(head, tail) =>
@@ -117,17 +83,11 @@ object PlantUml:
       .replace("-", "_")
       .replace(" ", "_")
 
-  // TODO test this
-  def render(xs: Chain[PlantUml]): Chain[String] =
-    xs
-      .distinct
-      .sorted
-      .pipe(DiagramEncoder[Chain[PlantUml]].encode)
-      .pipe(asDocument)
-
   private def renderSubsectionSorted[A: DiagramEncoder](xs: Set[A]) =
     xs.toList.map(summon[DiagramEncoder[A]].encode).sorted
 
+  // if links refer to a component that isn't defined, they will implicitly create their own;
+  // so allow components to take priority
   def render(x: PlantUml.ComponentDiagram): Chain[String] =
     Chain(
       x.parameters.pipe(renderSubsectionSorted),
