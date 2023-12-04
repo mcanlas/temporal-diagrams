@@ -33,10 +33,13 @@ object PlantUml:
       this |+| ComponentDiagram(x)
 
   object ComponentDiagram:
+    val empty: ComponentDiagram =
+      ComponentDiagram(Set.empty, Set.empty, Set.empty)
+
     given Monoid[ComponentDiagram] =
       new Monoid[ComponentDiagram]:
         def empty: ComponentDiagram =
-          ComponentDiagram(Set.empty, Set.empty, Set.empty)
+          ComponentDiagram.empty
 
         def combine(x: ComponentDiagram, y: ComponentDiagram): ComponentDiagram =
           ComponentDiagram(
