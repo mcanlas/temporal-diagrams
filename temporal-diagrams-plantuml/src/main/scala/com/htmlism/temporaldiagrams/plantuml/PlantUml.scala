@@ -85,10 +85,10 @@ object PlantUml:
       x.entities.pipe(renderSubsectionSorted),
       x.links.pipe(renderSubsectionSorted)
     )
-      .filter(_.nonEmpty)             // drop empty sections
-      .map(Chain.fromSeq)             // from list to chain
-      .flatten                        // make them one stream of bundles
-      .pipe(intersperse(_, identity)) // intersperse newlines and flatten
+      .filter(_.nonEmpty)           // drop empty sections
+      .map(Chain.fromSeq)           // from list to chain
+      .flatten                      // make them one stream of bundles
+      .pipe(interlace(_, identity)) // intersperse newlines and flatten
       .pipe(asDocument)
 
   /**
@@ -134,7 +134,7 @@ object PlantUml:
             xs
               .pipe(renderSubsectionSorted)
               .pipe(Chain.fromSeq)
-              .pipe(intersperse(_, identity))
+              .pipe(interlace(_, identity))
               .map { s =>
                 if s.isEmpty then ""
                 else "  " + s
@@ -167,7 +167,7 @@ object PlantUml:
               xs
                 .pipe(renderSubsectionSorted)
                 .pipe(Chain.fromSeq)
-                .pipe(intersperse(_, identity))
+                .pipe(interlace(_, identity))
                 .map { s =>
                   if s.isEmpty then ""
                   else "  " + s
