@@ -25,11 +25,11 @@ object OuroborosDsl:
 
   case class Link(src: String, dest: String) extends OuroborosDsl
 
-  given BrightEncoder[Chain[PlantUml], OuroborosDsl] with
-    def encodeBrightly(x: OuroborosDsl, isBright: Boolean): Chain[PlantUml] =
+  given BrightEncoder[PlantUml.ComponentDiagram, OuroborosDsl] with
+    def encodeBrightly(x: OuroborosDsl, isBright: Boolean): PlantUml.ComponentDiagram =
       x match
         case Type(name, oEncoder) =>
-          Chain(
+          PlantUml.ComponentDiagram(
             PlantUml
               .Component(name, safe(name).some, Option.when(isBright)("Type"))
               .applySome(oEncoder): (c, e) =>
@@ -38,7 +38,7 @@ object OuroborosDsl:
           )
 
         case Output(name, oEncoder) =>
-          Chain(
+          PlantUml.ComponentDiagram(
             PlantUml
               .Database(name, safe(name).some, Option.when(isBright)("Text file"), Set.empty)
               .applySome(oEncoder): (c, e) =>
@@ -47,7 +47,7 @@ object OuroborosDsl:
           )
 
         case Link(src, dest) =>
-          Chain:
+          PlantUml.ComponentDiagram:
             PlantUml
               .Link(safe(src), safe(dest), 2, PlantUml.Link.Direction.Forwards, None)
 

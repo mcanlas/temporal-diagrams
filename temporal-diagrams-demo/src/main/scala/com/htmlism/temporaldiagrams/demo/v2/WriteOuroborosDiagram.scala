@@ -14,7 +14,7 @@ import com.htmlism.temporaldiagrams.v2.syntax.*
 
 object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) with IOApp.Simple:
   def variant(showMermaid: Boolean, showForeign: Boolean) =
-    Kleisli.fromFunction[Id, OuroborosDsl.Config.Variant][Chain[Renderable[Chain[PlantUml]]]]:
+    Kleisli.fromFunction[Id, OuroborosDsl.Config.Variant][Chain[Renderable[PlantUml.ComponentDiagram]]]:
       case OuroborosDsl.Config.Variant(namespace, oEncoder) =>
         def w(s: String) =
           if namespace.isEmpty then s
@@ -38,7 +38,7 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
 
         val mermaid =
           if showMermaid then
-            Chain[Renderable[Chain[PlantUml]]](
+            Chain[Renderable[PlantUml.ComponentDiagram]](
               OuroborosDsl.Type(w("TemporalDiagrams.Mermaid"), diagramEncoder).tag("mermaid"),
               OuroborosDsl.Output(w("Mermaid"), None).tag("mermaid"),
               OuroborosDsl.Link(w("YourDsl"), w("TemporalDiagrams.Mermaid")).tag("mermaid"),
@@ -48,7 +48,7 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
 
         val foreign =
           if showForeign then
-            Chain[Renderable[Chain[PlantUml]]](
+            Chain[Renderable[PlantUml.ComponentDiagram]](
               OuroborosDsl
                 .Type(w("ForeignDsl"), highlightEncoder)
                 .tag("foreign", "one-render"),
@@ -56,7 +56,7 @@ object WriteOuroborosDiagram extends WriteOuroborosDiagram[IO](FilePrinter[IO]) 
             )
           else Chain.empty
 
-        Chain[Renderable[Chain[PlantUml]]](
+        Chain[Renderable[PlantUml.ComponentDiagram]](
           OuroborosDsl
             .Type(w("YourDsl.Config"), configWrap)
             .tag("mermaid", "function"),
@@ -160,7 +160,7 @@ class WriteOuroborosDiagram[F[_]: Applicative](out: FilePrinter[F]):
       .zipWithIndex
       .traverse:
         case (cfg, n) =>
-          val renders: Chain[Renderable[Chain[PlantUml]]] =
+          val renders: Chain[Renderable[PlantUml.ComponentDiagram]] =
             cfg
               .variants
               .toChain
@@ -173,17 +173,17 @@ class WriteOuroborosDiagram[F[_]: Applicative](out: FilePrinter[F]):
           printNormalDiagram(renders, n) *> printHighlightDiagrams(renders, n)
       .void
 
-  private def printNormalDiagram(renders: Chain[Renderable[Chain[PlantUml]]], n: Int) =
+  private def printNormalDiagram(renders: Chain[Renderable[PlantUml.ComponentDiagram]], n: Int) =
     val str =
       renders
-        .pipe(Renderable.renderMany[Chain[PlantUml]])
-        .prepend(PlantUml.LeftToRightDirection)
+        .pipe(Renderable.renderMany[PlantUml.ComponentDiagram])
+        .add(PlantUml.LeftToRightDirection)
         .pipe(PlantUml.render)
         .mkString_("\n")
 
     out.print(s"ouroboros-$n.puml")(str)
 
-  private def printHighlightDiagrams(renders: Chain[Renderable[Chain[PlantUml]]], n: Int) =
+  private def printHighlightDiagrams(renders: Chain[Renderable[PlantUml.ComponentDiagram]], n: Int) =
     val tags =
       Renderable
         .allTags(renders)
@@ -192,8 +192,8 @@ class WriteOuroborosDiagram[F[_]: Applicative](out: FilePrinter[F]):
     tags.traverse_ { t =>
       val str =
         renders
-          .pipe(Renderable.renderManyWithTag[Chain[PlantUml]](_, t))
-          .prepend(PlantUml.LeftToRightDirection)
+          .pipe(Renderable.renderManyWithTag[PlantUml.ComponentDiagram](_, t))
+          .add(PlantUml.LeftToRightDirection)
           .pipe(PlantUml.render)
           .mkString_("\n")
 
