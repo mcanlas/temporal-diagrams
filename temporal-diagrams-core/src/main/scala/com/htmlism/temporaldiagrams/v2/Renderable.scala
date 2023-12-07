@@ -36,7 +36,7 @@ object Renderable:
     * @tparam D
     *   The target diagram language
     */
-  trait Of[D] extends Renderable[D]:
+  sealed trait Of[D] extends Renderable[D]:
 
     /**
       * Returns a list of tags associated with this renderable object
