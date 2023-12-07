@@ -1,38 +1,37 @@
 package com.htmlism.temporaldiagrams.v2
+package syntax
 
 import scala.collection.immutable.ListSet
 
-package object syntax:
+/**
+  * Postfix syntax enhancement for marking an expression as renderable
+  *
+  * @param x
+  *   The data being rendered
+  * @tparam A
+  *   The type of the data being rendered
+  */
+extension [A](x: A)
 
   /**
-    * Postfix syntax enhancement for marking an expression as renderable
+    * Marks an expression as renderable to `D`, without any tags
     *
-    * @param x
-    *   The data being rendered
-    * @tparam A
-    *   The type of the data being rendered
+    * @tparam D
+    *   The target diagram language
     */
-  extension [A](x: A)
+  def r[D](using enc: HighlightEncoder[D, A]): Renderable.OfA[A, D] =
+    Renderable.OfA(x, ListSet.empty)
 
-    /**
-      * Marks an expression as renderable to `D`, without any tags
-      *
-      * @tparam D
-      *   The target diagram language
-      */
-    def r[D](using enc: HighlightEncoder[D, A]): Renderable.OfA[A, D] =
-      Renderable.OfA(x, ListSet.empty)
-
-    /**
-      * Marks an expression as renderable to `D`, with the specified tags
-      *
-      * @tparam D
-      *   The target diagram language
-      *
-      * @param t
-      *   A required tag
-      * @param ts
-      *   Optional, additional tags
-      */
-    def tag[D](t: String, ts: String*)(using enc: HighlightEncoder[D, A]): Renderable.OfA[A, D] =
-      Renderable.OfA(x, ListSet.from(t +: ts))
+  /**
+    * Marks an expression as renderable to `D`, with the specified tags
+    *
+    * @tparam D
+    *   The target diagram language
+    *
+    * @param t
+    *   A required tag
+    * @param ts
+    *   Optional, additional tags
+    */
+  def tag[D](t: String, ts: String*)(using enc: HighlightEncoder[D, A]): Renderable.OfA[A, D] =
+    Renderable.OfA(x, ListSet.from(t +: ts))

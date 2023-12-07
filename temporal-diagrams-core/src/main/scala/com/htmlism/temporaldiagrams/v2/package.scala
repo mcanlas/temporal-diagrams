@@ -1,14 +1,13 @@
-package com.htmlism.temporaldiagrams
+package com.htmlism.temporaldiagrams.v2
 
 import cats.Monoid
 import cats.data.Chain
 
-package object v2:
-  def interlace[A, M: Monoid](xs: Chain[A], f: A => Chain[M]): Chain[M] =
-    xs.uncons match
-      case Some(head, tail) =>
-        f(head)
-          .concat(tail.flatMap(x => Monoid[M].empty +: f(x)))
+def interlace[A, M: Monoid](xs: Chain[A], f: A => Chain[M]): Chain[M] =
+  xs.uncons match
+    case Some(head, tail) =>
+      f(head)
+        .concat(tail.flatMap(x => Monoid[M].empty +: f(x)))
 
-      case None =>
-        Chain.empty
+    case None =>
+      Chain.empty
