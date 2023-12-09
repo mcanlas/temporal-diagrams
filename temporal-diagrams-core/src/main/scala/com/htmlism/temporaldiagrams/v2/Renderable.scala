@@ -7,27 +7,29 @@ import cats.Monoid
 import cats.data.Chain
 import cats.syntax.all.*
 
-/**
-  * @tparam D
-  *   The target diagram language
-  */
-sealed trait Renderable[D]:
-
-  /**
-    * Renders this object into target language `D`
-    */
-  def render: D
-
-  /**
-    * Renders this object into target language `D` for a specific highlight tag
-    *
-    * @param tag
-    *   If the renderable has this tag, it will be rendered with its highlighted style; otherwise it will use its dim
-    *   style
-    */
-  def renderWithHighlight(tag: String): D
+type Renderable[A] =
+  Renderable.Of[A]
 
 object Renderable:
+  /**
+    * @tparam D
+    *   The target diagram language
+    */
+  sealed trait Directive[D]:
+
+    /**
+      * Renders this object into target language `D`
+      */
+    def render: D
+
+    /**
+      * Renders this object into target language `D` for a specific highlight tag
+      *
+      * @param tag
+      *   If the renderable has this tag, it will be rendered with its highlighted style; otherwise it will use its dim
+      *   style
+      */
+    def renderWithHighlight(tag: String): D
 
   /**
     * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
@@ -36,7 +38,7 @@ object Renderable:
     * @tparam D
     *   The target diagram language
     */
-  sealed trait Of[D] extends Renderable[D]:
+  sealed trait Of[D] extends Renderable.Directive[D]:
 
     /**
       * Returns a list of tags associated with this renderable object
