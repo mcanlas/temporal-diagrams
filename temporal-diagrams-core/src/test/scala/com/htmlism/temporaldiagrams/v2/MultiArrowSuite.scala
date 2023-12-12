@@ -1,4 +1,4 @@
-package com.htmlism.temporaldiagrams.v2.syntax
+package com.htmlism.temporaldiagrams.v2
 
 import weaver.FunSuite
 
