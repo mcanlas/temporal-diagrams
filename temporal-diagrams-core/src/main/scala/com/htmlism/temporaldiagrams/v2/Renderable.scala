@@ -15,7 +15,16 @@ object Renderable:
     * @tparam D
     *   The target diagram language
     */
-  sealed trait Directive[D]:
+  sealed trait Directive[D]
+
+  /**
+    * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
+    * different domains are participating in the same diagram
+    *
+    * @tparam D
+    *   The target diagram language
+    */
+  sealed trait Of[D] extends Renderable.Directive[D]:
 
     /**
       * Renders this object into target language `D`
@@ -30,15 +39,6 @@ object Renderable:
       *   style
       */
     def renderWithHighlight(tag: String): D
-
-  /**
-    * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
-    * different domains are participating in the same diagram
-    *
-    * @tparam D
-    *   The target diagram language
-    */
-  sealed trait Of[D] extends Renderable.Directive[D]:
 
     /**
       * Returns a list of tags associated with this renderable object
