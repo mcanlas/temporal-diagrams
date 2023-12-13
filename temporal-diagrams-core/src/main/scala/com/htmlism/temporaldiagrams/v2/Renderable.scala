@@ -24,7 +24,14 @@ object Renderable:
     * @tparam D
     *   The target diagram language
     */
-  sealed trait Of[D] extends Renderable.Directive[D]:
+
+  sealed trait Taggable:
+    /**
+      * Returns a list of tags associated with this renderable object
+      */
+    def tags: ListSet[String]
+
+  sealed trait Of[D] extends Renderable.Directive[D] with Taggable:
 
     /**
       * Renders this object into target language `D`
@@ -39,11 +46,6 @@ object Renderable:
       *   style
       */
     def renderWithHighlight(tag: String): D
-
-    /**
-      * Returns a list of tags associated with this renderable object
-      */
-    def tags: ListSet[String]
 
   /**
     * @tparam D
