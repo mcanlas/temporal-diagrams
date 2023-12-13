@@ -5,6 +5,7 @@ import scala.util.chaining.*
 
 import cats.Monoid
 import cats.data.Chain
+import cats.data.NonEmptyList
 import cats.syntax.all.*
 
 type Renderable[A] =
@@ -15,7 +16,7 @@ object Renderable:
     * @tparam D
     *   The target diagram language
     */
-  sealed trait Directive[D]
+  sealed trait WithMultiArrows[+D]
 
   /**
     * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
@@ -25,13 +26,18 @@ object Renderable:
     *   The target diagram language
     */
 
+  object WithMultiArrows:
+    case class Source[A](alias: String, sources: NonEmptyList[A]) extends WithMultiArrows[Nothing]
+
+    case class Destination[A](alias: String, destinations: NonEmptyList[A]) extends WithMultiArrows[Nothing]
+
   sealed trait Taggable:
     /**
       * Returns a list of tags associated with this renderable object
       */
     def tags: ListSet[String]
 
-  sealed trait Of[D] extends Renderable.Directive[D] with Taggable:
+  sealed trait Of[D] extends Renderable.WithMultiArrows[D] with Taggable:
 
     /**
       * Renders this object into target language `D`

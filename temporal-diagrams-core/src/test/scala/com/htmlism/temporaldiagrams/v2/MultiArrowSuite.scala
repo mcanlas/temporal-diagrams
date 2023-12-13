@@ -1,13 +1,42 @@
 package com.htmlism.temporaldiagrams.v2
 
+import cats.data.*
 import weaver.FunSuite
+
+import com.htmlism.temporaldiagrams.v2.syntax.*
 
 object MultiArrowSuite extends FunSuite:
   test("can add multi-arrow sources"):
-    expect.eql(1, 1)
+    val implicitRs: Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]] =
+      Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
+        Amazon.Ec2("").r,
+        Google.Compute("").r,
+        Renderable.WithMultiArrows.Source("", NonEmptyList.of("foo"))
+      )
+
+    expect.eql(
+      1L,
+      implicitRs
+        .collect:
+          case x: Renderable.WithMultiArrows.Source[?] => x
+        .size
+    )
 
   test("can add multi-arrow destinations"):
-    expect.eql(1, 1)
+    val implicitRs: Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]] =
+      Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
+        Amazon.Ec2("").r,
+        Google.Compute("").r,
+        Renderable.WithMultiArrows.Destination("", NonEmptyList.of("foo"))
+      )
+
+    expect.eql(
+      1L,
+      implicitRs
+        .collect:
+          case x: Renderable.WithMultiArrows.Destination[?] => x
+        .size
+    )
 
   test("can define multi-arrows"):
     expect.eql(1, 1)
