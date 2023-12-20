@@ -31,6 +31,8 @@ object Renderable:
 
     case class Destination[A](alias: String, destinations: NonEmptyList[A]) extends WithMultiArrows[Nothing]
 
+    case class MultiArrow(source: String, destination: String) extends WithMultiArrows[Nothing]
+
   sealed trait Taggable:
     /**
       * Returns a list of tags associated with this renderable object

@@ -14,12 +14,11 @@ object MultiArrowSuite extends FunSuite:
         Renderable.WithMultiArrows.Source("", NonEmptyList.of("foo"))
       )
 
-    expect.eql(
-      1L,
+    expect.same(
+      Chain(Renderable.WithMultiArrows.Source("", NonEmptyList.of("foo"))),
       implicitRs
         .collect:
           case x: Renderable.WithMultiArrows.Source[?] => x
-        .size
     )
 
   test("can add multi-arrow destinations"):
@@ -30,16 +29,27 @@ object MultiArrowSuite extends FunSuite:
         Renderable.WithMultiArrows.Destination("", NonEmptyList.of("foo"))
       )
 
-    expect.eql(
-      1L,
+    expect.same(
+      Chain(Renderable.WithMultiArrows.Destination("", NonEmptyList.of("foo"))),
       implicitRs
         .collect:
           case x: Renderable.WithMultiArrows.Destination[?] => x
-        .size
     )
 
   test("can define multi-arrows"):
-    expect.eql(1, 1)
+    val implicitRs: Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]] =
+      Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
+        Amazon.Ec2("").r,
+        Google.Compute("").r,
+        Renderable.WithMultiArrows.MultiArrow("src", "dest")
+      )
+
+    expect.same(
+      Chain(Renderable.WithMultiArrows.MultiArrow("src", "dest")),
+      implicitRs
+        .collect:
+          case x: Renderable.WithMultiArrows.MultiArrow => x
+    )
 
   test("rendering multi-arrows is fallible given an undefined source"):
     expect.eql(1, 1)
