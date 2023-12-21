@@ -8,7 +8,7 @@ import com.htmlism.temporaldiagrams.v2.syntax.*
 object MultiArrowSuite extends FunSuite:
   test("can add multi-arrow sources"):
     val rs =
-      Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
+      Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
         Renderable.WithMultiArrows.Source("", NonEmptyList.of("foo"))
@@ -23,7 +23,7 @@ object MultiArrowSuite extends FunSuite:
 
   test("can add multi-arrow destinations"):
     val rs =
-      Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
+      Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
         Renderable.WithMultiArrows.Destination("", NonEmptyList.of("foo"))
@@ -38,7 +38,7 @@ object MultiArrowSuite extends FunSuite:
 
   test("can define multi-arrows"):
     val rs =
-      Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
+      Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
         Renderable.WithMultiArrows.MultiArrow("src", "dest")
