@@ -10,16 +10,13 @@ object ToyDiagramLanguage:
 
   case class Arrow(s: String) extends ToyDiagramLanguage
 
-  given DiagramEncoder[ToyDiagramLanguage] =
-    (x: ToyDiagramLanguage) =>
-      val str =
-        x match
-          case Component(s) =>
-            s"component($s)"
-          case Arrow(s) =>
-            s"arrow($s)"
-
-      Chain(str)
+  given DiagramEncoder[Chain[ToyDiagramLanguage]] =
+    (xs: Chain[ToyDiagramLanguage]) =>
+      xs.map:
+        case Component(s) =>
+          s"component($s)"
+        case Arrow(s) =>
+          s"arrow($s)"
 
   given Eq[ToyDiagramLanguage] =
     Eq.fromUniversalEquals
