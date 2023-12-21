@@ -7,7 +7,7 @@ import com.htmlism.temporaldiagrams.v2.syntax.*
 
 object MultiArrowSuite extends FunSuite:
   test("can add multi-arrow sources"):
-    val implicitRs: Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]] =
+    val rs =
       Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -16,13 +16,13 @@ object MultiArrowSuite extends FunSuite:
 
     expect.same(
       Chain(Renderable.WithMultiArrows.Source("", NonEmptyList.of("foo"))),
-      implicitRs
+      rs
         .collect:
           case x: Renderable.WithMultiArrows.Source[?] => x
     )
 
   test("can add multi-arrow destinations"):
-    val implicitRs: Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]] =
+    val rs =
       Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -31,13 +31,13 @@ object MultiArrowSuite extends FunSuite:
 
     expect.same(
       Chain(Renderable.WithMultiArrows.Destination("", NonEmptyList.of("foo"))),
-      implicitRs
+      rs
         .collect:
           case x: Renderable.WithMultiArrows.Destination[?] => x
     )
 
   test("can define multi-arrows"):
-    val implicitRs: Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]] =
+    val rs =
       Chain[Renderable.WithMultiArrows[Chain[ToyDiagramLanguage]]](
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -46,7 +46,7 @@ object MultiArrowSuite extends FunSuite:
 
     expect.same(
       Chain(Renderable.WithMultiArrows.MultiArrow("src", "dest")),
-      implicitRs
+      rs
         .collect:
           case x: Renderable.WithMultiArrows.MultiArrow => x
     )
