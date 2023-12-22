@@ -8,7 +8,6 @@ object Google:
   case class Compute(s: String)
 
   object Compute:
-    // differs from amazon encoder, which is not nec
     given HighlightEncoder[Chain[ToyDiagramLanguage], Compute] with
       def encode(x: Compute): Chain[ToyDiagramLanguage] =
         Chain(Component(s"google compute: ${x.s}"))
