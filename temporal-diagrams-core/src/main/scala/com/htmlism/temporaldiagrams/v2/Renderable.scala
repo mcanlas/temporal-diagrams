@@ -33,6 +33,17 @@ object Renderable:
 
     case class MultiArrow(source: String, destination: String) extends WithMultiArrows[Nothing]
 
+    // TODO
+    def renderArrows[D: Monoid](xs: Chain[Renderable.WithMultiArrows[D]]): Chain[Renderable[D]] =
+      xs
+        .collect:
+          case x: Renderable[?] => x.asInstanceOf[Renderable[D]]
+
+    def dropArrows[D: Monoid](xs: Chain[Renderable.WithMultiArrows[D]]): Chain[Renderable[D]] =
+      xs
+        .collect:
+          case x: Renderable[?] => x.asInstanceOf[Renderable[D]]
+
   sealed trait Taggable:
     /**
       * Returns a list of tags associated with this renderable object

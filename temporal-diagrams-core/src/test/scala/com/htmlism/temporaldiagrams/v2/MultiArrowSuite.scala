@@ -58,7 +58,25 @@ object MultiArrowSuite extends FunSuite:
     expect.eql(1, 1)
 
   test("rendering multi-arrows can be ignored"):
-    expect.eql(1, 1)
+    val rs =
+      Chain(
+        Amazon.Ec2("").r,
+        Google.Compute("").r,
+        Renderable.WithMultiArrows.Source("src", NonEmptyList.of("foo")),
+        Renderable.WithMultiArrows.Destination("dest", NonEmptyList.of("foo")),
+        Renderable.WithMultiArrows.MultiArrow("src", "dest")
+      )
+
+    expect.same(
+      Chain(
+        Amazon.Ec2("").r,
+        Google.Compute("").r
+      ),
+      Renderable
+        .WithMultiArrows
+        .dropArrows:
+          rs
+    )
 
   test("rendering multi-arrows becomes one domain language"):
     expect.eql(1, 1)
