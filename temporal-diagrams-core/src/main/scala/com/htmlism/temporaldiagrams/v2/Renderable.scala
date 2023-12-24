@@ -27,6 +27,10 @@ object Renderable:
     */
 
   object WithMultiArrows:
+    enum RenderError:
+      case MissingSource(source: String)
+      case MissingDestination(destination: String)
+
     case class Source[A](alias: String, sources: NonEmptyList[A]) extends WithMultiArrows[Nothing]
 
     case class Destination[A](alias: String, destinations: NonEmptyList[A]) extends WithMultiArrows[Nothing]
