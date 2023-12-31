@@ -46,7 +46,7 @@ object FacetedFrame:
     selectors
       .foldLeft(xs) { (xs, s) =>
         xs
-          .map((refineKeysFrames[K, A] _).tupled(s))
+          .map(refineKeysFrames[K, A].tupled(s))
       }
       .toList
       .flatMap(pickDefaults)
