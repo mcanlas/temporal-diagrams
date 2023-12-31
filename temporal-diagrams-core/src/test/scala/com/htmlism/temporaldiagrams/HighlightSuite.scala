@@ -40,7 +40,7 @@ object HighlightSuite extends FunSuite:
     expect.same(
       DslEncoder.encodeManyWithHighlights[Service, PlantUml](withTags, "foo"),
       List(
-        Component("foo") of "Service",
+        Component("foo").of("Service"),
         Component("bar"),
         Link("foo", "bar")
       )
@@ -63,8 +63,8 @@ object HighlightSuite extends FunSuite:
         "bar"
       ),
       List(
-        Component("foo") of "Service",
-        Component("bar") of "Service",
+        Component("foo").of("Service"),
+        Component("bar").of("Service"),
         Link("foo", "bar")
       )
     )

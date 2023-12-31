@@ -24,7 +24,7 @@ object DslSuite extends FunSuite:
       Service("foo")
 
     expect.same(
-      List(Component("foo") of "Service"),
+      List(Component("foo").of("Service")),
       DslEncoder
         .encodeMany[Service, PlantUml](List(foo.r))
     )
