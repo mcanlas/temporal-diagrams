@@ -16,7 +16,7 @@ object Renderable:
     * @tparam D
     *   The target diagram language
     */
-  sealed trait WithMultiArrows[+D]
+  sealed trait WithMultiArrows[+D, +A]
 
   /**
     * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
@@ -24,6 +24,8 @@ object Renderable:
     *
     * @tparam D
     *   The target diagram language
+    * @tparam A
+    *   The type of underlying source and destination arguments to multi arrows
     */
 
   object WithMultiArrows:
@@ -31,19 +33,19 @@ object Renderable:
       case MissingSource(source: String)
       case MissingDestination(destination: String)
 
-    case class Source[A](alias: String, sources: NonEmptyList[A]) extends WithMultiArrows[Nothing]
+    case class Source[A](alias: String, sources: NonEmptyList[A]) extends WithMultiArrows[Nothing, A]
 
-    case class Destination[A](alias: String, destinations: NonEmptyList[A]) extends WithMultiArrows[Nothing]
+    case class Destination[A](alias: String, destinations: NonEmptyList[A]) extends WithMultiArrows[Nothing, A]
 
-    case class MultiArrow(source: String, destination: String) extends WithMultiArrows[Nothing]
+    case class MultiArrow(source: String, destination: String) extends WithMultiArrows[Nothing, Nothing]
 
     // TODO
-    def renderArrows[D: Monoid](xs: Chain[Renderable.WithMultiArrows[D]]): Chain[Renderable[D]] =
+    def renderArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs
         .collect:
           case x: Renderable[?] => x.asInstanceOf[Renderable[D]]
 
-    def dropArrows[D: Monoid](xs: Chain[Renderable.WithMultiArrows[D]]): Chain[Renderable[D]] =
+    def dropArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs
         .collect:
           case x: Renderable[?] => x.asInstanceOf[Renderable[D]]
@@ -54,7 +56,7 @@ object Renderable:
       */
     def tags: ListSet[String]
 
-  sealed trait Of[D] extends Renderable.WithMultiArrows[D] with Taggable:
+  sealed trait Of[D] extends Renderable.WithMultiArrows[D, Nothing] with Taggable:
 
     /**
       * Renders this object into target language `D`
