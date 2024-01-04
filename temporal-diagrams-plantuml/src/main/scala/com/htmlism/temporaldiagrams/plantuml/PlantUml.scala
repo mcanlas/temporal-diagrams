@@ -153,6 +153,12 @@ object PlantUml:
                 .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
                 .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
+          case Actor(name, oAlias, oStereotype) =>
+            Chain:
+              s"actor ${safeQuote(name)}"
+                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
+                .applySome(oStereotype)((s, st) => s + s" << $st >>")
+
           case Queue(name, oAlias, oStereotype) =>
             Chain:
               s"queue ${safeQuote(name)}"
@@ -197,6 +203,9 @@ object PlantUml:
     *   Optional. A tag to share styling among components of the same stereotype
     */
   case class Component(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+
+  // TODO
+  case class Actor(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
