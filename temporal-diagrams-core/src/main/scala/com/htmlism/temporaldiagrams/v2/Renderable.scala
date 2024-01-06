@@ -39,7 +39,7 @@ object Renderable:
 
     case class MultiArrow(source: String, destination: String) extends WithMultiArrows[Nothing, Nothing]
 
-    // TODO
+    // TODO after reconciliation, this should call the regular render
     def renderArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs
         .collect:
