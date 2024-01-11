@@ -33,6 +33,14 @@ Copy the URL from [the PlantUML download page](https://plantuml.com/download)
 
 `-L` means follow redirects and `-O` means save the payload
 
+## Generating very large diagrams
+
+[Inject the override via environment variable](https://plantuml.com/faq)
+
+```
+PLANTUML_LIMIT_SIZE=8192 sbt run
+```
+
 ## Elsewhere
 
 - [Mermaid](http://mermaid.js.org/)
