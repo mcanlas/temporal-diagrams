@@ -13,7 +13,7 @@ object ImageWriter:
   private def fileOutputStream[F[_]: Sync](dest: String): Resource[F, FileOutputStream] =
     Resource
       .fromAutoCloseable:
-        Sync[F].delay:
+        Sync[F].blocking:
           FileOutputStream(dest)
 
   def sync[F[_]: Sync](using out: std.Console[F]): ImageWriter[F] =
