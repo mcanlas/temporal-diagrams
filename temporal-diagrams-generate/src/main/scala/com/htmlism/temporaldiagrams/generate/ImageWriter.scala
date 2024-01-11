@@ -7,7 +7,7 @@ import cats.syntax.all.*
 import net.sourceforge.plantuml.SourceStringReader
 
 trait ImageWriter[F[_]]:
-  def writeFile(s: String, dest: String): F[Unit]
+  def writeFile(body: String, destination: String): F[Unit]
 
 object ImageWriter:
   private def fileOutputStream[F[_]: Sync](dest: String): Resource[F, FileOutputStream] =
@@ -18,14 +18,14 @@ object ImageWriter:
 
   def sync[F[_]: Sync](using out: std.Console[F]): ImageWriter[F] =
     new ImageWriter[F]:
-      def writeFile(s: String, dest: String): F[Unit] =
-        fileOutputStream[F](dest)
+      def writeFile(body: String, destination: String): F[Unit] =
+        fileOutputStream[F](destination)
           .use: os =>
-            val reader = SourceStringReader(s)
+            val reader = SourceStringReader(body)
 
             for
               desc <- Sync[F].blocking:
                 reader.outputImage(os)
 
-              _ <- out.println(s"Wrote to $dest : $desc")
+              _ <- out.println(s"Wrote to $destination : $desc")
             yield ()
