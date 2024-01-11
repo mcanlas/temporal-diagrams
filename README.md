@@ -28,7 +28,7 @@ Install the plugin [PlantUML Integration](https://plugins.jetbrains.com/plugin/7
 Copy the URL from [the PlantUML download page](https://plantuml.com/download)
 
 ```bash
-(cd temporal-diagrams-generate/lib && curl -LO https://github.com/plantuml/plantuml/releases/download/v1.2023.13/plantuml-mit-1.2023.13.jar)
+(cd YOUR_SBT_SUB_PROJECT/lib && curl -LO https://github.com/plantuml/plantuml/releases/download/v1.2023.13/plantuml-mit-1.2023.13.jar)
 ```
 
 `-L` means follow redirects and `-O` means save the payload
