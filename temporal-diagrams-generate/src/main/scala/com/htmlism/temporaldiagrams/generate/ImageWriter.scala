@@ -21,10 +21,10 @@ object ImageWriter:
       def writeFile(body: String, destination: String): F[Unit] =
         fileOutputStream[F](destination)
           .use: os =>
-            val reader = SourceStringReader(body)
-
             for
               desc <- Sync[F].blocking:
+                val reader = SourceStringReader(body)
+
                 reader.outputImage(os)
 
               _ <- out.println(s"Wrote to $destination : $desc")
