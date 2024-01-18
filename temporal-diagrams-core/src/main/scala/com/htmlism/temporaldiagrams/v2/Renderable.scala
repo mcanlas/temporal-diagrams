@@ -39,20 +39,21 @@ object Renderable:
 
     case class MultiArrow(source: String, destination: String) extends WithMultiArrows[Nothing, Nothing]
 
-    // TODO after reconciliation, this should call the regular render
     def renderArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
-      xs
-        .map:
-          case src: Source[?] =>
-            (Chain(src.asInstanceOf[Source[A]]), Chain.empty, Chain.empty, Chain.empty)
-          case dest: Destination[?] =>
-            (Chain.empty, Chain(dest.asInstanceOf[Destination[A]]), Chain.empty, Chain.empty)
-          case arrow: MultiArrow =>
-            (Chain.empty, Chain.empty, Chain(arrow), Chain.empty)
-          case x: Renderable[?] =>
-            (Chain.empty, Chain.empty, Chain.empty, Chain(x.asInstanceOf[Renderable[D]]))
-        .combineAll
-        ._4
+      val (sources, destinations, arrows, renderables) =
+        xs
+          .map:
+            case src: Source[?] =>
+              (Chain(src.asInstanceOf[Source[A]]), Chain.empty, Chain.empty, Chain.empty)
+            case dest: Destination[?] =>
+              (Chain.empty, Chain(dest.asInstanceOf[Destination[A]]), Chain.empty, Chain.empty)
+            case arrow: MultiArrow =>
+              (Chain.empty, Chain.empty, Chain(arrow), Chain.empty)
+            case x: Renderable[?] =>
+              (Chain.empty, Chain.empty, Chain.empty, Chain(x.asInstanceOf[Renderable[D]]))
+          .combineAll
+
+      renderables
 
     def dropArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs
