@@ -7,7 +7,7 @@ object DependenciesPlugin extends AutoPlugin {
   object autoImport {
     implicit class DependencyOps(p: Project) {
       val http4sVersion =
-        "0.23.23"
+        "0.23.25"
 
       def withCats: Project =
         p
@@ -22,7 +22,7 @@ object DependenciesPlugin extends AutoPlugin {
           .settings(
             libraryDependencies ++= Seq(
               "org.http4s" %% "http4s-dsl"          % http4sVersion,
-              "org.http4s" %% "http4s-blaze-server" % "0.23.15"
+              "org.http4s" %% "http4s-blaze-server" % "0.23.16"
             )
           )
 
