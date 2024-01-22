@@ -39,6 +39,7 @@ object Renderable:
 
     case class MultiArrow(source: String, destination: String) extends WithMultiArrows[Nothing, Nothing]
 
+    // TODO this needs a multi arrow encoder that is separate from the normal encoder
     def renderArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       val (sources, destinations, arrows, renderables) =
         xs
