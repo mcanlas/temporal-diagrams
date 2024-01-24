@@ -17,7 +17,7 @@ object Renderable:
     * @tparam D
     *   The target diagram language
     */
-  sealed trait WithMultiArrows[+D, +A]
+  sealed trait WithMultiArrows[+D, +K]
 
   /**
     * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
@@ -25,7 +25,7 @@ object Renderable:
     *
     * @tparam D
     *   The target diagram language
-    * @tparam A
+    * @tparam K
     *   The type of underlying source and destination arguments to multi arrows
     */
 
@@ -34,9 +34,9 @@ object Renderable:
       case MissingSource(source: String)
       case MissingDestination(destination: String)
 
-    case class Source[A](alias: String, sources: NonEmptyList[A]) extends WithMultiArrows[Nothing, A]
+    case class Source[K](alias: String, sources: NonEmptyList[K]) extends WithMultiArrows[Nothing, K]
 
-    case class Destination[A](alias: String, destinations: NonEmptyList[A]) extends WithMultiArrows[Nothing, A]
+    case class Destination[K](alias: String, destinations: NonEmptyList[K]) extends WithMultiArrows[Nothing, K]
 
     // TODO support tags
     case class MultiArrow(sourceAlias: String, destinationAlias: String) extends WithMultiArrows[Nothing, Nothing]
