@@ -38,7 +38,7 @@ object Renderable:
     case class Destination[A](alias: String, destinations: NonEmptyList[A]) extends WithMultiArrows[Nothing, A]
 
     // TODO support tags
-    case class MultiArrow(source: String, destination: String) extends WithMultiArrows[Nothing, Nothing]
+    case class MultiArrow(sourceAlias: String, destinationAlias: String) extends WithMultiArrows[Nothing, Nothing]
 
     // TODO use multi arrow encoder
     // TODO it is fallible, aggregated
