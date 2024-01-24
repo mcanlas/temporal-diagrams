@@ -67,6 +67,7 @@ object Renderable:
             if destinations.map(_.alias).contains(s.destinationAlias) then s.destinationAlias.validNec
             else s"specified destination alias ${s.destinationAlias} was not defined".invalidNec
 
+          // TODO not correct, should be a for loop on the targets
           (vSrc, vDest).mapN((src, dest) => Renderable.OfA(A.encodeArrow(src, dest), ListSet.empty))
 
       arrowRenderables
