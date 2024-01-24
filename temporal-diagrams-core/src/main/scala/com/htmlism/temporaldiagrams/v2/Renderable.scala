@@ -6,6 +6,7 @@ import scala.util.chaining.*
 import cats.Monoid
 import cats.data.Chain
 import cats.data.NonEmptyList
+import cats.data.ValidatedNec
 import cats.syntax.all.*
 
 type Renderable[A] =
@@ -40,23 +41,36 @@ object Renderable:
     // TODO support tags
     case class MultiArrow(sourceAlias: String, destinationAlias: String) extends WithMultiArrows[Nothing, Nothing]
 
-    // TODO use multi arrow encoder
-    // TODO it is fallible, aggregated
-    def renderArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
+    def renderArrows[D: Monoid, A, K](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[A])(using
+        HighlightEncoder[D, A]
+    ): ValidatedNec[String, Chain[Renderable[D]]] =
       val (sources, destinations, specs, renderables) =
         xs
           .map:
             case src: Source[?] =>
-              (Chain(src.asInstanceOf[Source[A]]), Chain.empty, Chain.empty, Chain.empty)
+              (Chain(src.asInstanceOf[Source[K]]), Chain.empty, Chain.empty, Chain.empty)
             case dest: Destination[?] =>
-              (Chain.empty, Chain(dest.asInstanceOf[Destination[A]]), Chain.empty, Chain.empty)
+              (Chain.empty, Chain(dest.asInstanceOf[Destination[K]]), Chain.empty, Chain.empty)
             case arrow: MultiArrow =>
               (Chain.empty, Chain.empty, Chain(arrow), Chain.empty)
             case x: Renderable[?] =>
               (Chain.empty, Chain.empty, Chain.empty, Chain(x.asInstanceOf[Renderable[D]]))
           .combineAll
 
-      renderables
+      val arrowRenderables = specs
+        .traverse: s =>
+          val vSrc =
+            if sources.map(_.alias).contains(s.sourceAlias) then s.sourceAlias.validNec
+            else s"specified source alias ${s.sourceAlias} was not defined".invalidNec
+
+          val vDest =
+            if destinations.map(_.alias).contains(s.destinationAlias) then s.destinationAlias.validNec
+            else s"specified destination alias ${s.destinationAlias} was not defined".invalidNec
+
+          (vSrc, vDest).mapN((src, dest) => Renderable.OfA(A.encodeArrow(src, dest), ListSet.empty))
+
+      arrowRenderables
+        .map(renderables |+| _)
 
     def dropArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs
