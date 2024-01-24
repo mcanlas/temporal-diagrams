@@ -41,7 +41,7 @@ object Renderable:
     // TODO support tags
     case class MultiArrow(sourceAlias: String, destinationAlias: String) extends WithMultiArrows[Nothing, Nothing]
 
-    def renderArrows[D: Monoid, A, K](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[A])(using
+    def renderArrows[D, A, K](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[A])(using
         HighlightEncoder[D, A]
     ): ValidatedNec[String, Chain[Renderable[D]]] =
       val (sources, destinations, specs, renderables) =
