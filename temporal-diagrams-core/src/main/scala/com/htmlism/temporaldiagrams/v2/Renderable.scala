@@ -7,8 +7,14 @@ import cats.*
 import cats.data.*
 import cats.syntax.all.*
 
-type Renderable[A] =
-  Renderable.Of[A]
+/**
+  * An alias for renderables bound to a specific diagram language
+  *
+  * @tparam D
+  *   The target diagram language to render to
+  */
+type Renderable[D] =
+  Renderable.Of[D]
 
 object Renderable:
   /**
@@ -21,17 +27,26 @@ object Renderable:
 
   object WithMultiArrows:
     /**
+      * Defines an alias that can be used to define the source side of arrows representing a many-to-many relationship
+      *
       * @tparam K
       *   The identifier type for multi arrow sources and destinations
       */
     case class Source[K](alias: String, sources: List[K]) extends WithMultiArrows[Nothing, K]
 
     /**
+      * Defines an alias that can be used to define the destination side of arrows representing a many-to-many
+      * relationship
+      *
       * @tparam K
       *   The identifier type for multi arrow sources and destinations
       */
     case class Destination[K](alias: String, destinations: List[K]) extends WithMultiArrows[Nothing, K]
 
+    /**
+      * Defines a relationship between a source alias and a destination alias, representing a many-to-many relationship
+      * between their underlying targets
+      */
     case class MultiArrow(sourceAlias: String, destinationAlias: String, tags: ListSet[String])
         extends WithMultiArrows[Nothing, Nothing]
 
