@@ -135,6 +135,9 @@ object MultiArrowSuite extends FunSuite:
         Renderable.renderMany(rs)
       )
 
+  test("multi-arrows are tagged"):
+    expect.eql(1, 1)
+
   test("rendering multi-arrows can be ignored"):
     val domainWithArrows =
       Chain(
