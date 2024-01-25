@@ -44,7 +44,7 @@ object Renderable:
     def renderArrows[D, A, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[K, A])(using
         HighlightEncoder[D, A]
     ): ValidatedNec[String, Chain[Renderable[D]]] =
-      val (sources, destinations, specs, renderables) =
+      val (sources, destinations, arrows, renderables) =
         xs
           .map:
             case src: Source[?] =>
@@ -57,20 +57,20 @@ object Renderable:
               (Chain.empty, Chain.empty, Chain.empty, Chain(x.asInstanceOf[Renderable[D]]))
           .combineAll
 
-      val arrowRenderables = specs
-        .flatTraverse: s =>
+      val arrowRenderables = arrows
+        .flatTraverse: ma =>
           val vSrc =
             Validated.fromOption(
-              sources.find(_.alias == s.sourceAlias),
+              sources.find(_.alias == ma.sourceAlias),
               NonEmptyChain.one:
-                s"specified source alias ${s.sourceAlias} was not defined"
+                s"specified source alias ${ma.sourceAlias} was not defined"
             )
 
           val vDest =
             Validated.fromOption(
-              destinations.find(_.alias == s.destinationAlias),
+              destinations.find(_.alias == ma.destinationAlias),
               NonEmptyChain.one:
-                s"specified destination alias ${s.destinationAlias} was not defined"
+                s"specified destination alias ${ma.destinationAlias} was not defined"
             )
 
           (vSrc, vDest)
