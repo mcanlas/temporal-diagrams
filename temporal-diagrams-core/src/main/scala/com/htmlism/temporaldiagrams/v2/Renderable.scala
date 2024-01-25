@@ -41,7 +41,7 @@ object Renderable:
       * @tparam K
       *   The identifier type for multi arrow sources and destinations
       */
-    def renderArrows[D, A, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[K, A])(using
+    def renderArrows[D, A, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, K]])(using A: MultiArrowEncoder[K, A])(using
         HighlightEncoder[D, A]
     ): ValidatedNec[String, Chain[Renderable[D]]] =
       val (sources, destinations, arrows, renderables) =

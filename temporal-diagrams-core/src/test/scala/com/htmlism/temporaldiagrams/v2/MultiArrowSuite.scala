@@ -54,7 +54,20 @@ object MultiArrowSuite extends FunSuite:
     )
 
   test("rendering multi-arrows is fallible given an undefined source"):
-    expect.eql(1, 1)
+    val rs =
+      Chain(
+        Amazon.Ec2("").r,
+        Google.Compute("").r,
+        Renderable.WithMultiArrows.Source("", List("foo")),
+        Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)
+      )
+
+    val res =
+      Renderable.WithMultiArrows.renderArrows[Chain[ToyDiagramLanguage], Microsoft.Arrow, String](rs)
+
+    matches(res):
+      case Validated.Invalid(errs) =>
+        expect.eql(2L, errs.length)
 
   test("rendering multi-arrows is fallible given an undefined destination"):
     expect.eql(1, 1)
