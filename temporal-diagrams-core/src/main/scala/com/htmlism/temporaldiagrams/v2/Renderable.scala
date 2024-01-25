@@ -19,24 +19,28 @@ object Renderable:
     */
   sealed trait WithMultiArrows[+D, +K]
 
-  /**
-    * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
-    * different domains are participating in the same diagram
-    *
-    * @tparam D
-    *   The target diagram language
-    * @tparam K
-    *   The type of underlying source and destination arguments to multi arrows
-    */
-
   object WithMultiArrows:
+    /**
+      * @tparam K
+      *   The identifier type for multi arrow sources and destinations
+      */
     case class Source[K](alias: String, sources: List[K]) extends WithMultiArrows[Nothing, K]
 
+    /**
+      * @tparam K
+      *   The identifier type for multi arrow sources and destinations
+      */
     case class Destination[K](alias: String, destinations: List[K]) extends WithMultiArrows[Nothing, K]
 
     // TODO support tags
     case class MultiArrow(sourceAlias: String, destinationAlias: String) extends WithMultiArrows[Nothing, Nothing]
 
+    /**
+      * @tparam D
+      *   The target diagram language
+      * @tparam K
+      *   The identifier type for multi arrow sources and destinations
+      */
     def renderArrows[D, A, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[K, A])(using
         HighlightEncoder[D, A]
     ): ValidatedNec[String, Chain[Renderable[D]]] =
@@ -92,6 +96,13 @@ object Renderable:
       */
     def tags: ListSet[String]
 
+  /**
+    * A trait to ease the hiding of the underlying domain type (shown in [[Renderable.OfA]], for cases where two
+    * different domains are participating in the same diagram
+    *
+    * @tparam D
+    *   The target diagram language
+    */
   sealed trait Of[D] extends Renderable.WithMultiArrows[D, Nothing] with Taggable:
 
     /**
