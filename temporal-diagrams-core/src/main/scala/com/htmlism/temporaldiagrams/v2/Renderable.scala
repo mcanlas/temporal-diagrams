@@ -32,8 +32,8 @@ object Renderable:
       */
     case class Destination[K](alias: String, destinations: List[K]) extends WithMultiArrows[Nothing, K]
 
-    // TODO support tags
-    case class MultiArrow(sourceAlias: String, destinationAlias: String) extends WithMultiArrows[Nothing, Nothing]
+    case class MultiArrow(sourceAlias: String, destinationAlias: String, tags: ListSet[String])
+        extends WithMultiArrows[Nothing, Nothing]
 
     /**
       * @tparam D
@@ -80,7 +80,7 @@ object Renderable:
                   for
                     src  <- mSrc.sources
                     dest <- mDest.destinations
-                  yield Renderable.OfA(A.encodeArrow(src, dest), ListSet.empty): Renderable.Of[D]
+                  yield Renderable.OfA(A.encodeArrow(src, dest), ma.tags): Renderable.Of[D]
 
       arrowRenderables
         .map(_ |+| renderables)

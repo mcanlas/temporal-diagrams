@@ -1,5 +1,7 @@
 package com.htmlism.temporaldiagrams.v2
 
+import scala.collection.immutable.ListSet
+
 import cats.data.*
 import weaver.FunSuite
 
@@ -41,11 +43,11 @@ object MultiArrowSuite extends FunSuite:
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
-        Renderable.WithMultiArrows.MultiArrow("src", "dest")
+        Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)
       )
 
     expect.same(
-      Chain(Renderable.WithMultiArrows.MultiArrow("src", "dest")),
+      Chain(Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)),
       rs
         .collect:
           case x: Renderable.WithMultiArrows.MultiArrow => x
@@ -64,7 +66,7 @@ object MultiArrowSuite extends FunSuite:
         Google.Compute("").r,
         Renderable.WithMultiArrows.Source("src", List("foo")),
         Renderable.WithMultiArrows.Destination("dest", List("foo")),
-        Renderable.WithMultiArrows.MultiArrow("src", "dest")
+        Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)
       )
 
     expect.same(
