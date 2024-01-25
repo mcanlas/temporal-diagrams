@@ -4,9 +4,7 @@ import scala.collection.immutable.ListSet
 import scala.util.chaining.*
 
 import cats.*
-import cats.data.Chain
-import cats.data.NonEmptyList
-import cats.data.ValidatedNec
+import cats.data.*
 import cats.syntax.all.*
 
 type Renderable[A] =
@@ -36,14 +34,14 @@ object Renderable:
       case MissingSource(source: String)
       case MissingDestination(destination: String)
 
-    case class Source[K](alias: String, sources: NonEmptyList[K]) extends WithMultiArrows[Nothing, K]
+    case class Source[K](alias: String, sources: List[K]) extends WithMultiArrows[Nothing, K]
 
-    case class Destination[K](alias: String, destinations: NonEmptyList[K]) extends WithMultiArrows[Nothing, K]
+    case class Destination[K](alias: String, destinations: List[K]) extends WithMultiArrows[Nothing, K]
 
     // TODO support tags
     case class MultiArrow(sourceAlias: String, destinationAlias: String) extends WithMultiArrows[Nothing, Nothing]
 
-    def renderArrows[D, A, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[A])(using
+    def renderArrows[D, A, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[K, A])(using
         HighlightEncoder[D, A]
     ): ValidatedNec[String, Chain[Renderable[D]]] =
       val (sources, destinations, specs, renderables) =
@@ -60,19 +58,29 @@ object Renderable:
           .combineAll
 
       val arrowRenderables = specs
-        .traverse: s =>
+        .flatTraverse: s =>
           val vSrc =
-            if sources.map(_.alias).contains(s.sourceAlias) then s.sourceAlias.validNec
-            else s"specified source alias ${s.sourceAlias} was not defined".invalidNec
+            Validated.fromOption(
+              sources.find(_.alias == s.sourceAlias),
+              NonEmptyChain.one:
+                s"specified source alias ${s.sourceAlias} was not defined"
+            )
 
           val vDest =
-            if destinations.map(_.alias).contains(s.destinationAlias) then s.destinationAlias.validNec
-            else s"specified destination alias ${s.destinationAlias} was not defined".invalidNec
+            Validated.fromOption(
+              destinations.find(_.alias == s.destinationAlias),
+              NonEmptyChain.one:
+                s"specified destination alias ${s.destinationAlias} was not defined"
+            )
 
-          // TODO not correct, should be a for loop on the targets
           (vSrc, vDest)
-            .mapN((src, dest) => Renderable.OfA(A.encodeArrow(src, dest), ListSet.empty))
-            .widen[Renderable.Of[D]]
+            .mapN: (mSrc, mDest) =>
+              Chain
+                .fromSeq:
+                  for
+                    src  <- mSrc.sources
+                    dest <- mDest.destinations
+                  yield Renderable.OfA(A.encodeArrow(src, dest), ListSet.empty): Renderable.Of[D]
 
       arrowRenderables
         .map(_ |+| renderables)

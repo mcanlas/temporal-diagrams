@@ -6,5 +6,5 @@ package com.htmlism.temporaldiagrams.v2
   * @tparam A
   *   The target domain language being encoded to
   */
-trait MultiArrowEncoder[A]:
-  def encodeArrow(source: String, destination: String): A
+trait MultiArrowEncoder[K, A]:
+  def encodeArrow(source: K, destination: K): A

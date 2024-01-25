@@ -11,11 +11,11 @@ object MultiArrowSuite extends FunSuite:
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
-        Renderable.WithMultiArrows.Source("", NonEmptyList.of("foo"))
+        Renderable.WithMultiArrows.Source("", List("foo"))
       )
 
     expect.same(
-      Chain(Renderable.WithMultiArrows.Source("", NonEmptyList.of("foo"))),
+      Chain(Renderable.WithMultiArrows.Source("", List("foo"))),
       rs
         .collect:
           case x: Renderable.WithMultiArrows.Source[?] => x
@@ -26,11 +26,11 @@ object MultiArrowSuite extends FunSuite:
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
-        Renderable.WithMultiArrows.Destination("", NonEmptyList.of("foo"))
+        Renderable.WithMultiArrows.Destination("", List("foo"))
       )
 
     expect.same(
-      Chain(Renderable.WithMultiArrows.Destination("", NonEmptyList.of("foo"))),
+      Chain(Renderable.WithMultiArrows.Destination("", List("foo"))),
       rs
         .collect:
           case x: Renderable.WithMultiArrows.Destination[?] => x
@@ -62,8 +62,8 @@ object MultiArrowSuite extends FunSuite:
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
-        Renderable.WithMultiArrows.Source("src", NonEmptyList.of("foo")),
-        Renderable.WithMultiArrows.Destination("dest", NonEmptyList.of("foo")),
+        Renderable.WithMultiArrows.Source("src", List("foo")),
+        Renderable.WithMultiArrows.Destination("dest", List("foo")),
         Renderable.WithMultiArrows.MultiArrow("src", "dest")
       )
 
