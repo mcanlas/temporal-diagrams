@@ -107,6 +107,34 @@ object MultiArrowSuite extends FunSuite:
         Renderable.renderMany(rs)
       )
 
+  test("rendered multi-arrows are a product of its inputs"):
+    val domainWithArrows =
+      Chain(
+        Amazon.Ec2("").r,
+        Google.Compute("").r,
+        Renderable.WithMultiArrows.Source("src", List("a", "b", "c")),
+        Renderable.WithMultiArrows.Destination("dest", List("x", "y")),
+        Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)
+      )
+
+    val res =
+      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](domainWithArrows)
+
+    whenSuccess(res): rs =>
+      expect.eql(
+        Chain[ToyDiagramLanguage](
+          ToyDiagramLanguage.Component("amazon ec2: "),
+          ToyDiagramLanguage.Component("google compute: "),
+          ToyDiagramLanguage.Arrow("a to x"),
+          ToyDiagramLanguage.Arrow("a to y"),
+          ToyDiagramLanguage.Arrow("b to x"),
+          ToyDiagramLanguage.Arrow("b to y"),
+          ToyDiagramLanguage.Arrow("c to x"),
+          ToyDiagramLanguage.Arrow("c to y")
+        ),
+        Renderable.renderMany(rs)
+      )
+
   test("rendering multi-arrows can be ignored"):
     val domainWithArrows =
       Chain(

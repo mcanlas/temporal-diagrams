@@ -100,7 +100,7 @@ object Renderable:
                     yield Renderable.OfA(A.encodeArrow(src, dest), ma.tags): Renderable.Of[D]
 
         arrowRenderables
-          .map(_ |+| renderables)
+          .map(renderables |+| _)
 
     def dropArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs
