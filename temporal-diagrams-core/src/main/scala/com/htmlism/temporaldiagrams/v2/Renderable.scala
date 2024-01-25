@@ -3,7 +3,7 @@ package com.htmlism.temporaldiagrams.v2
 import scala.collection.immutable.ListSet
 import scala.util.chaining.*
 
-import cats.Monoid
+import cats.*
 import cats.data.Chain
 import cats.data.NonEmptyList
 import cats.data.ValidatedNec
@@ -41,7 +41,7 @@ object Renderable:
     // TODO support tags
     case class MultiArrow(sourceAlias: String, destinationAlias: String) extends WithMultiArrows[Nothing, Nothing]
 
-    def renderArrows[D, A, K](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[A])(using
+    def renderArrows[D, A, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, A]])(using A: MultiArrowEncoder[A])(using
         HighlightEncoder[D, A]
     ): ValidatedNec[String, Chain[Renderable[D]]] =
       val (sources, destinations, specs, renderables) =
@@ -68,10 +68,12 @@ object Renderable:
             else s"specified destination alias ${s.destinationAlias} was not defined".invalidNec
 
           // TODO not correct, should be a for loop on the targets
-          (vSrc, vDest).mapN((src, dest) => Renderable.OfA(A.encodeArrow(src, dest), ListSet.empty))
+          (vSrc, vDest)
+            .mapN((src, dest) => Renderable.OfA(A.encodeArrow(src, dest), ListSet.empty))
+            .widen[Renderable.Of[D]]
 
       arrowRenderables
-        .map(renderables |+| _)
+        .map(_ |+| renderables)
 
     def dropArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs
