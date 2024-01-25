@@ -17,11 +17,6 @@ trait DslEncoder[A, B]:
     */
   protected def renderArrow(src: String, dest: String): List[Renderable.Tagged[A]]
 
-  /**
-    * Encoders opt-in to showing debug strings somewhere in the diagrams by implementing this method
-    */
-  protected def debug(xs: List[String]): List[B]
-
 object DslEncoder:
   def encodeMany[A, B](xs: List[Renderable[A]])(using ev: DslEncoder[A, B]): List[B] =
     encodeCommon(xs)(
@@ -62,13 +57,7 @@ object DslEncoder:
     val tagged =
       xs.collect { case x: Renderable.Tagged[A] => x }
 
-    val sourcesDebug =
-      srcLookup.toList.map { case (k, vs) => s"Source `$k` rewritten as " + vs.toList.mkString(", ") }
-
-    val destsDebug =
-      destLookup.toList.map { case (k, vs) => s"Destination `$k` rewritten as " + vs.toList.mkString(", ") }
-
     val outs =
-      f(tagged ++ arrows) ++ ev.debug(sourcesDebug ++ destsDebug)
+      f(tagged ++ arrows)
 
     outs
