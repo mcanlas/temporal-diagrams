@@ -36,54 +36,71 @@ object Renderable:
         extends WithMultiArrows[Nothing, Nothing]
 
     /**
-      * @tparam D
-      *   The target diagram language
-      * @tparam K
-      *   The identifier type for multi arrow sources and destinations
+      * Uses the "partially applied" pattern from Cats to elide needing to specify the target diagram language type and
+      * the multi arrow key type
+      *
+      * The intermediate language type `A` does need to be specified
+      *
+      * @tparam A
+      *   The intermediate domain language to encode multi arrows to
       */
-    def renderArrows[D, A, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, K]])(using A: MultiArrowEncoder[K, A])(using
-        HighlightEncoder[D, A]
-    ): ValidatedNec[String, Chain[Renderable[D]]] =
-      val (sources, destinations, arrows, renderables) =
-        xs
-          .map:
-            case src: Source[?] =>
-              (Chain(src.asInstanceOf[Source[K]]), Chain.empty, Chain.empty, Chain.empty)
-            case dest: Destination[?] =>
-              (Chain.empty, Chain(dest.asInstanceOf[Destination[K]]), Chain.empty, Chain.empty)
-            case arrow: MultiArrow =>
-              (Chain.empty, Chain.empty, Chain(arrow), Chain.empty)
-            case x: Renderable[?] =>
-              (Chain.empty, Chain.empty, Chain.empty, Chain(x.asInstanceOf[Renderable[D]]))
-          .combineAll
+    def renderArrows[A]: PartiallyApplied[A] =
+      new PartiallyApplied[A]
 
-      val arrowRenderables = arrows
-        .flatTraverse: ma =>
-          val vSrc =
-            Validated.fromOption(
-              sources.find(_.alias == ma.sourceAlias),
-              NonEmptyChain.one:
-                s"specified source alias ${ma.sourceAlias} was not defined"
-            )
+    /**
+      * @tparam A
+      *   The intermediate domain language to encode multi arrows to
+      */
+    class PartiallyApplied[A]:
+      /**
+        * @tparam D
+        *   The target diagram language
+        * @tparam K
+        *   The identifier type for multi arrow sources and destinations
+        */
+      def apply[D, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, K]])(using A: MultiArrowEncoder[K, A])(using
+          HighlightEncoder[D, A]
+      ): ValidatedNec[String, Chain[Renderable[D]]] =
+        val (sources, destinations, arrows, renderables) =
+          xs
+            .map:
+              case src: Source[?] =>
+                (Chain(src.asInstanceOf[Source[K]]), Chain.empty, Chain.empty, Chain.empty)
+              case dest: Destination[?] =>
+                (Chain.empty, Chain(dest.asInstanceOf[Destination[K]]), Chain.empty, Chain.empty)
+              case arrow: MultiArrow =>
+                (Chain.empty, Chain.empty, Chain(arrow), Chain.empty)
+              case x: Renderable[?] =>
+                (Chain.empty, Chain.empty, Chain.empty, Chain(x.asInstanceOf[Renderable[D]]))
+            .combineAll
 
-          val vDest =
-            Validated.fromOption(
-              destinations.find(_.alias == ma.destinationAlias),
-              NonEmptyChain.one:
-                s"specified destination alias ${ma.destinationAlias} was not defined"
-            )
+        val arrowRenderables = arrows
+          .flatTraverse: ma =>
+            val vSrc =
+              Validated.fromOption(
+                sources.find(_.alias == ma.sourceAlias),
+                NonEmptyChain.one:
+                  s"specified source alias ${ma.sourceAlias} was not defined"
+              )
 
-          (vSrc, vDest)
-            .mapN: (mSrc, mDest) =>
-              Chain
-                .fromSeq:
-                  for
-                    src  <- mSrc.sources
-                    dest <- mDest.destinations
-                  yield Renderable.OfA(A.encodeArrow(src, dest), ma.tags): Renderable.Of[D]
+            val vDest =
+              Validated.fromOption(
+                destinations.find(_.alias == ma.destinationAlias),
+                NonEmptyChain.one:
+                  s"specified destination alias ${ma.destinationAlias} was not defined"
+              )
 
-      arrowRenderables
-        .map(_ |+| renderables)
+            (vSrc, vDest)
+              .mapN: (mSrc, mDest) =>
+                Chain
+                  .fromSeq:
+                    for
+                      src  <- mSrc.sources
+                      dest <- mDest.destinations
+                    yield Renderable.OfA(A.encodeArrow(src, dest), ma.tags): Renderable.Of[D]
+
+        arrowRenderables
+          .map(_ |+| renderables)
 
     def dropArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs

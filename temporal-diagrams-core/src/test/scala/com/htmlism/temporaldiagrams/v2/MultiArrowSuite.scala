@@ -58,19 +58,34 @@ object MultiArrowSuite extends FunSuite:
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
-        Renderable.WithMultiArrows.Source("", List("foo")),
-        Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)
+        Renderable.WithMultiArrows.Destination("dest", List.empty[String]),
+        Renderable.WithMultiArrows.MultiArrow("invalid-src", "dest", ListSet.empty)
       )
 
     val res =
-      Renderable.WithMultiArrows.renderArrows[Chain[ToyDiagramLanguage], Microsoft.Arrow, String](rs)
+      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](rs)
 
     matches(res):
       case Validated.Invalid(errs) =>
-        expect.eql(2L, errs.length)
+        expect.eql(1L, errs.length) and
+          expect(errs.head.contains("invalid-src"))
 
   test("rendering multi-arrows is fallible given an undefined destination"):
-    expect.eql(1, 1)
+    val rs =
+      Chain(
+        Amazon.Ec2("").r,
+        Google.Compute("").r,
+        Renderable.WithMultiArrows.Source("src", List.empty[String]),
+        Renderable.WithMultiArrows.MultiArrow("src", "invalid-dest", ListSet.empty)
+      )
+
+    val res =
+      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](rs)
+
+    matches(res):
+      case Validated.Invalid(errs) =>
+        expect.eql(1L, errs.length) and
+          expect(errs.head.contains("invalid-dest"))
 
   test("rendering multi-arrows can be ignored"):
     val rs =
