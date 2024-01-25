@@ -13,9 +13,3 @@ extension [A](x: A)
 
   def nel: NonEmptyList[A] =
     NonEmptyList.one(x)
-
-  def r: Renderable.Tagged[A] =
-    Renderable.Tagged(Nil, x)
-
-  def tag(tags: String*): Renderable.Tagged[A] =
-    Renderable.Tagged(tags.toList, x)
