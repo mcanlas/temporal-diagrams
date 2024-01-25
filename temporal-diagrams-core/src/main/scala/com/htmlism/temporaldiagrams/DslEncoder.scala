@@ -1,8 +1,5 @@
 package com.htmlism.temporaldiagrams
 
-import cats.data.NonEmptyList
-import cats.syntax.all.*
-
 /**
   * Describes an encoding bridge from DSL `A` to diagram dialect `B`
   */
@@ -32,32 +29,11 @@ object DslEncoder:
       else ev.encodeWithHighlights(x, highlighted                                         = false)
     })
 
-  private def encodeCommon[A, B](xs: List[Renderable[A]])(f: List[Renderable.Tagged[A]] => List[B])(using
-      ev: DslEncoder[A, B]
-  ): List[B] =
-    val srcLookup =
-      xs.collect { case Renderable.Source(k, vs) => Map(k -> vs) }
-        .foldLeft(Map.empty[String, NonEmptyList[String]])(_ |+| _)
-
-    val destLookup =
-      xs.collect { case Renderable.Destination(k, vs) => Map(k -> vs) }
-        .foldLeft(Map.empty[String, NonEmptyList[String]])(_ |+| _)
-
-    val arrows =
-      xs
-        .collect { case Renderable.MultiArrow(src, dest) => src -> dest }
-        .flatMap { case (srcAlias, destAlias) =>
-          (for
-            xs <- srcLookup.getOrElse(srcAlias, NonEmptyList.one(srcAlias))
-            ys <- destLookup.getOrElse(destAlias, NonEmptyList.one(destAlias))
-          yield ev.renderArrow(xs, ys)).toList
-        }
-        .flatten
-
+  private def encodeCommon[A, B](xs: List[Renderable[A]])(f: List[Renderable.Tagged[A]] => List[B]): List[B] =
     val tagged =
       xs.collect { case x: Renderable.Tagged[A] => x }
 
     val outs =
-      f(tagged ++ arrows)
+      f(tagged)
 
     outs
