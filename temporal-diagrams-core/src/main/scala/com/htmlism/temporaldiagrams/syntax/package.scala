@@ -24,7 +24,3 @@ extension [A](x: A)
 extension [A](x: Renderable.Tagged[A])
   def f[K]: FacetedFrame[K, A] =
     FacetedFrame.fixed(x.list)
-
-extension [K, A](xs: NonEmptyList[FacetedFrame[K, A]])
-  def start: Narrative[K, A] =
-    Narrative(xs, NonEmptyList.of(Nil))
