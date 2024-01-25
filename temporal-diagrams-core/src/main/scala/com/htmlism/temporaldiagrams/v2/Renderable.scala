@@ -16,6 +16,8 @@ object Renderable:
   /**
     * @tparam D
     *   The target diagram language
+    * @tparam K
+    *   The identifier type for multi arrow sources and destinations
     */
   sealed trait WithMultiArrows[+D, +K]
 
