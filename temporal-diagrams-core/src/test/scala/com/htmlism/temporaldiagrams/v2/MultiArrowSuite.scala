@@ -9,7 +9,7 @@ import com.htmlism.temporaldiagrams.v2.syntax.*
 
 object MultiArrowSuite extends FunSuite:
   test("can add multi-arrow sources"):
-    val rs =
+    val domainWithArrows =
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -18,13 +18,13 @@ object MultiArrowSuite extends FunSuite:
 
     expect.same(
       Chain(Renderable.WithMultiArrows.Source("", List("foo"))),
-      rs
+      domainWithArrows
         .collect:
           case x: Renderable.WithMultiArrows.Source[?] => x
     )
 
   test("can add multi-arrow destinations"):
-    val rs =
+    val domainWithArrows =
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -33,13 +33,13 @@ object MultiArrowSuite extends FunSuite:
 
     expect.same(
       Chain(Renderable.WithMultiArrows.Destination("", List("foo"))),
-      rs
+      domainWithArrows
         .collect:
           case x: Renderable.WithMultiArrows.Destination[?] => x
     )
 
   test("can define multi-arrows"):
-    val rs =
+    val domainWithArrows =
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -48,13 +48,13 @@ object MultiArrowSuite extends FunSuite:
 
     expect.same(
       Chain(Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)),
-      rs
+      domainWithArrows
         .collect:
           case x: Renderable.WithMultiArrows.MultiArrow => x
     )
 
   test("rendering multi-arrows is fallible given an undefined source"):
-    val rs =
+    val domainWithArrows =
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -63,7 +63,7 @@ object MultiArrowSuite extends FunSuite:
       )
 
     val res =
-      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](rs)
+      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](domainWithArrows)
 
     matches(res):
       case Validated.Invalid(errs) =>
@@ -71,7 +71,7 @@ object MultiArrowSuite extends FunSuite:
           expect(errs.head.contains("invalid-src"))
 
   test("rendering multi-arrows is fallible given an undefined destination"):
-    val rs =
+    val domainWithArrows =
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -80,15 +80,35 @@ object MultiArrowSuite extends FunSuite:
       )
 
     val res =
-      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](rs)
+      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](domainWithArrows)
 
     matches(res):
       case Validated.Invalid(errs) =>
         expect.eql(1L, errs.length) and
           expect(errs.head.contains("invalid-dest"))
 
+  test("multi-arrows can render to an input domain language unrelated to the existing renderables"):
+    val domainWithArrows =
+      Chain(
+        Amazon.Ec2("").r,
+        Google.Compute("").r,
+        Renderable.WithMultiArrows.Source("src", List.empty[String])
+      )
+
+    val res =
+      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](domainWithArrows)
+
+    whenSuccess(res): rs =>
+      expect.eql(
+        Chain[ToyDiagramLanguage](
+          ToyDiagramLanguage.Component("amazon ec2: "),
+          ToyDiagramLanguage.Component("google compute: ")
+        ),
+        Renderable.renderMany(rs)
+      )
+
   test("rendering multi-arrows can be ignored"):
-    val rs =
+    val domainWithArrows =
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
@@ -105,7 +125,7 @@ object MultiArrowSuite extends FunSuite:
       Renderable
         .WithMultiArrows
         .dropArrows:
-          rs
+          domainWithArrows
     )
 
   test("rendering multi-arrows becomes one domain language"):
