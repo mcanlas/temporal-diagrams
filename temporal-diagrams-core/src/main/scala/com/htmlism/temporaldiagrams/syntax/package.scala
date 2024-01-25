@@ -19,8 +19,3 @@ extension [A](x: A)
 
   def tag(tags: String*): Renderable.Tagged[A] =
     Renderable.Tagged(tags.toList, x)
-
-// TODO get rid of this, and all faceted frames
-extension [A](x: Renderable.Tagged[A])
-  def f[K]: FacetedFrame[K, A] =
-    FacetedFrame.fixed(x.list)
