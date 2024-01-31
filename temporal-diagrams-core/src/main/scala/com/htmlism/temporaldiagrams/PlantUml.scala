@@ -146,12 +146,6 @@ object PlantUml:
       case Package(title, xs) =>
         s"package \"$title\" {" :: xs.flatMap(consumeOne).map("  " + _).mkString("\n\n").list appended "}"
 
-      case Actor(name, title, tag) =>
-        oneThing("actor", name, title, tag).list
-
-      case UseCase(name, title, tag) =>
-        oneThing("usecase", name, title, tag).list
-
       case SkinParam.Single(k, v) =>
         s"skinparam $k $v".list
 
@@ -209,9 +203,5 @@ object PlantUml:
   case class Database(name: String, title: Option[String], tag: Option[String], xs: List[PlantUml]) extends Entity
 
   case class Package(title: String, xs: List[PlantUml]) extends Entity
-
-  case class Actor(name: String, title: Option[String], tag: Option[String]) extends Entity
-
-  case class UseCase(name: String, title: Option[String], tag: Option[String]) extends Entity
 
 sealed trait PlantUml
