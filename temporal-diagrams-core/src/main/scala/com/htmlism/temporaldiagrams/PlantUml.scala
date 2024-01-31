@@ -8,9 +8,6 @@ object PlantUml:
   def render(xs: List[PlantUml]): String =
     renderWithDirection(None, xs)
 
-  def renderHorizontally(xs: List[PlantUml]): String =
-    renderWithDirection("left to right direction".some, xs)
-
   private def renderWithDirection(direction: Option[String], xs: List[PlantUml]) =
     val singletons =
       xs.collect { case x: Singleton => x }
