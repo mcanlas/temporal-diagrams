@@ -167,6 +167,10 @@ object PlantUml:
             Chain:
               common("usecase", name, oAlias, oStereotype)
 
+          case BusinessUseCase(name, oAlias, oStereotype) =>
+            Chain:
+              common("usecase/", name, oAlias, oStereotype)
+
           case Database(name, oAlias, oStereotype, xs) =>
             val slug =
               common("database", name, oAlias, oStereotype)
@@ -215,6 +219,8 @@ object PlantUml:
   case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   case class UseCase(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+
+  case class BusinessUseCase(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   case class Database(name: String, alias: Option[String], stereotype: Option[String], xs: Set[Entity]) extends Entity
 
