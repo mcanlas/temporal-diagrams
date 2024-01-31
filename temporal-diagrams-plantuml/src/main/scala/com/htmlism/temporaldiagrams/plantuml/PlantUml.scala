@@ -214,7 +214,6 @@ object PlantUml:
 
   case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
-  // TODO
   case class UseCase(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   case class Database(name: String, alias: Option[String], stereotype: Option[String], xs: Set[Entity]) extends Entity
