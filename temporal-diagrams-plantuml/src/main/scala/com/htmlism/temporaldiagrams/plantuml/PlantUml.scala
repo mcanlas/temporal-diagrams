@@ -149,27 +149,19 @@ object PlantUml:
 
           case Component(name, oAlias, oStereotype) =>
             Chain:
-              s"component ${safeQuote(name)}"
-                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
-                .applySome(oStereotype)((s, st) => s + s" << $st >>")
+              common("component", name, oAlias, oStereotype)
 
           case Actor(name, oAlias, oStereotype) =>
             Chain:
-              s"actor ${safeQuote(name)}"
-                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
-                .applySome(oStereotype)((s, st) => s + s" << $st >>")
+              common("actor", name, oAlias, oStereotype)
 
           case Queue(name, oAlias, oStereotype) =>
             Chain:
-              s"queue ${safeQuote(name)}"
-                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
-                .applySome(oStereotype)((s, st) => s + s" << $st >>")
+              common("queue", name, oAlias, oStereotype)
 
           case Database(name, oAlias, oStereotype, xs) =>
             val slug =
-              s"database ${safeQuote(name)}"
-                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
-                .applySome(oStereotype)((s, st) => s + s" << $st >>")
+              common("database", name, oAlias, oStereotype)
 
             if xs.isEmpty then
               Chain:
@@ -188,8 +180,12 @@ object PlantUml:
 
           case Interface(name, oAlias) =>
             Chain:
-              s"interface ${safeQuote(name)}"
-                .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
+              common("interface", name, oAlias, None)
+
+  private def common(componentType: String, name: String, oAlias: Option[String], oStereotype: Option[String]): String =
+    s"$componentType ${safeQuote(name)}"
+      .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
+      .applySome(oStereotype)((s, st) => s + s" << $st >>")
 
   /**
     * A building block in component diagrams
