@@ -155,6 +155,10 @@ object PlantUml:
             Chain:
               common("actor", name, oAlias, oStereotype)
 
+          case BusinessActor(name, oAlias, oStereotype) =>
+            Chain:
+              common("actor/", name, oAlias, oStereotype)
+
           case Queue(name, oAlias, oStereotype) =>
             Chain:
               common("queue", name, oAlias, oStereotype)
@@ -205,6 +209,8 @@ object PlantUml:
   case class Component(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   case class Actor(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+
+  case class BusinessActor(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
