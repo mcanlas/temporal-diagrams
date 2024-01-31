@@ -204,7 +204,6 @@ object PlantUml:
     */
   case class Component(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
-  // TODO
   case class Actor(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
 
   case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
