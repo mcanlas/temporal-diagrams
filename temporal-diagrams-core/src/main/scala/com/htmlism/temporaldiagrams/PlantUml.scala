@@ -123,9 +123,6 @@ object PlantUml:
           .mkString
           .list
 
-      case Queue(name, title, tag) =>
-        oneThing("queue", name, title, tag).list
-
       case Database(name, title, tag, xs) =>
         val header =
           oneThing("database", name, title, tag)
@@ -197,8 +194,6 @@ object PlantUml:
 
     def apply(src: String, dest: String): Link =
       Link(src, dest, 2, Weight.Solid, Direction.Forwards, None, None, influencesRank = true, None)
-
-  case class Queue(name: String, title: Option[String], tag: Option[String]) extends Entity
 
   case class Database(name: String, title: Option[String], tag: Option[String], xs: List[PlantUml]) extends Entity
 
