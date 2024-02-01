@@ -137,9 +137,6 @@ object PlantUml:
 
             open :: xs.flatMap(consumeOne) appended close
 
-      case Package(title, xs) =>
-        s"package \"$title\" {" :: xs.flatMap(consumeOne).map("  " + _).mkString("\n\n").list appended "}"
-
       case SkinParam.Single(k, v) =>
         s"skinparam $k $v".list
 
@@ -193,7 +190,5 @@ object PlantUml:
       Link(src, dest, 2, Weight.Solid, Direction.Forwards, None, None, influencesRank = true, None)
 
   case class Database(name: String, title: Option[String], tag: Option[String], xs: List[PlantUml]) extends Entity
-
-  case class Package(title: String, xs: List[PlantUml]) extends Entity
 
 sealed trait PlantUml
