@@ -149,31 +149,31 @@ object PlantUml:
 
           case Component(name, oAlias, oStereotype) =>
             Chain:
-              common("component", name, oAlias, oStereotype)
+              entity("component", name, oAlias, oStereotype)
 
           case Actor(name, oAlias, oStereotype) =>
             Chain:
-              common("actor", name, oAlias, oStereotype)
+              entity("actor", name, oAlias, oStereotype)
 
           case BusinessActor(name, oAlias, oStereotype) =>
             Chain:
-              common("actor/", name, oAlias, oStereotype)
+              entity("actor/", name, oAlias, oStereotype)
 
           case Queue(name, oAlias, oStereotype) =>
             Chain:
-              common("queue", name, oAlias, oStereotype)
+              entity("queue", name, oAlias, oStereotype)
 
           case UseCase(name, oAlias, oStereotype) =>
             Chain:
-              common("usecase", name, oAlias, oStereotype)
+              entity("usecase", name, oAlias, oStereotype)
 
           case BusinessUseCase(name, oAlias, oStereotype) =>
             Chain:
-              common("usecase/", name, oAlias, oStereotype)
+              entity("usecase/", name, oAlias, oStereotype)
 
           case Database(name, oAlias, oStereotype, xs) =>
             val slug =
-              common("database", name, oAlias, oStereotype)
+              entity("database", name, oAlias, oStereotype)
 
             if xs.isEmpty then
               Chain:
@@ -192,9 +192,9 @@ object PlantUml:
 
           case Interface(name, oAlias) =>
             Chain:
-              common("interface", name, oAlias, None)
+              entity("interface", name, oAlias, None)
 
-  private def common(componentType: String, name: String, oAlias: Option[String], oStereotype: Option[String]): String =
+  private def entity(componentType: String, name: String, oAlias: Option[String], oStereotype: Option[String]): String =
     s"$componentType ${safeQuote(name)}"
       .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
       .applySome(oStereotype)((s, st) => s + s" << $st >>")
