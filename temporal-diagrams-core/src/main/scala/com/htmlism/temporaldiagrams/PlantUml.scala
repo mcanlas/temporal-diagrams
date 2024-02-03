@@ -120,23 +120,6 @@ object PlantUml:
           .mkString
           .list
 
-      case Database(name, title, tag, xs) =>
-        val header =
-          oneThing("database", name, title, tag)
-
-        xs match
-          case Nil =>
-            header.list
-
-          case _ =>
-            val open =
-              header + " {"
-
-            val close =
-              "}"
-
-            open :: xs.flatMap(consumeOne) appended close
-
       case SkinParam.Single(k, v) =>
         s"skinparam $k $v".list
 
@@ -188,7 +171,5 @@ object PlantUml:
 
     def apply(src: String, dest: String): Link =
       Link(src, dest, 2, Weight.Solid, Direction.Forwards, None, None, influencesRank = true, None)
-
-  case class Database(name: String, title: Option[String], tag: Option[String], xs: List[PlantUml]) extends Entity
 
 sealed trait PlantUml
