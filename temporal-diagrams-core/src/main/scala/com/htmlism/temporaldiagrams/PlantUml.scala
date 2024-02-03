@@ -15,13 +15,10 @@ object PlantUml:
     val skins =
       xs.collect { case x: SkinParam => x }.distinct
 
-    val entities =
-      xs.collect { case x: Entity => x }.distinct
-
     val relationships =
       xs.collect { case x: Link => x }
 
-    ("@startuml" :: direction.toList ::: (singletons ::: skins ::: entities ::: relationships)
+    ("@startuml" :: direction.toList ::: (singletons ::: skins ::: relationships)
       .flatMap(consumeOne) ::: List("@enduml"))
       .mkString("\n\n")
 
@@ -46,18 +43,6 @@ object PlantUml:
     def build(entity: String, stereotype: String): Bundle =
       Bundle(entity, stereotype.some, Nil)
 
-  sealed trait Entity extends PlantUml
-
-  private def oneThing(thing: String, name: String, title: Option[String], tag: Option[String]) =
-    val maybeTitle =
-      title.fold(List.empty[String])(s => List(s"\"$s\"", "as"))
-
-    val maybeTag =
-      tag.fold(List.empty[String])(s => List(s"<< $s >>"))
-
-    (thing :: maybeTitle ::: name :: maybeTag)
-      .mkString(" ")
-
   private def consumeOne(x: PlantUml): List[String] =
     x match
       case Title(str) =>
@@ -65,14 +50,6 @@ object PlantUml:
 
       case Legend(xs) =>
         ("legend" :: xs appended "end legend").mkString("\n").list
-
-      case Interface(name, title) =>
-        title
-          .fold(s"interface $name")(t => s"interface \"$t\" as $name")
-          .list
-
-      case Component(name, title, tag) =>
-        oneThing("component", name, title, tag).list
 
       case Link(src, dest, length, weight, direction, oColor, oComment, withRank, oStereotype) =>
         val (segment, style) =
@@ -131,16 +108,6 @@ object PlantUml:
           .map { case SkinParam.Single(k, v) => s"  $k $v" } appended "}")
           .mkString("\n")
           .list
-
-  case class Interface(name: String, title: Option[String]) extends Entity
-
-  case class Component(name: String, title: Option[String], tag: Option[String]) extends Entity:
-    def of(stereotype: String): Component =
-      this.copy(tag = stereotype.some)
-
-  object Component:
-    def apply(name: String): Component =
-      Component(name, None, None)
 
   case class Link(
       src: String,
