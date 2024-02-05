@@ -25,7 +25,7 @@ object PlantUml:
           DiagramEncoder[PlantUml.Directive].encode(x)
 
   // TODO test
-  case class ComponentDiagram(parameters: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link]):
+  case class ComponentDiagram(directives: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link]):
     def add(x: PlantUml): ComponentDiagram =
       this |+| ComponentDiagram(x)
 
@@ -43,7 +43,7 @@ object PlantUml:
 
         def combine(x: ComponentDiagram, y: ComponentDiagram): ComponentDiagram =
           ComponentDiagram(
-            x.parameters ++ y.parameters,
+            x.directives ++ y.directives,
             x.entities ++ y.entities,
             x.links ++ y.links
           )
@@ -86,7 +86,7 @@ object PlantUml:
   // so allow components to take priority
   def render(x: PlantUml.ComponentDiagram): Chain[String] =
     Chain(
-      x.parameters.pipe(renderSubsectionSorted),
+      x.directives.pipe(renderSubsectionSorted),
       x.entities.pipe(renderSubsectionSorted),
       x.links.pipe(renderSubsectionSorted)
     )
