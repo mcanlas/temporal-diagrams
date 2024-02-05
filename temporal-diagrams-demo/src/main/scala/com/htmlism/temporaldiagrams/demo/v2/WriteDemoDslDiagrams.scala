@@ -45,7 +45,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
     )
       .traverse(_.run)
 
-  val z =
+  val initialDiagramConfig =
     DemoDsl.ConfigBasket(
       fooStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton,
       DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton
@@ -57,12 +57,12 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
       _.copy(barStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsCluster),
       _.copy(barStyle = DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer)
     )
-      .mapAccumulate(z)((s, f) => f(s) -> f(s))
+      .mapAccumulate(initialDiagramConfig)((s, f) => f(s) -> f(s))
       ._2
 
   def run: F[Unit] =
     val cfgs =
-      z :: episodesDeltas
+      initialDiagramConfig :: episodesDeltas
 
     cfgs
       .zipWithIndex
