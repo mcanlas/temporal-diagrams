@@ -12,6 +12,7 @@ import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.v2.Renderable
 import com.htmlism.temporaldiagrams.v2.syntax.*
 
+// sbt "demo/runMain com.htmlism.temporaldiagrams.demo.v2.WriteDemoDslDiagrams"
 object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinter[IO]) with IOApp.Simple
 
 class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
