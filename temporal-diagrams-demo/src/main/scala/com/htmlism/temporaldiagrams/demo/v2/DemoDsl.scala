@@ -13,6 +13,7 @@ sealed trait DemoDsl
 object DemoDsl:
   case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
+  case class Echo(x: PlantUml.Directive)                                                  extends DemoDsl
 
   given BrightEncoder[PlantUml.ComponentDiagram, DemoDsl] with
     def encodeBrightly(x: DemoDsl, isBright: Boolean): PlantUml.ComponentDiagram =
@@ -53,6 +54,9 @@ object DemoDsl:
             }
             .pipe(PlantUml.ComponentDiagram.apply(_))
 
+        case Echo(x) =>
+          PlantUml.ComponentDiagram(x)
+
   private val queueSkin =
     PlantUml
       .SkinParamGroup("queue")
@@ -80,7 +84,11 @@ object DemoDsl:
         .and("borderColor", "#AAA")
         .and("borderThickness", "2")
 
-  case class ConfigBasket(fooStyle: ConfigBasket.ServiceAppearance, barStyle: ConfigBasket.ServiceAppearance)
+  case class ConfigBasket(
+      fooStyle: ConfigBasket.ServiceAppearance,
+      barStyle: ConfigBasket.ServiceAppearance,
+      title: String
+  )
 
   object ConfigBasket:
     sealed trait ServiceAppearance

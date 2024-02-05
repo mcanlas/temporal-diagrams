@@ -38,8 +38,13 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
       case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
         DemoDsl.Buffered("bar", "foo".some).tag("bar")
 
+  private val toTitle =
+    Kleisli.fromFunction[Id, String][Renderable[PlantUml.ComponentDiagram]]: s =>
+      DemoDsl.Echo(PlantUml.Title(List(s))).r
+
   val stackGivenCfg =
     Chain(
+      toTitle.local[DemoDsl.ConfigBasket](_.title),
       toProducer.local[DemoDsl.ConfigBasket](_.fooStyle),
       toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
     )
@@ -48,7 +53,8 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   val initialDiagramConfig =
     DemoDsl.ConfigBasket(
       fooStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton,
-      DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton
+      DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton,
+      title = "Component diagram"
     )
 
   val episodesDeltas =
