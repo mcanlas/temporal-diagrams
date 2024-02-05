@@ -126,6 +126,29 @@ object PlantUml:
               .pipe(Chain.fromSeq)
               .pipe(_ ++ Chain("}"))
 
+          // TODO test
+          case Title(xs) =>
+            if xs.isEmpty then Chain.empty
+            else
+              Chain.one:
+                s"title ${xs.mkString("\n")}"
+
+          // TODO test
+          case Caption(xs) =>
+            if xs.isEmpty then Chain.empty
+            else
+              Chain.one:
+                s"caption ${xs.mkString("\n")}"
+
+          // TODO test
+          case Legend(xs) =>
+            if xs.isEmpty then Chain.empty
+            else
+              Chain
+                .fromSeq(xs)
+                .prepend("legend")
+                .append("endlegend")
+
   case object LeftToRightDirection extends Directive
 
   // something that can be nested in a package; or is global in scope, like an arrow
@@ -300,3 +323,9 @@ object PlantUml:
     Chain("@startuml", "") ++
       xs ++
       Chain("", "@enduml")
+
+  case class Title(xs: List[String]) extends Directive
+
+  case class Caption(xs: List[String]) extends Directive
+
+  case class Legend(xs: List[String]) extends Directive
