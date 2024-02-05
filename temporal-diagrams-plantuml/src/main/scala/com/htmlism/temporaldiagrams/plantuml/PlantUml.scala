@@ -126,21 +126,18 @@ object PlantUml:
               .pipe(Chain.fromSeq)
               .pipe(_ ++ Chain("}"))
 
-          // TODO test
           case Title(xs) =>
             if xs.isEmpty then Chain.empty
             else
               Chain.one:
                 s"title ${xs.mkString("\n")}"
 
-          // TODO test
           case Caption(xs) =>
             if xs.isEmpty then Chain.empty
             else
               Chain.one:
                 s"caption ${xs.mkString("\n")}"
 
-          // TODO test
           case Legend(xs) =>
             if xs.isEmpty then Chain.empty
             else
