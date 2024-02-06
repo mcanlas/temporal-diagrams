@@ -9,30 +9,12 @@ object PlantUml:
     renderWithDirection(None, xs)
 
   private def renderWithDirection(direction: Option[String], xs: List[PlantUml]) =
-    val skins =
-      xs.collect { case x: SkinParam => x }.distinct
-
     val relationships =
       xs.collect { case x: Link => x }
 
-    ("@startuml" :: direction.toList ::: (skins ::: relationships)
+    ("@startuml" :: direction.toList ::: relationships
       .flatMap(consumeOne) ::: List("@enduml"))
       .mkString("\n\n")
-
-  sealed trait SkinParam extends PlantUml
-
-  object SkinParam:
-    case class Single(key: String, value: String) extends SkinParam
-
-    case class Bundle(entity: String, stereotype: Option[String], xs: List[Single]) extends SkinParam:
-      def and(key: String, value: String): Bundle =
-        this.copy(xs = xs appended Single(key, value))
-
-    def build(entity: String): Bundle =
-      Bundle(entity, None, Nil)
-
-    def build(entity: String, stereotype: String): Bundle =
-      Bundle(entity, stereotype.some, Nil)
 
   private def consumeOne(x: PlantUml): List[String] =
     x match
@@ -80,18 +62,6 @@ object PlantUml:
 
         (srcArrowDest :: stereotype ::: comment)
           .mkString
-          .list
-
-      case SkinParam.Single(k, v) =>
-        s"skinparam $k $v".list
-
-      case SkinParam.Bundle(entity, oStereotype, xs) =>
-        val stereotype =
-          oStereotype.fold("")(s => s"<< $s >>")
-
-        (s"skinparam $entity$stereotype {" :: xs
-          .map { case SkinParam.Single(k, v) => s"  $k $v" } appended "}")
-          .mkString("\n")
           .list
 
   case class Link(
