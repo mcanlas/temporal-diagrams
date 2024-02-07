@@ -261,8 +261,14 @@ object PlantUml:
     * @param text
     *   Optional text written along the link
     */
-  case class Link(source: String, destination: String, length: Int, direction: Link.Direction, text: Option[String])
-      extends PlantUml
+  case class Link(
+      source: String,
+      destination: String,
+      length: Int,
+      direction: Link.Direction,
+      weight: Link.Weight,
+      text: Option[String]
+  ) extends PlantUml
 
   object Link:
     enum Direction:
@@ -270,12 +276,38 @@ object PlantUml:
       case Backwards
       case Bidirectional
 
+    enum Weight:
+      case Solid
+      case Dotted
+      case Bold
+
     given linkEncoder: DiagramEncoder[Link] with
       def encode(x: Link): Chain[String] =
         x match
-          case Link(src, dest, length, dir, oText) =>
-            val body =
-              "-" * length
+          case Link(src, dest, length, dir, weight, oText) =>
+            val (segment, weightStyle) =
+              weight match
+                case Link.Weight.Solid =>
+                  "-" -> Nil
+
+                case Link.Weight.Dotted =>
+                  "." -> Nil
+
+                case Link.Weight.Bold =>
+                  "-" -> List("bold")
+
+            val bodyHead =
+              segment
+
+            val bodyTail =
+              segment * (length - 1)
+
+            val styles =
+              weightStyle
+
+            val stylesStr =
+              if styles.isEmpty then ""
+              else "[" + styles.mkString(",") + "]"
 
             val (leftHead, rightHead) =
               dir match
@@ -289,7 +321,7 @@ object PlantUml:
                   "<" -> ">"
 
             Chain:
-              s"${safeQuote(src)} $leftHead$body$rightHead ${safeQuote(dest)}"
+              s"${safeQuote(src)} $leftHead$bodyHead$stylesStr$bodyTail$rightHead ${safeQuote(dest)}"
                 .applySome(oText)((s, t) => s"$s : $t")
 
   // TODO test

@@ -13,7 +13,7 @@ object LinkSuite extends FunSuite:
         "foo --> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, text = None)
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, text = None)
       )
     )
 
@@ -23,7 +23,7 @@ object LinkSuite extends FunSuite:
         "foo --> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, text = None)
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, text = None)
       )
     )
 
@@ -33,7 +33,7 @@ object LinkSuite extends FunSuite:
         "foo --> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, text = None)
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, text = None)
       )
     )
 
@@ -43,7 +43,7 @@ object LinkSuite extends FunSuite:
         "foo --> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, text = None)
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, text = None)
       )
     )
 
@@ -53,7 +53,7 @@ object LinkSuite extends FunSuite:
         "foo <-- bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Backwards, text = None)
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Backwards, PlantUml.Link.Weight.Solid, text = None)
       )
     )
 
@@ -63,7 +63,7 @@ object LinkSuite extends FunSuite:
         "foo <--> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Bidirectional, text = None)
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Bidirectional, PlantUml.Link.Weight.Solid, text = None)
       )
     )
 
@@ -73,6 +73,43 @@ object LinkSuite extends FunSuite:
         "foo --> bar : comment"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, text = "comment".some)
+        PlantUml.Link(
+          "foo",
+          "bar",
+          2,
+          PlantUml.Link.Direction.Forwards,
+          PlantUml.Link.Weight.Solid,
+          text = "comment".some
+        )
+      )
+    )
+
+  test("A link supports a weight, solid"):
+    expect.eql(
+      Chain(
+        "foo --> bar"
+      ),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, text = None)
+      )
+    )
+
+  test("A link supports a weight, dotted"):
+    expect.eql(
+      Chain(
+        "foo ..> bar"
+      ),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Dotted, text = None)
+      )
+    )
+
+  test("A link supports a weight, bold"):
+    expect.eql(
+      Chain(
+        "foo -[bold]-> bar"
+      ),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Bold, text = None)
       )
     )
