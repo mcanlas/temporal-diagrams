@@ -263,6 +263,8 @@ object PlantUml:
     *   components have the same rank
     * @param direction
     *   The direction of arrows on the link
+    * @param weight
+    *   The style and thickness of the arrow's body
     * @param text
     *   Optional text written along the link
     * @param color
