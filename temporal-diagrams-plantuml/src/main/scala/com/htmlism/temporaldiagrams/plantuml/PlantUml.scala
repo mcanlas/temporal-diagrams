@@ -261,7 +261,6 @@ object PlantUml:
     * @param text
     *   Optional text written along the link
     */
-  // TODO test
   case class Link(source: String, destination: String, length: Int, direction: Link.Direction, text: Option[String])
       extends PlantUml
 
