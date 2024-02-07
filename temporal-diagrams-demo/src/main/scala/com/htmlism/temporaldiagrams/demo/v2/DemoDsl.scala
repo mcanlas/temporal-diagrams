@@ -30,12 +30,7 @@ object DemoDsl:
                     a.append(
                       PlantUml.Link(
                         d + i.toString,
-                        n,
-                        2,
-                        PlantUml.Link.Direction.Forwards,
-                        PlantUml.Link.Weight.Solid,
-                        text  = None,
-                        color = None
+                        n
                       )
                     )
                   }
@@ -50,12 +45,7 @@ object DemoDsl:
                 a.append(
                   PlantUml.Link(
                     d,
-                    n,
-                    2,
-                    PlantUml.Link.Direction.Forwards,
-                    PlantUml.Link.Weight.Solid,
-                    text  = None,
-                    color = None
+                    n
                   )
                 )
               }
@@ -68,12 +58,7 @@ object DemoDsl:
             PlantUml.Queue(n + "_queue", None, None),
             PlantUml.Link(
               n + "_queue",
-              n,
-              2,
-              PlantUml.Link.Direction.Forwards,
-              PlantUml.Link.Weight.Solid,
-              text  = None,
-              color = None
+              n
             ),
             queueSkin
           )
@@ -82,12 +67,7 @@ object DemoDsl:
                 PlantUml
                   .Link(
                     d,
-                    n + "_queue",
-                    2,
-                    PlantUml.Link.Direction.Forwards,
-                    PlantUml.Link.Weight.Solid,
-                    text  = None,
-                    color = None
+                    n + "_queue"
                   )
               )
             }

@@ -265,6 +265,11 @@ object PlantUml:
     *   The direction of arrows on the link
     * @param weight
     *   The style and thickness of the arrow's body
+    * @param influencesRank
+    *   If true, the link will affect the rank between the linked components
+    * @param isVisible
+    *   If true, the link will be rendered and occupy space; if false, the link will occupy space and influence rank but
+    *   transparently
     * @param text
     *   Optional text written along the link
     * @param color
@@ -276,13 +281,27 @@ object PlantUml:
       length: Int,
       direction: Link.Direction,
       weight: Link.Weight,
+      influencesRank: Boolean,
+      isVisible: Boolean,
       text: Option[String],
       color: Option[String]
-  ) extends PlantUml
+  ) extends PlantUml:
+    def withText(s: String): Link =
+      copy(text = Some(s))
 
   object Link:
     def apply(source: String, destination: String): Link =
-      Link(source, destination, length = 2, Link.Direction.Forwards, Link.Weight.Solid, text = None, color = None)
+      Link(
+        source,
+        destination,
+        length = 2,
+        Link.Direction.Forwards,
+        Link.Weight.Solid,
+        influencesRank = true,
+        isVisible      = true,
+        text           = None,
+        color          = None
+      )
 
     enum Direction:
       case Forwards
@@ -298,7 +317,7 @@ object PlantUml:
     given linkEncoder: DiagramEncoder[Link] with
       def encode(x: Link): Chain[String] =
         x match
-          case Link(src, dest, length, dir, weight, oText, oColor) =>
+          case Link(src, dest, length, dir, weight, influencesRank, isVisible, oText, oColor) =>
             val (segment, weightStyle) =
               weight match
                 case Link.Weight.Solid =>
@@ -321,8 +340,16 @@ object PlantUml:
                 .map("#" + _)
                 .toList
 
+            val rankStyle =
+              if influencesRank then Nil
+              else List("norank")
+
+            val hiddenStyle =
+              if isVisible then Nil
+              else List("hidden")
+
             val styles =
-              weightStyle ++ colorStyle
+              weightStyle ++ colorStyle ++ rankStyle ++ hiddenStyle
 
             val stylesStr =
               if styles.isEmpty then ""

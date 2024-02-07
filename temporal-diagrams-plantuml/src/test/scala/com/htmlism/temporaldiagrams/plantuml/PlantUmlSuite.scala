@@ -60,12 +60,7 @@ object PlantUmlSuite extends FunSuite:
         .ComponentDiagram(
           PlantUml.Link(
             "src",
-            "dest",
-            2,
-            PlantUml.Link.Direction.Forwards,
-            PlantUml.Link.Weight.Solid,
-            text  = None,
-            color = None
+            "dest"
           ),
           PlantUml.Component("asdf", None, None),
           PlantUml.SkinParamGroup("foo"),

@@ -51,12 +51,7 @@ object OuroborosDsl:
             PlantUml
               .Link(
                 safe(src),
-                safe(dest),
-                2,
-                PlantUml.Link.Direction.Forwards,
-                PlantUml.Link.Weight.Solid,
-                text  = None,
-                color = None
+                safe(dest)
               )
 
   private def safe(s: String) =

@@ -115,7 +115,7 @@ object LinkSuite extends FunSuite:
             "foo",
             "bar"
           )
-          .copy(text = "comment".some)
+          .withText("comment")
       )
     )
 
@@ -176,5 +176,35 @@ object LinkSuite extends FunSuite:
             "bar"
           )
           .copy(color = "red".some)
+      )
+    )
+
+  test("A link supports disabling rank"):
+    expect.eql(
+      Chain(
+        "foo -[norank]-> bar"
+      ),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(influencesRank = false)
+      )
+    )
+
+  test("A link supports being hidden"):
+    expect.eql(
+      Chain(
+        "foo -[hidden]-> bar"
+      ),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(isVisible = false)
       )
     )
