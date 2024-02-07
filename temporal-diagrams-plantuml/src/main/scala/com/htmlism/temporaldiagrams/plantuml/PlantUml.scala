@@ -265,6 +265,8 @@ object PlantUml:
     *   The direction of arrows on the link
     * @param text
     *   Optional text written along the link
+    * @param color
+    *   Optional color value, without the leading `#`. See [[https://plantuml.com/color]]
     */
   case class Link(
       source: String,
@@ -272,7 +274,8 @@ object PlantUml:
       length: Int,
       direction: Link.Direction,
       weight: Link.Weight,
-      text: Option[String]
+      text: Option[String],
+      color: Option[String]
   ) extends PlantUml
 
   object Link:
@@ -290,7 +293,7 @@ object PlantUml:
     given linkEncoder: DiagramEncoder[Link] with
       def encode(x: Link): Chain[String] =
         x match
-          case Link(src, dest, length, dir, weight, oText) =>
+          case Link(src, dest, length, dir, weight, oText, oColor) =>
             val (segment, weightStyle) =
               weight match
                 case Link.Weight.Solid =>
@@ -308,8 +311,13 @@ object PlantUml:
             val bodyTail =
               segment * (length - 1)
 
+            val colorStyle =
+              oColor
+                .map("#" + _)
+                .toList
+
             val styles =
-              weightStyle
+              weightStyle ++ colorStyle
 
             val stylesStr =
               if styles.isEmpty then ""

@@ -49,7 +49,15 @@ object OuroborosDsl:
         case Link(src, dest) =>
           PlantUml.ComponentDiagram:
             PlantUml
-              .Link(safe(src), safe(dest), 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, None)
+              .Link(
+                safe(src),
+                safe(dest),
+                2,
+                PlantUml.Link.Direction.Forwards,
+                PlantUml.Link.Weight.Solid,
+                text  = None,
+                color = None
+              )
 
   private def safe(s: String) =
     s

@@ -58,7 +58,15 @@ object PlantUmlSuite extends FunSuite:
       ),
       PlantUml
         .ComponentDiagram(
-          PlantUml.Link("src", "dest", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, text = None),
+          PlantUml.Link(
+            "src",
+            "dest",
+            2,
+            PlantUml.Link.Direction.Forwards,
+            PlantUml.Link.Weight.Solid,
+            text  = None,
+            color = None
+          ),
           PlantUml.Component("asdf", None, None),
           PlantUml.SkinParamGroup("foo"),
           PlantUml.LeftToRightDirection

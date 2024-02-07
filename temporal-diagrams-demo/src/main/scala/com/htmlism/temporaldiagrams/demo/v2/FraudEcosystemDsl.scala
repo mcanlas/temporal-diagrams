@@ -71,7 +71,15 @@ object FraudEcosystemDsl:
 
         case Link(src, comment, dest) =>
           PlantUml.ComponentDiagram:
-            PlantUml.Link(src, dest, 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, comment.some)
+            PlantUml.Link(
+              src,
+              dest,
+              2,
+              PlantUml.Link.Direction.Forwards,
+              PlantUml.Link.Weight.Solid,
+              comment.some,
+              color = None
+            )
 
   private def red(name: String, stereotype: String) =
     PlantUml

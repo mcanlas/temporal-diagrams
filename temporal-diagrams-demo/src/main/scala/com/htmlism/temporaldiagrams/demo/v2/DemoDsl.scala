@@ -34,7 +34,8 @@ object DemoDsl:
                         2,
                         PlantUml.Link.Direction.Forwards,
                         PlantUml.Link.Weight.Solid,
-                        text = None
+                        text  = None,
+                        color = None
                       )
                     )
                   }
@@ -47,7 +48,15 @@ object DemoDsl:
             )
               .applySome(oDep) { (a, d) =>
                 a.append(
-                  PlantUml.Link(d, n, 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, text = None)
+                  PlantUml.Link(
+                    d,
+                    n,
+                    2,
+                    PlantUml.Link.Direction.Forwards,
+                    PlantUml.Link.Weight.Solid,
+                    text  = None,
+                    color = None
+                  )
                 )
               }
               .pipe(PlantUml.ComponentDiagram.apply(_))
@@ -63,14 +72,23 @@ object DemoDsl:
               2,
               PlantUml.Link.Direction.Forwards,
               PlantUml.Link.Weight.Solid,
-              text = None
+              text  = None,
+              color = None
             ),
             queueSkin
           )
             .applySome(oDep) { (a, d) =>
               a.append(
                 PlantUml
-                  .Link(d, n + "_queue", 2, PlantUml.Link.Direction.Forwards, PlantUml.Link.Weight.Solid, text = None)
+                  .Link(
+                    d,
+                    n + "_queue",
+                    2,
+                    PlantUml.Link.Direction.Forwards,
+                    PlantUml.Link.Weight.Solid,
+                    text  = None,
+                    color = None
+                  )
               )
             }
             .pipe(PlantUml.ComponentDiagram.apply(_))
