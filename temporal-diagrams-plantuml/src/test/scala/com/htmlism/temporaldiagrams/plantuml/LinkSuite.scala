@@ -15,12 +15,7 @@ object LinkSuite extends FunSuite:
       DiagramEncoder[PlantUml].encode(
         PlantUml.Link(
           "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Solid,
-          text  = None,
-          color = None
+          "bar"
         )
       )
     )
@@ -33,12 +28,7 @@ object LinkSuite extends FunSuite:
       DiagramEncoder[PlantUml].encode(
         PlantUml.Link(
           "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Solid,
-          text  = None,
-          color = None
+          "bar"
         )
       )
     )
@@ -51,12 +41,7 @@ object LinkSuite extends FunSuite:
       DiagramEncoder[PlantUml].encode(
         PlantUml.Link(
           "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Solid,
-          text  = None,
-          color = None
+          "bar"
         )
       )
     )
@@ -69,12 +54,7 @@ object LinkSuite extends FunSuite:
       DiagramEncoder[PlantUml].encode(
         PlantUml.Link(
           "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Solid,
-          text  = None,
-          color = None
+          "bar"
         )
       )
     )
@@ -85,15 +65,12 @@ object LinkSuite extends FunSuite:
         "foo <-- bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link(
-          "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Backwards,
-          PlantUml.Link.Weight.Solid,
-          text  = None,
-          color = None
-        )
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(direction = PlantUml.Link.Direction.Backwards)
       )
     )
 
@@ -103,15 +80,12 @@ object LinkSuite extends FunSuite:
         "foo <--> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link(
-          "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Bidirectional,
-          PlantUml.Link.Weight.Solid,
-          text  = None,
-          color = None
-        )
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(direction = PlantUml.Link.Direction.Bidirectional)
       )
     )
 
@@ -121,15 +95,12 @@ object LinkSuite extends FunSuite:
         "foo -- bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link(
-          "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Empty,
-          PlantUml.Link.Weight.Solid,
-          text  = None,
-          color = None
-        )
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(direction = PlantUml.Link.Direction.Empty)
       )
     )
 
@@ -139,15 +110,12 @@ object LinkSuite extends FunSuite:
         "foo --> bar : comment"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link(
-          "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Solid,
-          text  = "comment".some,
-          color = None
-        )
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(text = "comment".some)
       )
     )
 
@@ -157,15 +125,12 @@ object LinkSuite extends FunSuite:
         "foo --> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link(
-          "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Solid,
-          text  = None,
-          color = None
-        )
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(weight = PlantUml.Link.Weight.Solid)
       )
     )
 
@@ -175,15 +140,12 @@ object LinkSuite extends FunSuite:
         "foo ..> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link(
-          "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Dotted,
-          text  = None,
-          color = None
-        )
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(weight = PlantUml.Link.Weight.Dotted)
       )
     )
 
@@ -193,15 +155,12 @@ object LinkSuite extends FunSuite:
         "foo -[bold]-> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link(
-          "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Bold,
-          text  = None,
-          color = None
-        )
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(weight = PlantUml.Link.Weight.Bold)
       )
     )
 
@@ -211,14 +170,11 @@ object LinkSuite extends FunSuite:
         "foo -[#red]-> bar"
       ),
       DiagramEncoder[PlantUml].encode(
-        PlantUml.Link(
-          "foo",
-          "bar",
-          2,
-          PlantUml.Link.Direction.Forwards,
-          PlantUml.Link.Weight.Solid,
-          text = None,
-          "red".some
-        )
+        PlantUml
+          .Link(
+            "foo",
+            "bar"
+          )
+          .copy(color = "red".some)
       )
     )

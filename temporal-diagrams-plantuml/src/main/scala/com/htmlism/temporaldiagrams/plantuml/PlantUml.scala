@@ -279,6 +279,9 @@ object PlantUml:
   ) extends PlantUml
 
   object Link:
+    def apply(source: String, destination: String): Link =
+      Link(source, destination, length = 2, Link.Direction.Forwards, Link.Weight.Solid, text = None, color = None)
+
     enum Direction:
       case Forwards
       case Backwards
