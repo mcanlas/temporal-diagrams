@@ -255,9 +255,14 @@ object PlantUml:
     * right.
     *
     * @param source
-    *   The base side of the link, where it originates
+    *   The base side of the link, where it originates. The source has higher rank
     * @param destination
-    *   The tip side of the link, where it stops
+    *   The tip side of the link, where it stops. The destination has lower rank
+    * @param length
+    *   The amount of rank a link has influence over, measured in segments in the markup. If length = 1, the linked
+    *   components have the same rank
+    * @param direction
+    *   The direction of arrows on the link
     * @param text
     *   Optional text written along the link
     */
@@ -275,6 +280,7 @@ object PlantUml:
       case Forwards
       case Backwards
       case Bidirectional
+      case Empty
 
     enum Weight:
       case Solid
@@ -319,6 +325,9 @@ object PlantUml:
 
                 case Link.Direction.Bidirectional =>
                   "<" -> ">"
+
+                case Link.Direction.Empty =>
+                  "" -> ""
 
             Chain:
               s"${safeQuote(src)} $leftHead$bodyHead$stylesStr$bodyTail$rightHead ${safeQuote(dest)}"

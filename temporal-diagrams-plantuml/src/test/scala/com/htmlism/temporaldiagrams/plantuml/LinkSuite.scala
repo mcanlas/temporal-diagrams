@@ -67,6 +67,16 @@ object LinkSuite extends FunSuite:
       )
     )
 
+  test("A link supports a direction, empty"):
+    expect.eql(
+      Chain(
+        "foo -- bar"
+      ),
+      DiagramEncoder[PlantUml].encode(
+        PlantUml.Link("foo", "bar", 2, PlantUml.Link.Direction.Empty, PlantUml.Link.Weight.Solid, text = None)
+      )
+    )
+
   test("A link supports text"):
     expect.eql(
       Chain(
