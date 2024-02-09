@@ -3,7 +3,7 @@ package com.htmlism.temporaldiagrams.plantuml
 import cats.data.*
 import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.DiagramEncoder
+import com.htmlism.temporaldiagrams.DiagramEncoder
 
 object CaptionSuite extends FunSuite:
   test("A caption supports multiple lines"):

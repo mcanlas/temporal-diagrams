@@ -1,4 +1,4 @@
-package com.htmlism.temporaldiagrams.v2
+package com.htmlism.temporaldiagrams
 
 /**
   * A type class that describes encoding a multi arrow specification into a target domain language

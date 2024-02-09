@@ -7,7 +7,7 @@ import cats.*
 import cats.data.*
 import cats.syntax.all.*
 
-import com.htmlism.temporaldiagrams.v2.*
+import com.htmlism.temporaldiagrams.*
 
 sealed trait PlantUml
 

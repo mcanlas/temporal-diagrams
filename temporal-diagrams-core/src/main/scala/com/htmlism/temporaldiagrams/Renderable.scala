@@ -1,4 +1,4 @@
-package com.htmlism.temporaldiagrams.v2
+package com.htmlism.temporaldiagrams
 
 import scala.collection.immutable.ListSet
 import scala.util.chaining.*

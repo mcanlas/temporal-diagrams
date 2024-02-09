@@ -1,9 +1,9 @@
-package com.htmlism.temporaldiagrams.demo.v2
+package com.htmlism.temporaldiagrams.demo
 
 import cats.syntax.all.*
 
+import com.htmlism.temporaldiagrams.BrightEncoder
 import com.htmlism.temporaldiagrams.plantuml.*
-import com.htmlism.temporaldiagrams.v2.BrightEncoder
 
 enum FraudEcosystemDsl:
   case EcsService(name: String)

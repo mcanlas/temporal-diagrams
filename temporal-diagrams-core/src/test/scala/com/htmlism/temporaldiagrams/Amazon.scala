@@ -1,8 +1,8 @@
-package com.htmlism.temporaldiagrams.v2
+package com.htmlism.temporaldiagrams
 
 import cats.data.Chain
 
-import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
+import com.htmlism.temporaldiagrams.ToyDiagramLanguage.*
 
 object Amazon:
   case class Ec2(s: String)

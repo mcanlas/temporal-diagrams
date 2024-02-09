@@ -1,12 +1,11 @@
 package com.htmlism.temporaldiagrams
-package demo.v2
+package demo
 
 import scala.util.chaining.*
 
 import cats.data.Chain
 
 import com.htmlism.temporaldiagrams.plantuml.*
-import com.htmlism.temporaldiagrams.v2.BrightEncoder
 
 sealed trait DemoDsl
 

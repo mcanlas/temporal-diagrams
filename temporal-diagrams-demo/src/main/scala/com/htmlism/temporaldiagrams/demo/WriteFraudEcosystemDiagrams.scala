@@ -1,4 +1,4 @@
-package com.htmlism.temporaldiagrams.demo.v2
+package com.htmlism.temporaldiagrams.demo
 
 import scala.util.chaining.*
 
@@ -7,10 +7,9 @@ import cats.data.*
 import cats.effect.*
 import cats.syntax.all.*
 
-import com.htmlism.temporaldiagrams.demo.FilePrinter
+import com.htmlism.temporaldiagrams.Renderable
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
-import com.htmlism.temporaldiagrams.v2.Renderable
-import com.htmlism.temporaldiagrams.v2.syntax.*
+import com.htmlism.temporaldiagrams.syntax.*
 
 object WriteFraudEcosystemDiagrams extends WriteFraudEcosystemDiagrams[IO](FilePrinter[IO]) with IOApp.Simple
 

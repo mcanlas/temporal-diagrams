@@ -1,11 +1,11 @@
-package com.htmlism.temporaldiagrams.v2
+package com.htmlism.temporaldiagrams
 
 import scala.collection.immutable.ListSet
 
 import cats.data.*
 import weaver.FunSuite
 
-import com.htmlism.temporaldiagrams.v2.syntax.*
+import com.htmlism.temporaldiagrams.syntax.*
 
 object MultiArrowSuite extends FunSuite:
   test("can add multi-arrow sources"):

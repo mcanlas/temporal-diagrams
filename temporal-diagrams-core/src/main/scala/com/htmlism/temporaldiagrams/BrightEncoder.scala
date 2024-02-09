@@ -1,4 +1,4 @@
-package com.htmlism.temporaldiagrams.v2
+package com.htmlism.temporaldiagrams
 
 /**
   * A convenience trait that uses one "bright" encoding for both the normal rendering and highlighted rendering

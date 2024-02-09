@@ -3,7 +3,7 @@ package com.htmlism.temporaldiagrams.plantuml
 import cats.data.*
 import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.DiagramEncoder
+import com.htmlism.temporaldiagrams.DiagramEncoder
 
 object SkinParamSuite extends FunSuite:
   test("Can render skin params"):

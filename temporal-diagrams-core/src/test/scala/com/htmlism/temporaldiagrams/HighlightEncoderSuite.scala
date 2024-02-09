@@ -1,10 +1,10 @@
-package com.htmlism.temporaldiagrams.v2
+package com.htmlism.temporaldiagrams
 
 import cats.data.*
 import cats.syntax.all.*
 import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
+import com.htmlism.temporaldiagrams.ToyDiagramLanguage.*
 
 object HighlightEncoderSuite extends FunSuite:
   test("A diagram encoder can encode"):

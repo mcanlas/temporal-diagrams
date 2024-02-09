@@ -5,7 +5,7 @@ import scala.util.chaining.*
 import cats.data.*
 import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.*
+import com.htmlism.temporaldiagrams.*
 
 object PlantUmlSuite extends FunSuite:
   test("Can render one component"):

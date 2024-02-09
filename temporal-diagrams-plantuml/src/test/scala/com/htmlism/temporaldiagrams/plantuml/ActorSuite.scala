@@ -4,7 +4,7 @@ import cats.data.*
 import cats.syntax.all.*
 import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.DiagramEncoder
+import com.htmlism.temporaldiagrams.DiagramEncoder
 
 object ActorSuite extends FunSuite:
   test("An actor has an name"):

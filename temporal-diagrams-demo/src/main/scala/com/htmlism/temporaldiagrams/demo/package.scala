@@ -1,4 +1,4 @@
-package com.htmlism.temporaldiagrams.demo.v2
+package com.htmlism.temporaldiagrams.demo
 
 extension [A](x: A)
   /**

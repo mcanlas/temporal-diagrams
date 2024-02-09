@@ -3,7 +3,7 @@ package com.htmlism.temporaldiagrams.plantuml
 import cats.data.*
 import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.DiagramEncoder
+import com.htmlism.temporaldiagrams.DiagramEncoder
 
 object TitleSuite extends FunSuite:
   test("A title supports multiple lines"):

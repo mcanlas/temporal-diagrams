@@ -3,7 +3,7 @@ package com.htmlism.temporaldiagrams.plantuml
 import cats.data.*
 import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.DiagramEncoder
+import com.htmlism.temporaldiagrams.DiagramEncoder
 
 object PackageSuite extends FunSuite:
   test("A package sorts and indents its body"):

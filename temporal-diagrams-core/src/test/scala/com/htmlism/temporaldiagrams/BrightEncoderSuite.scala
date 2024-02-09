@@ -1,8 +1,8 @@
-package com.htmlism.temporaldiagrams.v2
+package com.htmlism.temporaldiagrams
 
 import weaver.*
 
-import com.htmlism.temporaldiagrams.v2.ToyDiagramLanguage.*
+import com.htmlism.temporaldiagrams.ToyDiagramLanguage.*
 
 object BrightEncoderSuite extends FunSuite:
   test("A bright encoder's default encoding is equal to its bright encoding"):
