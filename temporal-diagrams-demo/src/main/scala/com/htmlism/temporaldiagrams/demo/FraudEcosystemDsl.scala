@@ -83,7 +83,7 @@ object FraudEcosystemDsl:
       .SkinParamGroup(name, stereotype)
       .and("fontStyle", "bold")
       .and("fontColor", "white")
-      .and("backgroundColor", "#bc4f4f")
+      .and("backgroundColor", "#d47777/#822323")
       .and("borderColor", "#642a2a")
       .and("borderThickness", "2")
 
@@ -92,7 +92,7 @@ object FraudEcosystemDsl:
       .SkinParamGroup(name, stereotype)
       .and("fontStyle", "bold")
       .and("fontColor", "white")
-      .and("backgroundColor", "#586ba4")
+      .and("backgroundColor", "#7082b8/#283d7a")
       .and("borderColor", "#223336")
       .and("borderThickness", "2")
 
@@ -101,7 +101,7 @@ object FraudEcosystemDsl:
       .SkinParamGroup(name, stereotype)
       .and("fontStyle", "bold")
       .and("fontColor", "#444")
-      .and("backgroundColor", "#EEDD82")
+      .and("backgroundColor", "#faf2c8/#e6c72c")
       .and("borderColor", "#807746")
       .and("borderThickness", "2")
 
