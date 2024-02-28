@@ -49,10 +49,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   private def renderSubsectionSorted[A: DiagramEncoder](xs: Set[A]) =
     xs.toList.map(summon[DiagramEncoder[A]].encode).sorted
 
-  case class CommonEncoder[A <: FlowchartCommon](s: String) extends MermaidDiagramEncoder[A]:
-    def header: String =
-      s
-
+  case class CommonEncoder[A <: FlowchartCommon](header: String) extends MermaidDiagramEncoder[A]:
     def encode(x: A): Chain[String] =
       x
         .nodes
