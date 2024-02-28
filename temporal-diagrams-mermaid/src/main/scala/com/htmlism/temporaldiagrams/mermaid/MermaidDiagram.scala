@@ -17,5 +17,20 @@ object MermaidDiagram:
     *   The specific diagram type
     */
   def render[A: MermaidDiagramType](x: MermaidDiagram[A]): Chain[String] =
-    Chain.one:
-      summon[MermaidDiagramType[A]].header
+    val frontmatterLines =
+      if x.frontmatter.isEmpty then Chain.empty
+      else
+        x
+          .frontmatter
+          .flatMap(FrontmatterPair.encode)
+          .prepend("---")
+          .append("---")
+
+    val headerLines =
+      Chain.one:
+        summon[MermaidDiagramType[A]].header
+
+    val bodyLines =
+      Chain.empty
+
+    frontmatterLines ++ headerLines ++ bodyLines
