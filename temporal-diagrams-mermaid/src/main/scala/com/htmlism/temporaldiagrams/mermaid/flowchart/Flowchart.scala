@@ -14,11 +14,41 @@ object Flowchart:
     def header: String =
       "flowchart"
 
-  sealed trait LeftToRight extends Flowchart
+  sealed trait LeftToRight
 
   object LeftToRight:
     given MermaidDiagramType[LeftToRight] with
       def header: String =
         "flowchart LR"
 
-  case class Node(id: String, text: Option[String]) extends Flowchart
+  sealed trait RightToLeft
+
+  object RightToLeft:
+    given MermaidDiagramType[RightToLeft] with
+      def header: String =
+        "flowchart RL"
+
+  sealed trait TopDown
+
+  object TopDown:
+    given MermaidDiagramType[TopDown] with
+      def header: String =
+        "flowchart TD"
+
+  sealed trait TopToBottom
+
+  object TopToBottom:
+    given MermaidDiagramType[TopToBottom] with
+      def header: String =
+        "flowchart TB"
+
+  sealed trait BottomToTop
+
+  object BottomToTop:
+    given MermaidDiagramType[BottomToTop] with
+      def header: String =
+        "flowchart BT"
+
+  sealed trait Common extends Flowchart, LeftToRight, RightToLeft, TopDown, TopToBottom, BottomToTop
+
+  case class Node(id: String, text: Option[String]) extends Common

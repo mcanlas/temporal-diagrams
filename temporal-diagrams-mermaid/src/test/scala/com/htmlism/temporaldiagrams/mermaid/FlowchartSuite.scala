@@ -51,3 +51,20 @@ object FlowchartSuite extends FunSuite:
       ,
       MermaidDiagram.render(MermaidDiagram.empty[Flowchart.BT])
     )
+
+  test("A flowchart shares its DSL with its directional counterparts"):
+    val x =
+      MermaidDiagram[Flowchart](
+        Chain.empty,
+        Chain.one:
+          Flowchart.Node("foo", text = None)
+      )
+
+    val xlr =
+      MermaidDiagram[Flowchart.LR](
+        Chain.empty,
+        Chain.one:
+          Flowchart.Node("foo", text = None)
+      )
+
+    expect.same(x, xlr)
