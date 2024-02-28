@@ -29,3 +29,47 @@ object FrontmatterSuite extends FunSuite:
         )
       )
     )
+
+  test("A string pair renders"):
+    expect.eql(
+      Chain(
+        "---",
+        "title: asdf",
+        "---",
+        "flowchart"
+      ),
+      MermaidDiagram.render(
+        MermaidDiagram[Flowchart](
+          Chain.one:
+            FrontmatterPair.StringPair("title", "asdf")
+          ,
+          Chain.empty
+        )
+      )
+    )
+
+  test("A map renders"):
+    expect.eql(
+      Chain(
+        "---",
+        "asdf:",
+        "  foo: 123",
+        "  bar: 456",
+        "---",
+        "flowchart"
+      ),
+      MermaidDiagram.render(
+        MermaidDiagram[Flowchart](
+          Chain.one:
+            FrontmatterPair.MapPair(
+              "asdf",
+              Chain(
+                FrontmatterPair.StringPair("foo", "123"),
+                FrontmatterPair.StringPair("bar", "456")
+              )
+            )
+          ,
+          Chain.empty
+        )
+      )
+    )
