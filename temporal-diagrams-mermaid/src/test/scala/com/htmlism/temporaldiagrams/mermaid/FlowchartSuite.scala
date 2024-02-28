@@ -68,3 +68,31 @@ object FlowchartSuite extends FunSuite:
       )
 
     expect.same(x, xlr)
+
+  test("Supports nodes, without text"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node("foo", text = None)
+        )
+    )
+
+  test("Supports nodes, with text"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo[bar]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node("foo", text = Some("bar"))
+        )
+    )
