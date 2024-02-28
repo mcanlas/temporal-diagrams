@@ -14,7 +14,7 @@ trait FlowchartCommon:
 case class Flowchart(nodes: Set[FlowchartDeclaration.Node], links: Set[FlowchartDeclaration.Link])
     extends FlowchartCommon
 
-object Flowchart:
+object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   type LR = LeftToRight
   type RL = RightToLeft
   type TD = TopDown
@@ -28,15 +28,6 @@ object Flowchart:
   val BT = BottomToTop
 
   val Node = FlowchartDeclaration.Node
-
-  def empty: Flowchart =
-    Flowchart(Set.empty, Set.empty)
-
-  def apply(xs: FlowchartDeclaration*): Flowchart =
-    Flowchart(
-      xs.collect { case x: FlowchartDeclaration.Node => x }.toSet,
-      Set.empty // TODO,
-    )
 
   def deriveMonoid[A <: FlowchartCommon](
       f: (Set[FlowchartDeclaration.Node], Set[FlowchartDeclaration.Link]) => A
@@ -73,7 +64,7 @@ object Flowchart:
   case class LeftToRight(nodes: Set[FlowchartDeclaration.Node], links: Set[FlowchartDeclaration.Link])
       extends FlowchartCommon
 
-  object LeftToRight:
+  object LeftToRight extends FlowchartFactory(LeftToRight(_, _)):
     given MermaidDiagramEncoder[LeftToRight] =
       CommonEncoder("flowchart LR")
 
@@ -83,7 +74,7 @@ object Flowchart:
   case class RightToLeft(nodes: Set[FlowchartDeclaration.Node], links: Set[FlowchartDeclaration.Link])
       extends FlowchartCommon
 
-  object RightToLeft:
+  object RightToLeft extends FlowchartFactory(RightToLeft(_, _)):
     given MermaidDiagramEncoder[RightToLeft] =
       CommonEncoder("flowchart RL")
 
@@ -93,7 +84,7 @@ object Flowchart:
   case class TopDown(nodes: Set[FlowchartDeclaration.Node], links: Set[FlowchartDeclaration.Link])
       extends FlowchartCommon
 
-  object TopDown:
+  object TopDown extends FlowchartFactory(TopDown(_, _)):
     given MermaidDiagramEncoder[TopDown] =
       CommonEncoder("flowchart TD")
 
@@ -103,7 +94,7 @@ object Flowchart:
   case class TopToBottom(nodes: Set[FlowchartDeclaration.Node], links: Set[FlowchartDeclaration.Link])
       extends FlowchartCommon
 
-  object TopToBottom:
+  object TopToBottom extends FlowchartFactory(TopToBottom(_, _)):
     given MermaidDiagramEncoder[TopToBottom] =
       CommonEncoder("flowchart TB")
 
@@ -113,7 +104,7 @@ object Flowchart:
   case class BottomToTop(nodes: Set[FlowchartDeclaration.Node], links: Set[FlowchartDeclaration.Link])
       extends FlowchartCommon
 
-  object BottomToTop:
+  object BottomToTop extends FlowchartFactory(BottomToTop(_, _)):
     given MermaidDiagramEncoder[BottomToTop] =
       CommonEncoder("flowchart BT")
 
