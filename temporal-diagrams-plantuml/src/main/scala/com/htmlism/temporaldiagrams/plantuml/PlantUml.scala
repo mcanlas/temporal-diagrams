@@ -36,17 +36,16 @@ object PlantUml:
     val empty: ComponentDiagram =
       ComponentDiagram(Set.empty, Set.empty, Set.empty)
 
-    given Monoid[ComponentDiagram] =
-      new Monoid[ComponentDiagram]:
-        def empty: ComponentDiagram =
-          ComponentDiagram.empty
+    given Monoid[ComponentDiagram] with
+      def empty: ComponentDiagram =
+        ComponentDiagram.empty
 
-        def combine(x: ComponentDiagram, y: ComponentDiagram): ComponentDiagram =
-          ComponentDiagram(
-            x.directives ++ y.directives,
-            x.entities ++ y.entities,
-            x.links ++ y.links
-          )
+      def combine(x: ComponentDiagram, y: ComponentDiagram): ComponentDiagram =
+        ComponentDiagram(
+          x.directives ++ y.directives,
+          x.entities ++ y.entities,
+          x.links ++ y.links
+        )
 
     /**
       * A sequence-builder-style factory method for constructing [[ComponentDiagram]] where the user doesn't need to

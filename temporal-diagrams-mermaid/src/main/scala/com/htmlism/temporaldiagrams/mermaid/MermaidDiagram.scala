@@ -1,5 +1,6 @@
 package com.htmlism.temporaldiagrams.mermaid
 
+import cats.*
 import cats.data.Chain
 
 /**
@@ -9,6 +10,16 @@ import cats.data.Chain
 case class MermaidDiagram[A](frontmatter: Chain[FrontmatterPair], xs: Chain[A])
 
 object MermaidDiagram:
+  given [A]: Monoid[MermaidDiagram[A]] with
+    def empty: MermaidDiagram[A] =
+      MermaidDiagram.empty
+
+    def combine(x: MermaidDiagram[A], y: MermaidDiagram[A]) =
+      MermaidDiagram(
+        x.frontmatter ++ y.frontmatter,
+        x.xs ++ y.xs
+      )
+
   def empty[A]: MermaidDiagram[A] =
     MermaidDiagram(Chain.empty, Chain.empty)
 
