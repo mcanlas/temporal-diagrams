@@ -4,52 +4,54 @@ import cats.data.Chain
 import cats.syntax.all.*
 import weaver.FunSuite
 
+import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDeclaration
+
 object MermaidDiagramSuite extends FunSuite:
   test("Frontmatter is monoidal"):
     val foo =
-      MermaidDiagram[Flowchart](
+      MermaidDiagram(
         Chain.one(FrontmatterPair.StringPair("foo", "123")),
-        Chain.empty
+        Flowchart.empty
       )
 
     val bar =
-      MermaidDiagram[Flowchart](
+      MermaidDiagram(
         Chain.one(FrontmatterPair.StringPair("bar", "456")),
-        Chain.empty
+        Flowchart.empty
       )
 
     expect.same(
-      MermaidDiagram[Flowchart](
+      MermaidDiagram(
         Chain(
           FrontmatterPair.StringPair("foo", "123"),
           FrontmatterPair.StringPair("bar", "456")
         ),
-        Chain.empty
+        Flowchart.empty
       ),
       foo |+| bar
     )
 
   test("Declarations are monoidal"):
     val foo =
-      MermaidDiagram[Flowchart](
+      MermaidDiagram(
         Chain.empty,
-        Chain.one:
-          Flowchart.Node("foo", text = None)
+        Flowchart:
+          Flowchart.Node.Square("foo", text = None)
       )
 
     val bar =
-      MermaidDiagram[Flowchart](
+      MermaidDiagram(
         Chain.empty,
-        Chain.one:
-          Flowchart.Node("bar", text = None)
+        Flowchart:
+          Flowchart.Node.Square("bar", text = None)
       )
 
     expect.same(
-      MermaidDiagram[Flowchart](
+      MermaidDiagram(
         Chain.empty,
-        Chain(
-          Flowchart.Node("foo", text = None),
-          Flowchart.Node("bar", text = None)
+        Flowchart(
+          Flowchart.Node.Square("foo", text = None),
+          Flowchart.Node.Square("bar", text = None)
         )
       ),
       foo |+| bar

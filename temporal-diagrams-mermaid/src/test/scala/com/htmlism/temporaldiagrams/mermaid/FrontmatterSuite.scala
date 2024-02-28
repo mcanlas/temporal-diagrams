@@ -21,11 +21,11 @@ object FrontmatterSuite extends FunSuite:
         "flowchart"
       ),
       MermaidDiagram.render(
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.one:
             FrontmatterPair.StringPair("title", "asdf")
           ,
-          Chain.empty
+          Flowchart.empty
         )
       )
     )
@@ -39,11 +39,11 @@ object FrontmatterSuite extends FunSuite:
         "flowchart"
       ),
       MermaidDiagram.render(
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.one:
             FrontmatterPair.StringPair("title", "asdf")
           ,
-          Chain.empty
+          Flowchart.empty
         )
       )
     )
@@ -59,7 +59,7 @@ object FrontmatterSuite extends FunSuite:
         "flowchart"
       ),
       MermaidDiagram.render(
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.one:
             FrontmatterPair.MapPair(
               "asdf",
@@ -69,7 +69,7 @@ object FrontmatterSuite extends FunSuite:
               )
             )
           ,
-          Chain.empty
+          Flowchart.empty
         )
       )
     )

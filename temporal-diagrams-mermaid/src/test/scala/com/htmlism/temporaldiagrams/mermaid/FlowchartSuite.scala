@@ -52,23 +52,6 @@ object FlowchartSuite extends FunSuite:
       MermaidDiagram.render(MermaidDiagram.empty[Flowchart.BT])
     )
 
-  test("A flowchart shares its DSL with its directional counterparts"):
-    val x =
-      MermaidDiagram[Flowchart](
-        Chain.empty,
-        Chain.one:
-          Flowchart.Node("foo", text = None)
-      )
-
-    val xlr =
-      MermaidDiagram[Flowchart.LR](
-        Chain.empty,
-        Chain.one:
-          Flowchart.Node("foo", text = None)
-      )
-
-    expect.same(x, xlr)
-
   test("Supports nodes, without text"):
     expect.eql(
       Chain(
@@ -76,10 +59,10 @@ object FlowchartSuite extends FunSuite:
         "  foo"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
-            Flowchart.Node("foo", text = None)
+          Flowchart:
+            Flowchart.Node.Square("foo", text = None)
         )
     )
 
@@ -90,10 +73,10 @@ object FlowchartSuite extends FunSuite:
         "  foo[bar]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
-            Flowchart.Node("foo", text = Some("bar"))
+          Flowchart:
+            Flowchart.Node.Square("foo", text = Some("bar"))
         )
     )
 
@@ -104,9 +87,9 @@ object FlowchartSuite extends FunSuite:
         "  foo(bar)"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Round(id = "foo", text = "bar")
         )
     )
@@ -118,9 +101,9 @@ object FlowchartSuite extends FunSuite:
         "  foo([bar])"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Stadium(id = "foo", text = "bar")
         )
     )
@@ -132,9 +115,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[[bar]]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Subroutine(id = "foo", text = "bar")
         )
     )
@@ -146,9 +129,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[(bar)]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Cylinder(id = "foo", text = "bar")
         )
     )
@@ -160,9 +143,9 @@ object FlowchartSuite extends FunSuite:
         "  foo((bar))"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Circle(id = "foo", text = "bar")
         )
     )
@@ -174,9 +157,9 @@ object FlowchartSuite extends FunSuite:
         "  foo>bar]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Asymmetric(id = "foo", text = "bar")
         )
     )
@@ -188,9 +171,9 @@ object FlowchartSuite extends FunSuite:
         "  foo{bar}"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Rhombus(id = "foo", text = "bar")
         )
     )
@@ -202,9 +185,9 @@ object FlowchartSuite extends FunSuite:
         "  foo{{bar}}"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Hexagon(id = "foo", text = "bar")
         )
     )
@@ -216,9 +199,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[/bar/]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Parallelogram(id = "foo", text = "bar")
         )
     )
@@ -230,9 +213,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[\\bar\\]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.ParallelogramAlt(id = "foo", text = "bar")
         )
     )
@@ -244,9 +227,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[/bar\\]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.Trapezoid(id = "foo", text = "bar")
         )
     )
@@ -258,9 +241,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[\\bar/]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.TrapezoidAlt(id = "foo", text = "bar")
         )
     )
@@ -272,9 +255,9 @@ object FlowchartSuite extends FunSuite:
         "  foo(((bar)))"
       ),
       MermaidDiagram.render:
-        MermaidDiagram[Flowchart](
+        MermaidDiagram(
           Chain.empty,
-          Chain.one:
+          Flowchart:
             Flowchart.Node.DoubleCircle(id = "foo", text = "bar")
         )
     )
