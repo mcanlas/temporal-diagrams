@@ -30,40 +30,40 @@ object Flowchart:
           encodeNode("(", ")")(id, text)
 
         case Node.Stadium(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("([", "])")(id, text)
 
         case Node.Subroutine(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("[[", "]]")(id, text)
 
         case Node.Cylinder(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("[(", ")]")(id, text)
 
         case Node.Circle(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("((", "))")(id, text)
 
         case Node.Asymmetric(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode(">", "]")(id, text)
 
         case Node.Rhombus(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("{", "}")(id, text)
 
         case Node.Hexagon(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("{{", "}}")(id, text)
 
         case Node.Parallelogram(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("[/", "/]")(id, text)
 
         case Node.ParallelogramAlt(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("[\\", "\\]")(id, text)
 
         case Node.Trapezoid(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("[/", "\\]")(id, text)
 
         case Node.TrapezoidAlt(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("[\\", "/]")(id, text)
 
         case Node.DoubleCircle(id, text) =>
-          encodeNode("(", ")")(id, text)
+          encodeNode("(((", ")))")(id, text)
 
   given MermaidDiagramEncoder[Flowchart] =
     CommonEncoder("flowchart")

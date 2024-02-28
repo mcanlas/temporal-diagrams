@@ -96,3 +96,185 @@ object FlowchartSuite extends FunSuite:
             Flowchart.Node("foo", text = Some("bar"))
         )
     )
+
+  test("Can render node shape: round"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo(bar)"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Round(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: stadium"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo([bar])"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Stadium(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: subroutine"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo[[bar]]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Subroutine(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: cylinder"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo[(bar)]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Cylinder(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: circle"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo((bar))"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Circle(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: asymmetric"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo>bar]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Asymmetric(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: rhombus"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo{bar}"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Rhombus(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: hexagon"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo{{bar}}"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Hexagon(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: parallelogram"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo[/bar/]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Parallelogram(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: parallelogram alt"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo[\\bar\\]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.ParallelogramAlt(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: trapezoid"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo[/bar\\]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.Trapezoid(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: trapezoid alt"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo[\\bar/]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.TrapezoidAlt(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render node shape: double circle"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo(((bar)))"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram[Flowchart](
+          Chain.empty,
+          Chain.one:
+            Flowchart.Node.DoubleCircle(id = "foo", text = "bar")
+        )
+    )
