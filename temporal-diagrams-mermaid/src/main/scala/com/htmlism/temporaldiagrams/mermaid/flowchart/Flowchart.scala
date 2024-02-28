@@ -1,4 +1,5 @@
-package com.htmlism.temporaldiagrams.mermaid
+package com.htmlism.temporaldiagrams
+package mermaid
 package flowchart
 
 import scala.util.chaining.*
@@ -45,6 +46,9 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   given Monoid[Flowchart] =
     deriveMonoid(Flowchart(_, _))
 
+  private def renderSubsectionSorted[A: DiagramEncoder](xs: Set[A]) =
+    xs.toList.map(summon[DiagramEncoder[A]].encode).sorted
+
   case class CommonEncoder[A <: FlowchartCommon](s: String) extends MermaidDiagramEncoder[A]:
     def header: String =
       s
@@ -52,9 +56,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
     def encode(x: A): Chain[String] =
       x
         .nodes
-        .map(FlowchartDeclaration.encode)
-        .toList
-        .sorted
+        .pipe(renderSubsectionSorted)
         .pipe(Chain.fromSeq)
         .flatMap(identity)
 
