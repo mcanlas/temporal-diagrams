@@ -30,7 +30,27 @@ object MermaidDiagramSuite extends FunSuite:
     )
 
   test("Declarations are monoidal"):
-    expect.eql(
-      "TODO",
-      "TODO"
+    val foo =
+      MermaidDiagram[Flowchart](
+        Chain.empty,
+        Chain.one:
+          Flowchart.Node("foo", text = None)
+      )
+
+    val bar =
+      MermaidDiagram[Flowchart](
+        Chain.empty,
+        Chain.one:
+          Flowchart.Node("bar", text = None)
+      )
+
+    expect.same(
+      MermaidDiagram[Flowchart](
+        Chain.empty,
+        Chain(
+          Flowchart.Node("foo", text = None),
+          Flowchart.Node("bar", text = None)
+        )
+      ),
+      foo |+| bar
     )
