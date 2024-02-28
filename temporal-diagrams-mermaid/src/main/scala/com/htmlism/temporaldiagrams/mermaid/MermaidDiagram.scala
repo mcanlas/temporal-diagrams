@@ -27,7 +27,7 @@ object MermaidDiagram:
     * @tparam A
     *   The specific diagram type
     */
-  def render[A: MermaidDiagramType](x: MermaidDiagram[A]): Chain[String] =
+  def render[A: MermaidDiagramEncoder](x: MermaidDiagram[A]): Chain[String] =
     val frontmatterLines =
       if x.frontmatter.isEmpty then Chain.empty
       else
@@ -39,7 +39,7 @@ object MermaidDiagram:
 
     val headerLines =
       Chain.one:
-        summon[MermaidDiagramType[A]].header
+        summon[MermaidDiagramEncoder[A]].header
 
     val bodyLines =
       Chain.empty

@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams.mermaid
 package flowchart
 
+import cats.data.Chain
+
 sealed trait Flowchart
 
 object Flowchart:
@@ -10,44 +12,45 @@ object Flowchart:
   type TB = TopToBottom
   type BT = BottomToTop
 
-  given MermaidDiagramType[Flowchart] with
+  case class CommonEncoder[A](s: String) extends MermaidDiagramEncoder[A]:
     def header: String =
-      "flowchart"
+      s
+
+    def encode(x: A): Chain[String] =
+      Chain.empty
+
+  given MermaidDiagramEncoder[Flowchart] =
+    CommonEncoder("flowchart")
 
   sealed trait LeftToRight
 
   object LeftToRight:
-    given MermaidDiagramType[LeftToRight] with
-      def header: String =
-        "flowchart LR"
+    given MermaidDiagramEncoder[LeftToRight] =
+      CommonEncoder("flowchart LR")
 
   sealed trait RightToLeft
 
   object RightToLeft:
-    given MermaidDiagramType[RightToLeft] with
-      def header: String =
-        "flowchart RL"
+    given MermaidDiagramEncoder[RightToLeft] =
+      CommonEncoder("flowchart RL")
 
   sealed trait TopDown
 
   object TopDown:
-    given MermaidDiagramType[TopDown] with
-      def header: String =
-        "flowchart TD"
+    given MermaidDiagramEncoder[TopDown] =
+      CommonEncoder("flowchart TD")
 
   sealed trait TopToBottom
 
   object TopToBottom:
-    given MermaidDiagramType[TopToBottom] with
-      def header: String =
-        "flowchart TB"
+    given MermaidDiagramEncoder[TopToBottom] =
+      CommonEncoder("flowchart TB")
 
   sealed trait BottomToTop
 
   object BottomToTop:
-    given MermaidDiagramType[BottomToTop] with
-      def header: String =
-        "flowchart BT"
+    given MermaidDiagramEncoder[BottomToTop] =
+      CommonEncoder("flowchart BT")
 
   sealed trait Common extends Flowchart, LeftToRight, RightToLeft, TopDown, TopToBottom, BottomToTop
 
