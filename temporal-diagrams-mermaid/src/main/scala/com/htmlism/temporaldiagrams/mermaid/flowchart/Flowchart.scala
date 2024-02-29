@@ -9,10 +9,6 @@ import cats.*
 import cats.data.Chain
 import cats.syntax.all.*
 
-trait FlowchartCommon:
-  def entities: Set[FlowchartDsl.Entity]
-  def links: Set[FlowchartDsl.Link]
-
 case class Flowchart(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
 
 object Flowchart extends FlowchartFactory(Flowchart(_, _)):
