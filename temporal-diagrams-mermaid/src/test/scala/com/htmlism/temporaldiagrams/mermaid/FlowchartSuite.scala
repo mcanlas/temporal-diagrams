@@ -13,7 +13,8 @@ object FlowchartSuite extends FunSuite:
       Chain.one:
         "flowchart"
       ,
-      MermaidDiagram.render(MermaidDiagram.empty[Flowchart])
+      MermaidDiagram.render:
+        MermaidDiagram.empty[Flowchart]
     )
 
   test("Can render an empty flowchart, left to right"):
@@ -21,7 +22,8 @@ object FlowchartSuite extends FunSuite:
       Chain.one:
         "flowchart LR"
       ,
-      MermaidDiagram.render(MermaidDiagram.empty[Flowchart.LR])
+      MermaidDiagram.render:
+        MermaidDiagram.empty[Flowchart.LR]
     )
 
   test("Can render an empty flowchart, right to left"):
@@ -29,7 +31,8 @@ object FlowchartSuite extends FunSuite:
       Chain.one:
         "flowchart RL"
       ,
-      MermaidDiagram.render(MermaidDiagram.empty[Flowchart.RL])
+      MermaidDiagram.render:
+        MermaidDiagram.empty[Flowchart.RL]
     )
 
   test("Can render an empty flowchart, top down"):
@@ -37,7 +40,8 @@ object FlowchartSuite extends FunSuite:
       Chain.one:
         "flowchart TD"
       ,
-      MermaidDiagram.render(MermaidDiagram.empty[Flowchart.TD])
+      MermaidDiagram.render:
+        MermaidDiagram.empty[Flowchart.TD]
     )
 
   test("Can render an empty flowchart, top to bottom"):
@@ -45,7 +49,8 @@ object FlowchartSuite extends FunSuite:
       Chain.one:
         "flowchart TB"
       ,
-      MermaidDiagram.render(MermaidDiagram.empty[Flowchart.TB])
+      MermaidDiagram.render:
+        MermaidDiagram.empty[Flowchart.TB]
     )
 
   test("Can render an empty flowchart, bottom to top"):
@@ -53,7 +58,8 @@ object FlowchartSuite extends FunSuite:
       Chain.one:
         "flowchart BT"
       ,
-      MermaidDiagram.render(MermaidDiagram.empty[Flowchart.BT])
+      MermaidDiagram.render:
+        MermaidDiagram.empty[Flowchart.BT]
     )
 
   test("Supports nodes, without text"):
