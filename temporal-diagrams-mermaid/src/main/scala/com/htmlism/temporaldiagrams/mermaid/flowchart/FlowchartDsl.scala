@@ -9,15 +9,17 @@ import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.LinkChai
 sealed trait FlowchartDsl
 
 object FlowchartDsl:
-  sealed trait Node extends FlowchartDsl
+  sealed trait Entity extends FlowchartDsl
 
-  object Node:
+  sealed trait Node extends Entity
+
+  object Entity:
     private def encodeNode(left: String, right: String)(id: String, text: String) =
       Chain.one:
         s"$id$left$text$right"
 
-    given DiagramEncoder[Node] with
-      def encode(x: Node): Chain[String] =
+    given DiagramEncoder[Entity] with
+      def encode(x: Entity): Chain[String] =
         x match
           case Node.Square(id, oText) =>
             Chain.one:
@@ -62,6 +64,7 @@ object FlowchartDsl:
           case Node.DoubleCircle(id, text) =>
             encodeNode("(((", ")))")(id, text)
 
+  object Node:
     case class Square(id: String, text: Option[String]) extends Node:
       def withText(s: String): Node =
         copy(text = Some(s))

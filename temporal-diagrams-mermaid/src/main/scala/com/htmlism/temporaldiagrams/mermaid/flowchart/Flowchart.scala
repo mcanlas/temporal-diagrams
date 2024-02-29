@@ -10,10 +10,10 @@ import cats.data.Chain
 import cats.syntax.all.*
 
 trait FlowchartCommon:
-  def nodes: Set[FlowchartDsl.Node]
+  def entities: Set[FlowchartDsl.Entity]
   def links: Set[FlowchartDsl.Link]
 
-case class Flowchart(nodes: Set[FlowchartDsl.Node], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
+case class Flowchart(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
 
 object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   type LR = LeftToRight
@@ -29,7 +29,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   val BT = BottomToTop
 
   def deriveMonoid[A <: FlowchartCommon](
-      f: (Set[FlowchartDsl.Node], Set[FlowchartDsl.Link]) => A
+      f: (Set[FlowchartDsl.Entity], Set[FlowchartDsl.Link]) => A
   ): Monoid[A] =
     new Monoid[A]:
       def empty: A =
@@ -37,7 +37,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
 
       def combine(x: A, y: A): A =
         f(
-          x.nodes ++ y.nodes,
+          x.entities ++ y.entities,
           x.links ++ y.links
         )
 
@@ -50,7 +50,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   case class CommonEncoder[A <: FlowchartCommon](header: String) extends MermaidDiagramEncoder[A]:
     def encode(x: A): Chain[String] =
       Chain(
-        x.nodes.pipe(renderSubsectionSorted),
+        x.entities.pipe(renderSubsectionSorted),
         x.links.pipe(renderSubsectionSorted)
       )
         .filter(_.nonEmpty)           // drop empty sections
@@ -61,7 +61,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   given MermaidDiagramEncoder[Flowchart] =
     CommonEncoder("flowchart")
 
-  case class LeftToRight(nodes: Set[FlowchartDsl.Node], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
+  case class LeftToRight(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
 
   object LeftToRight extends FlowchartFactory(LeftToRight(_, _)):
     given MermaidDiagramEncoder[LeftToRight] =
@@ -70,7 +70,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
     given Monoid[LeftToRight] =
       deriveMonoid(LeftToRight(_, _))
 
-  case class RightToLeft(nodes: Set[FlowchartDsl.Node], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
+  case class RightToLeft(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
 
   object RightToLeft extends FlowchartFactory(RightToLeft(_, _)):
     given MermaidDiagramEncoder[RightToLeft] =
@@ -79,7 +79,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
     given Monoid[RightToLeft] =
       deriveMonoid(RightToLeft(_, _))
 
-  case class TopDown(nodes: Set[FlowchartDsl.Node], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
+  case class TopDown(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
 
   object TopDown extends FlowchartFactory(TopDown(_, _)):
     given MermaidDiagramEncoder[TopDown] =
@@ -88,7 +88,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
     given Monoid[TopDown] =
       deriveMonoid(TopDown(_, _))
 
-  case class TopToBottom(nodes: Set[FlowchartDsl.Node], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
+  case class TopToBottom(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
 
   object TopToBottom extends FlowchartFactory(TopToBottom(_, _)):
     given MermaidDiagramEncoder[TopToBottom] =
@@ -97,7 +97,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
     given Monoid[TopToBottom] =
       deriveMonoid(TopToBottom(_, _))
 
-  case class BottomToTop(nodes: Set[FlowchartDsl.Node], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
+  case class BottomToTop(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
 
   object BottomToTop extends FlowchartFactory(BottomToTop(_, _)):
     given MermaidDiagramEncoder[BottomToTop] =
