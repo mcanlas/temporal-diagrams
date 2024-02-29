@@ -14,12 +14,19 @@ object FlowchartDsl:
   sealed trait Node extends Entity
 
   object Entity:
+    given DiagramEncoder[Entity] with
+      def encode(x: Entity): Chain[String] =
+        x match
+          case n: Node =>
+            summon[DiagramEncoder[Node]].encode(n)
+
+  object Node:
     private def encodeNode(left: String, right: String)(id: String, text: String) =
       Chain.one:
         s"$id$left$text$right"
 
-    given DiagramEncoder[Entity] with
-      def encode(x: Entity): Chain[String] =
+    given DiagramEncoder[Node] with
+      def encode(x: Node): Chain[String] =
         x match
           case Node.Square(id, oText) =>
             Chain.one:
@@ -64,7 +71,6 @@ object FlowchartDsl:
           case Node.DoubleCircle(id, text) =>
             encodeNode("(((", ")))")(id, text)
 
-  object Node:
     case class Square(id: String, text: Option[String]) extends Node:
       def withText(s: String): Node =
         copy(text = Some(s))
