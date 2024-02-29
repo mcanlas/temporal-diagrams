@@ -343,3 +343,29 @@ object FlowchartSuite extends FunSuite:
             )
         )
     )
+
+  test("Can render a link: with text"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo -- hello --- bar"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Link.LinkChain(
+              NonEmptyList.one("foo"),
+              NonEmptyList.one(
+                Link
+                  .LinkChain
+                  .Segment(
+                    Link.Weight.Normal,
+                    Link.Direction.Open,
+                    text = Some("hello"),
+                    NonEmptyList.one("bar")
+                  )
+              )
+            )
+        )
+    )

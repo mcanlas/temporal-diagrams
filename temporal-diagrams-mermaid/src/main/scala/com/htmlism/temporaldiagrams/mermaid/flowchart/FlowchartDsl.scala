@@ -107,16 +107,37 @@ object FlowchartDsl:
               xs
                 .toList
                 .flatMap(seg =>
-                  val body =
+                  val (leftHead, rightHead) =
                     seg.direction match
                       case Direction.Open =>
-                        "---"
+                        "" -> "-"
 
-                      case Direction.Single(_) =>
-                        "-->"
+                      case Direction.Single(Head.Arrow) =>
+                        "" -> ">"
 
-                      case Direction.Multi(_) =>
-                        "<-->"
+                      case Direction.Single(Head.Circle) =>
+                        "" -> "o"
+
+                      case Direction.Single(Head.Cross) =>
+                        "" -> "x"
+
+                      case Direction.Multi(Head.Arrow) =>
+                        "<" -> ">"
+
+                      case Direction.Multi(Head.Circle) =>
+                        "o" -> "o"
+
+                      case Direction.Multi(Head.Cross) =>
+                        "x" -> "x"
+
+                  val text =
+                    seg
+                      .text
+                      .map(s => s"-- $s ")
+                      .getOrElse("")
+
+                  val body =
+                    leftHead + text + "--" + rightHead
 
                   List(
                     body,
@@ -137,7 +158,6 @@ object FlowchartDsl:
       case Normal
       case Dotted
       case Thick
-      case Invisible
 
     enum Head:
       case Arrow
