@@ -19,6 +19,21 @@ object FlowchartDsl:
   ) extends FlowchartCommon
       with Entity
 
+  object Subgraph:
+    sealed abstract class Direction(val declaration: String)
+
+    // interestingly, TD not supported unlike flowchart
+    object Direction:
+      val LR = LeftToRight
+      val RL = RightToLeft
+      val TB = TopToBottom
+      val BT = BottomToTop
+
+      object LeftToRight extends Direction("LR")
+      object RightToLeft extends Direction("RL")
+      object TopToBottom extends Direction("TB")
+      object BottomToTop extends Direction("BT")
+
   sealed trait Node extends Entity
 
   object Entity:
