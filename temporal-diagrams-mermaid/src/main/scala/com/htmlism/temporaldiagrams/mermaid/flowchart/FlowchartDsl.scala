@@ -4,10 +4,10 @@ package mermaid.flowchart
 import cats.data.*
 import cats.syntax.all.*
 
-sealed trait FlowchartDeclaration
+sealed trait FlowchartDsl
 
-object FlowchartDeclaration:
-  sealed trait Node extends FlowchartDeclaration
+object FlowchartDsl:
+  sealed trait Node extends FlowchartDsl
 
   object Node:
     private def encodeNode(left: String, right: String)(id: String, text: String) =
@@ -90,7 +90,7 @@ object FlowchartDeclaration:
 
     case class DoubleCircle(id: String, text: String) extends Node
 
-  sealed trait Link extends FlowchartDeclaration
+  sealed trait Link extends FlowchartDsl
 
   object Link:
     private def ampersand(xs: NonEmptyList[String]) =

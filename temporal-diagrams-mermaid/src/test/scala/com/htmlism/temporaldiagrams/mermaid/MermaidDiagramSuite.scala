@@ -4,7 +4,7 @@ import cats.data.Chain
 import cats.syntax.all.*
 import weaver.FunSuite
 
-import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDeclaration
+import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl
 
 object MermaidDiagramSuite extends FunSuite:
   test("Frontmatter is monoidal"):
@@ -36,22 +36,22 @@ object MermaidDiagramSuite extends FunSuite:
       MermaidDiagram(
         Chain.empty,
         Flowchart:
-          Flowchart.Node.Square("foo", text = None)
+          FlowchartDsl.Node.Square("foo", text = None)
       )
 
     val bar =
       MermaidDiagram(
         Chain.empty,
         Flowchart:
-          Flowchart.Node.Square("bar", text = None)
+          FlowchartDsl.Node.Square("bar", text = None)
       )
 
     expect.same(
       MermaidDiagram(
         Chain.empty,
         Flowchart(
-          Flowchart.Node.Square("foo", text = None),
-          Flowchart.Node.Square("bar", text = None)
+          FlowchartDsl.Node.Square("foo", text = None),
+          FlowchartDsl.Node.Square("bar", text = None)
         )
       ),
       foo |+| bar
