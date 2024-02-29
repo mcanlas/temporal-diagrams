@@ -266,19 +266,19 @@ object FlowchartSuite extends FunSuite:
         )
     )
 
-  test("Can render a link: open"):
+  test("Can render a link: open with lengths and text"):
     expect.eql(
       Chain(
         "flowchart",
-        "  foo --- bar"
+        "  alpha --- beta ---- gamma"
       ),
       MermaidDiagram.render:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
             Link.LinkChain(
-              NonEmptyList.one("foo"),
-              NonEmptyList.one(
+              NonEmptyList.one("alpha"),
+              NonEmptyList.of(
                 Link
                   .LinkChain
                   .Segment
@@ -287,7 +287,17 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Open,
                     text = None,
-                    NonEmptyList.one("bar")
+                    NonEmptyList.one("beta")
+                  ),
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    2,
+                    Link.Weight.Normal,
+                    Link.Direction.Open,
+                    text = None,
+                    NonEmptyList.one("gamma")
                   )
               )
             )
@@ -404,6 +414,82 @@ object FlowchartSuite extends FunSuite:
                   .Invisible(
                     2,
                     NonEmptyList.one("baz")
+                  )
+              )
+            )
+        )
+    )
+
+  test("Can render a link: dotted weight, no text"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  one -.- two -..- three"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Link.LinkChain(
+              NonEmptyList.one("one"),
+              NonEmptyList.of(
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    1,
+                    Link.Weight.Dotted,
+                    Link.Direction.Open,
+                    text = None,
+                    NonEmptyList.one("two")
+                  ),
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    2,
+                    Link.Weight.Dotted,
+                    Link.Direction.Open,
+                    text = None,
+                    NonEmptyList.one("three")
+                  )
+              )
+            )
+        )
+    )
+
+  test("Can render a link: dotted weight, with text"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  one -. foo .- two -. bar ..- three"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Link.LinkChain(
+              NonEmptyList.one("one"),
+              NonEmptyList.of(
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    1,
+                    Link.Weight.Dotted,
+                    Link.Direction.Open,
+                    text = Some("foo"),
+                    NonEmptyList.one("two")
+                  ),
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    2,
+                    Link.Weight.Dotted,
+                    Link.Direction.Open,
+                    text = Some("bar"),
+                    NonEmptyList.one("three")
                   )
               )
             )

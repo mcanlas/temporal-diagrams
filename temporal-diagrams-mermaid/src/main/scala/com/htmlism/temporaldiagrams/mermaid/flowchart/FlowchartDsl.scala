@@ -118,37 +118,69 @@ object FlowchartDsl:
                       ampersand(destinations)
                     )
 
-                  case LinkChain.Segment.Visible(_, _, direction, oText, destinations) =>
+                  case LinkChain.Segment.Visible(length, weight, direction, oText, destinations) =>
                     val (leftHead, rightHead) =
-                      direction match
-                        case Direction.Open =>
+                      (weight, direction) match
+                        case (Weight.Normal, Direction.Open) =>
                           "" -> "-"
 
-                        case Direction.Single(Head.Arrow) =>
+                        case (Weight.Dotted, Direction.Open) =>
+                          "" -> ""
+
+                        case (Weight.Thick, Direction.Open) =>
+                          "" -> "="
+
+                        case (_, Direction.Single(Head.Arrow)) =>
                           "" -> ">"
 
-                        case Direction.Single(Head.Circle) =>
+                        case (_, Direction.Single(Head.Circle)) =>
                           "" -> "o"
 
-                        case Direction.Single(Head.Cross) =>
+                        case (_, Direction.Single(Head.Cross)) =>
                           "" -> "x"
 
-                        case Direction.Multi(Head.Arrow) =>
+                        case (_, Direction.Multi(Head.Arrow)) =>
                           "<" -> ">"
 
-                        case Direction.Multi(Head.Circle) =>
+                        case (_, Direction.Multi(Head.Circle)) =>
                           "o" -> "o"
 
-                        case Direction.Multi(Head.Cross) =>
+                        case (_, Direction.Multi(Head.Cross)) =>
                           "x" -> "x"
 
-                    val text =
-                      oText
-                        .map(s => s"-- $s ")
-                        .getOrElse("")
+                    val leftBody =
+                      weight match
+                        case Weight.Normal =>
+                          "--"
+
+                        case Weight.Dotted =>
+                          "-."
+
+                        case Weight.Thick =>
+                          "=="
+
+                    val rightBody =
+                      (oText, weight) match
+                        case (Some(s), Weight.Normal) =>
+                          s" $s " + ("-" * (length + 1))
+
+                        case (Some(s), Weight.Dotted) =>
+                          s" $s " + ("." * length) + "-"
+
+                        case (Some(s), Weight.Thick) =>
+                          s" $s " + ("=" * (length + 1))
+
+                        case (None, Weight.Normal) =>
+                          "-" * (length - 1)
+
+                        case (None, Weight.Dotted) =>
+                          ("." * (length - 1)) + "-"
+
+                        case (None, Weight.Thick) =>
+                          "=" * (length - 1)
 
                     val body =
-                      leftHead + text + "--" + rightHead
+                      leftHead + leftBody + rightBody + rightHead
 
                     List(
                       body,
