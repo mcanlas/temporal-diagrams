@@ -1,7 +1,11 @@
 package com.htmlism.temporaldiagrams.mermaid
 
 import cats.data.Chain
+import cats.data.NonEmptyList
 import weaver.FunSuite
+
+import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDeclaration
+import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDeclaration.Link.*
 
 object FlowchartSuite extends FunSuite:
   test("Can render an empty flowchart"):
@@ -259,5 +263,32 @@ object FlowchartSuite extends FunSuite:
           Chain.empty,
           Flowchart:
             Flowchart.Node.DoubleCircle(id = "foo", text = "bar")
+        )
+    )
+
+  test("Can render a link: open"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo --- bar"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Flowchart.Link(
+              NonEmptyList.one("foo"),
+              NonEmptyList.one(
+                FlowchartDeclaration
+                  .Link
+                  .LinkChain
+                  .Segment(
+                    Weight.Normal,
+                    Direction.Open,
+                    text = None,
+                    NonEmptyList.one("bar")
+                  )
+              )
+            )
         )
     )

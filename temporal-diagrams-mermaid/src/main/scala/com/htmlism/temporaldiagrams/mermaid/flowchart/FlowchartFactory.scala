@@ -7,5 +7,5 @@ trait FlowchartFactory[A](f: (Set[FlowchartDeclaration.Node], Set[FlowchartDecla
   def apply(xs: FlowchartDeclaration*): A =
     f(
       xs.collect { case x: FlowchartDeclaration.Node => x }.toSet,
-      Set.empty // TODO,
+      xs.collect { case x: FlowchartDeclaration.Link => x }.toSet
     )

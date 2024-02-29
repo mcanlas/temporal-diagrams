@@ -7,6 +7,7 @@ import scala.util.chaining.*
 import cats.Order.*
 import cats.*
 import cats.data.Chain
+import cats.syntax.all.*
 
 trait FlowchartCommon:
   def nodes: Set[FlowchartDeclaration.Node]
@@ -29,6 +30,7 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   val BT = BottomToTop
 
   val Node = FlowchartDeclaration.Node
+  val Link = FlowchartDeclaration.Link.LinkChain
 
   def deriveMonoid[A <: FlowchartCommon](
       f: (Set[FlowchartDeclaration.Node], Set[FlowchartDeclaration.Link]) => A
@@ -51,11 +53,14 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
 
   case class CommonEncoder[A <: FlowchartCommon](header: String) extends MermaidDiagramEncoder[A]:
     def encode(x: A): Chain[String] =
-      x
-        .nodes
-        .pipe(renderSubsectionSorted)
-        .pipe(Chain.fromSeq)
-        .flatMap(identity)
+      Chain(
+        x.nodes.pipe(renderSubsectionSorted),
+        x.links.pipe(renderSubsectionSorted)
+      )
+        .filter(_.nonEmpty)           // drop empty sections
+        .map(Chain.fromSeq)           // from list to chain
+        .flatten                      // make them one stream of bundles
+        .pipe(interlace(_, identity)) // intersperse newlines and flatten
 
   given MermaidDiagramEncoder[Flowchart] =
     CommonEncoder("flowchart")

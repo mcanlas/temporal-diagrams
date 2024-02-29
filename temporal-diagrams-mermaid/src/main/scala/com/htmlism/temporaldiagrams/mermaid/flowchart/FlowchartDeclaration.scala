@@ -1,14 +1,13 @@
 package com.htmlism.temporaldiagrams
 package mermaid.flowchart
 
-import cats.data.Chain
+import cats.data.*
+import cats.syntax.all.*
 
 sealed trait FlowchartDeclaration
 
 object FlowchartDeclaration:
   sealed trait Node extends FlowchartDeclaration
-
-  sealed trait Link extends FlowchartDeclaration
 
   object Node:
     private def encodeNode(left: String, right: String)(id: String, text: String) =
@@ -90,3 +89,51 @@ object FlowchartDeclaration:
     case class TrapezoidAlt(id: String, text: String) extends Node
 
     case class DoubleCircle(id: String, text: String) extends Node
+
+  sealed trait Link extends FlowchartDeclaration
+
+  object Link:
+    private def ampersand(xs: NonEmptyList[String]) =
+      xs.mkString_(" & ")
+
+    given DiagramEncoder[Link] with
+      def encode(x: Link): Chain[String] =
+        x match
+          case LinkChain(srcs, xs) =>
+            val sourcePart =
+              ampersand(srcs)
+
+            val destinationParts =
+              xs
+                .toList
+                .flatMap(seg =>
+                  List(
+                    "---",
+                    ampersand(seg.destinations)
+                  )
+                )
+
+            Chain.one:
+              (sourcePart :: destinationParts)
+                .mkString(" ")
+
+    case class LinkChain(sources: NonEmptyList[String], xs: NonEmptyList[LinkChain.Segment]) extends Link
+
+    object LinkChain:
+      case class Segment(weight: Weight, direction: Direction, text: Option[String], destinations: NonEmptyList[String])
+
+    enum Weight:
+      case Normal
+      case Dotted
+      case Thick
+      case Invisible
+
+    enum Head:
+      case Arrow
+      case Circle
+      case Cross
+
+    enum Direction:
+      case Open
+      case Single(head: Head)
+      case Multi(head: Head)
