@@ -281,7 +281,9 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one(
                 Link
                   .LinkChain
-                  .Segment(
+                  .Segment
+                  .Visible(
+                    1,
                     Link.Weight.Normal,
                     Link.Direction.Open,
                     text = None,
@@ -307,7 +309,9 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one(
                 Link
                   .LinkChain
-                  .Segment(
+                  .Segment
+                  .Visible(
+                    1,
                     Link.Weight.Normal,
                     Link.Direction.Single(Link.Head.Arrow),
                     text = None,
@@ -333,7 +337,9 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one(
                 Link
                   .LinkChain
-                  .Segment(
+                  .Segment
+                  .Visible(
+                    1,
                     Link.Weight.Normal,
                     Link.Direction.Multi(Link.Head.Arrow),
                     text = None,
@@ -359,11 +365,45 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one(
                 Link
                   .LinkChain
-                  .Segment(
+                  .Segment
+                  .Visible(
+                    1,
                     Link.Weight.Normal,
                     Link.Direction.Open,
                     text = Some("hello"),
                     NonEmptyList.one("bar")
+                  )
+              )
+            )
+        )
+    )
+
+  test("Can render a link: invisible segment, with lengths"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo ~~~ bar ~~~~ baz"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Link.LinkChain(
+              NonEmptyList.one("foo"),
+              NonEmptyList.of(
+                Link
+                  .LinkChain
+                  .Segment
+                  .Invisible(
+                    1,
+                    NonEmptyList.one("bar")
+                  ),
+                Link
+                  .LinkChain
+                  .Segment
+                  .Invisible(
+                    2,
+                    NonEmptyList.one("baz")
                   )
               )
             )

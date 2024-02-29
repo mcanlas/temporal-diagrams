@@ -4,6 +4,8 @@ package mermaid.flowchart
 import cats.data.*
 import cats.syntax.all.*
 
+import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.LinkChain.Segment.Visible
+
 sealed trait FlowchartDsl
 
 object FlowchartDsl:
@@ -106,44 +108,52 @@ object FlowchartDsl:
             val destinationParts =
               xs
                 .toList
-                .flatMap(seg =>
-                  val (leftHead, rightHead) =
-                    seg.direction match
-                      case Direction.Open =>
-                        "" -> "-"
+                .flatMap:
+                  case LinkChain.Segment.Invisible(length, destinations) =>
+                    val body =
+                      "~" * (length + 2)
 
-                      case Direction.Single(Head.Arrow) =>
-                        "" -> ">"
+                    List(
+                      body,
+                      ampersand(destinations)
+                    )
 
-                      case Direction.Single(Head.Circle) =>
-                        "" -> "o"
+                  case LinkChain.Segment.Visible(_, _, direction, oText, destinations) =>
+                    val (leftHead, rightHead) =
+                      direction match
+                        case Direction.Open =>
+                          "" -> "-"
 
-                      case Direction.Single(Head.Cross) =>
-                        "" -> "x"
+                        case Direction.Single(Head.Arrow) =>
+                          "" -> ">"
 
-                      case Direction.Multi(Head.Arrow) =>
-                        "<" -> ">"
+                        case Direction.Single(Head.Circle) =>
+                          "" -> "o"
 
-                      case Direction.Multi(Head.Circle) =>
-                        "o" -> "o"
+                        case Direction.Single(Head.Cross) =>
+                          "" -> "x"
 
-                      case Direction.Multi(Head.Cross) =>
-                        "x" -> "x"
+                        case Direction.Multi(Head.Arrow) =>
+                          "<" -> ">"
 
-                  val text =
-                    seg
-                      .text
-                      .map(s => s"-- $s ")
-                      .getOrElse("")
+                        case Direction.Multi(Head.Circle) =>
+                          "o" -> "o"
 
-                  val body =
-                    leftHead + text + "--" + rightHead
+                        case Direction.Multi(Head.Cross) =>
+                          "x" -> "x"
 
-                  List(
-                    body,
-                    ampersand(seg.destinations)
-                  )
-                )
+                    val text =
+                      oText
+                        .map(s => s"-- $s ")
+                        .getOrElse("")
+
+                    val body =
+                      leftHead + text + "--" + rightHead
+
+                    List(
+                      body,
+                      ampersand(destinations)
+                    )
 
             Chain.one:
               (sourcePart :: destinationParts)
@@ -152,7 +162,15 @@ object FlowchartDsl:
     case class LinkChain(sources: NonEmptyList[String], xs: NonEmptyList[LinkChain.Segment]) extends Link
 
     object LinkChain:
-      case class Segment(weight: Weight, direction: Direction, text: Option[String], destinations: NonEmptyList[String])
+      enum Segment:
+        case Visible(
+            length: Int,
+            weight: Weight,
+            direction: Direction,
+            text: Option[String],
+            destinations: NonEmptyList[String]
+        )
+        case Invisible(length: Int, destinations: NonEmptyList[String])
 
     enum Weight:
       case Normal
