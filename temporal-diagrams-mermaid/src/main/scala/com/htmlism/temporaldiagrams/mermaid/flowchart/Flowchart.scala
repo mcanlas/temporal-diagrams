@@ -4,10 +4,8 @@ package flowchart
 
 import scala.util.chaining.*
 
-import cats.Order.*
 import cats.*
 import cats.data.Chain
-import cats.syntax.all.*
 
 case class Flowchart(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
 
@@ -40,19 +38,9 @@ object Flowchart extends FlowchartFactory(Flowchart(_, _)):
   given Monoid[Flowchart] =
     deriveMonoid(Flowchart(_, _))
 
-  private def renderSubsectionSorted[A: DiagramEncoder](xs: Set[A]) =
-    xs.toList.map(summon[DiagramEncoder[A]].encode).sorted
-
   case class CommonEncoder[A <: FlowchartCommon](header: String) extends MermaidDiagramEncoder[A]:
     def encode(x: A): Chain[String] =
-      Chain(
-        x.entities.pipe(renderSubsectionSorted),
-        x.links.pipe(renderSubsectionSorted)
-      )
-        .filter(_.nonEmpty)           // drop empty sections
-        .map(Chain.fromSeq)           // from list to chain
-        .flatten                      // make them one stream of bundles
-        .pipe(interlace(_, identity)) // intersperse newlines and flatten
+      FlowchartCommon.encode(x)
 
   given MermaidDiagramEncoder[Flowchart] =
     CommonEncoder("flowchart")
