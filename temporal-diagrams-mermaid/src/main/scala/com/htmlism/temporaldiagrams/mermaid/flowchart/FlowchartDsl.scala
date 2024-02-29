@@ -12,6 +12,8 @@ object FlowchartDsl:
   sealed trait Entity extends FlowchartDsl
 
   case class Subgraph(
+      id: String,
+      text: Option[String],
       entities: Set[FlowchartDsl.Entity],
       links: Set[FlowchartDsl.Link]
   ) extends FlowchartCommon
