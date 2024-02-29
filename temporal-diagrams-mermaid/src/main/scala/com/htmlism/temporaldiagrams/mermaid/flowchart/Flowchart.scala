@@ -7,85 +7,60 @@ import scala.util.chaining.*
 import cats.*
 import cats.data.Chain
 
-case class Flowchart(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
+case class Flowchart(
+    direction: Option[Flowchart.Direction],
+    entities: Set[FlowchartDsl.Entity],
+    links: Set[FlowchartDsl.Link]
+) extends FlowchartCommon:
+  def withDirection(dir: Flowchart.Direction): Flowchart =
+    copy(direction = Some(dir))
 
-object Flowchart extends FlowchartFactory(Flowchart(_, _)):
-  type LR = LeftToRight
-  type RL = RightToLeft
-  type TD = TopDown
-  type TB = TopToBottom
-  type BT = BottomToTop
+object Flowchart:
+  def empty: Flowchart =
+    Flowchart(None, Set.empty, Set.empty)
 
-  val LR = LeftToRight
-  val RL = RightToLeft
-  val TD = TopDown
-  val TB = TopToBottom
-  val BT = BottomToTop
+  def apply(xs: FlowchartDsl*): Flowchart =
+    Flowchart(
+      None,
+      xs.collect { case x: FlowchartDsl.Entity => x }.toSet,
+      xs.collect { case x: FlowchartDsl.Link => x }.toSet
+    )
 
-  def deriveMonoid[A <: FlowchartCommon](
-      f: (Set[FlowchartDsl.Entity], Set[FlowchartDsl.Link]) => A
-  ): Monoid[A] =
-    new Monoid[A]:
-      def empty: A =
-        f(Set.empty, Set.empty)
+  sealed abstract class Direction(val declaration: String)
 
-      def combine(x: A, y: A): A =
-        f(
-          x.entities ++ y.entities,
-          x.links ++ y.links
-        )
+  object Direction:
+    val LR = LeftToRight
+    val RL = RightToLeft
+    val TD = TopDown
+    val TB = TopToBottom
+    val BT = BottomToTop
 
-  given Monoid[Flowchart] =
-    deriveMonoid(Flowchart(_, _))
+    object LeftToRight extends Direction("LR")
+    object RightToLeft extends Direction("RL")
+    object TopDown     extends Direction("TD")
+    object TopToBottom extends Direction("TB")
+    object BottomToTop extends Direction("BT")
 
-  case class CommonEncoder[A <: FlowchartCommon](header: String) extends MermaidDiagramEncoder[A]:
-    def encode(x: A): Chain[String] =
+  given Monoid[Flowchart] with
+    def empty: Flowchart =
+      Flowchart(None, Set.empty, Set.empty)
+
+    // interesting departure from usual monoid affair, always takes whatever the right hand direction is
+    def combine(x: Flowchart, y: Flowchart): Flowchart =
+      Flowchart(
+        y.direction,
+        x.entities ++ y.entities,
+        x.links ++ y.links
+      )
+
+  given MermaidDiagramEncoder[Flowchart] with
+    def header(x: Flowchart): String =
+      val directionStr =
+        x.direction
+          .map(" " + _.declaration)
+          .getOrElse("")
+
+      s"flowchart$directionStr"
+
+    def encode(x: Flowchart): Chain[String] =
       FlowchartCommon.encode(x)
-
-  given MermaidDiagramEncoder[Flowchart] =
-    CommonEncoder("flowchart")
-
-  case class LeftToRight(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
-
-  object LeftToRight extends FlowchartFactory(LeftToRight(_, _)):
-    given MermaidDiagramEncoder[LeftToRight] =
-      CommonEncoder("flowchart LR")
-
-    given Monoid[LeftToRight] =
-      deriveMonoid(LeftToRight(_, _))
-
-  case class RightToLeft(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
-
-  object RightToLeft extends FlowchartFactory(RightToLeft(_, _)):
-    given MermaidDiagramEncoder[RightToLeft] =
-      CommonEncoder("flowchart RL")
-
-    given Monoid[RightToLeft] =
-      deriveMonoid(RightToLeft(_, _))
-
-  case class TopDown(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
-
-  object TopDown extends FlowchartFactory(TopDown(_, _)):
-    given MermaidDiagramEncoder[TopDown] =
-      CommonEncoder("flowchart TD")
-
-    given Monoid[TopDown] =
-      deriveMonoid(TopDown(_, _))
-
-  case class TopToBottom(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
-
-  object TopToBottom extends FlowchartFactory(TopToBottom(_, _)):
-    given MermaidDiagramEncoder[TopToBottom] =
-      CommonEncoder("flowchart TB")
-
-    given Monoid[TopToBottom] =
-      deriveMonoid(TopToBottom(_, _))
-
-  case class BottomToTop(entities: Set[FlowchartDsl.Entity], links: Set[FlowchartDsl.Link]) extends FlowchartCommon
-
-  object BottomToTop extends FlowchartFactory(BottomToTop(_, _)):
-    given MermaidDiagramEncoder[BottomToTop] =
-      CommonEncoder("flowchart BT")
-
-    given Monoid[BottomToTop] =
-      deriveMonoid(BottomToTop(_, _))

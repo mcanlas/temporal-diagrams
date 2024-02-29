@@ -40,7 +40,7 @@ object MermaidDiagram:
 
     val headerLines =
       Chain.one:
-        A.header
+        A.header(x.diagram)
 
     val bodyLines =
       A

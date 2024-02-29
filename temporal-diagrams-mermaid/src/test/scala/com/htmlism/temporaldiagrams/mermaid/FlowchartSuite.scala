@@ -4,6 +4,7 @@ import cats.data.Chain
 import cats.data.NonEmptyList
 import weaver.FunSuite
 
+import com.htmlism.temporaldiagrams.mermaid.flowchart.Flowchart.*
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.*
 
@@ -23,7 +24,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart LR"
       ,
       MermaidDiagram.render:
-        MermaidDiagram.empty[Flowchart.LR]
+        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.LR))
     )
 
   test("Can render an empty flowchart, right to left"):
@@ -32,7 +33,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart RL"
       ,
       MermaidDiagram.render:
-        MermaidDiagram.empty[Flowchart.RL]
+        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.RL))
     )
 
   test("Can render an empty flowchart, top down"):
@@ -41,7 +42,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart TD"
       ,
       MermaidDiagram.render:
-        MermaidDiagram.empty[Flowchart.TD]
+        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.TD))
     )
 
   test("Can render an empty flowchart, top to bottom"):
@@ -50,7 +51,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart TB"
       ,
       MermaidDiagram.render:
-        MermaidDiagram.empty[Flowchart.TB]
+        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.TB))
     )
 
   test("Can render an empty flowchart, bottom to top"):
@@ -59,7 +60,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart BT"
       ,
       MermaidDiagram.render:
-        MermaidDiagram.empty[Flowchart.BT]
+        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.BT))
     )
 
   test("Supports nodes, without text"):
