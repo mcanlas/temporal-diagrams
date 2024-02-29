@@ -45,6 +45,8 @@ object MermaidDiagram:
     val bodyLines =
       A
         .encode(x.diagram)
-        .map("  " + _)
+        .map: s =>
+          if s.isEmpty then s
+          else s"  $s"
 
     frontmatterLines ++ headerLines ++ bodyLines

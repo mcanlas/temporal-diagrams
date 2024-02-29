@@ -502,7 +502,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart",
         "  subgraph bar [barsub]",
         "  end",
-        "  ", // TODO
+        "",
         "  subgraph foo",
         "  end"
       ),
