@@ -107,8 +107,19 @@ object FlowchartDsl:
               xs
                 .toList
                 .flatMap(seg =>
+                  val body =
+                    seg.direction match
+                      case Direction.Open =>
+                        "---"
+
+                      case Direction.Single(_) =>
+                        "-->"
+
+                      case Direction.Multi(_) =>
+                        "<-->"
+
                   List(
-                    "---",
+                    body,
                     ampersand(seg.destinations)
                   )
                 )

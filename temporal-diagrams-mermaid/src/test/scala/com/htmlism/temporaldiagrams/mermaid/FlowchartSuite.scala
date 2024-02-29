@@ -291,3 +291,55 @@ object FlowchartSuite extends FunSuite:
             )
         )
     )
+
+  test("Can render a link: arrow"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo --> bar"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Link.LinkChain(
+              NonEmptyList.one("foo"),
+              NonEmptyList.one(
+                Link
+                  .LinkChain
+                  .Segment(
+                    Link.Weight.Normal,
+                    Link.Direction.Single(Link.Head.Arrow),
+                    text = None,
+                    NonEmptyList.one("bar")
+                  )
+              )
+            )
+        )
+    )
+
+  test("Can render a link: multi direction"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo <--> bar"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Link.LinkChain(
+              NonEmptyList.one("foo"),
+              NonEmptyList.one(
+                Link
+                  .LinkChain
+                  .Segment(
+                    Link.Weight.Normal,
+                    Link.Direction.Multi(Link.Head.Arrow),
+                    text = None,
+                    NonEmptyList.one("bar")
+                  )
+              )
+            )
+        )
+    )
