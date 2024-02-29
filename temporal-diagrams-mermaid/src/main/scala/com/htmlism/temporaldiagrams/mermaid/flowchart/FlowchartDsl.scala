@@ -11,12 +11,25 @@ sealed trait FlowchartDsl
 object FlowchartDsl:
   sealed trait Entity extends FlowchartDsl
 
+  case class Subgraph(
+      entities: Set[FlowchartDsl.Entity],
+      links: Set[FlowchartDsl.Link]
+  ) extends FlowchartCommon
+      with Entity
+
   sealed trait Node extends Entity
 
   object Entity:
     given DiagramEncoder[Entity] with
       def encode(x: Entity): Chain[String] =
         x match
+          case sg: Subgraph =>
+            FlowchartCommon
+              .encode(sg)
+              .map: s =>
+                if s.isEmpty then s
+                else s"  $s"
+
           case n: Node =>
             summon[DiagramEncoder[Node]].encode(n)
 
