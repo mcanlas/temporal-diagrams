@@ -25,12 +25,22 @@ object FlowchartDsl:
     given DiagramEncoder[Entity] with
       def encode(x: Entity): Chain[String] =
         x match
-          case sg: Subgraph =>
-            FlowchartCommon
-              .encode(sg)
-              .map: s =>
-                if s.isEmpty then s
-                else s"  $s"
+          case sg @ Subgraph(id, oText, _, _) =>
+            val body =
+              FlowchartCommon
+                .encode(sg)
+                .map: s =>
+                  if s.isEmpty then s
+                  else s"  $s"
+
+            val text =
+              oText
+                .map(s => s" [$s]")
+                .getOrElse("")
+
+            body
+              .prepend(s"subgraph $id$text")
+              .append("end")
 
           case n: Node =>
             summon[DiagramEncoder[Node]].encode(n)
