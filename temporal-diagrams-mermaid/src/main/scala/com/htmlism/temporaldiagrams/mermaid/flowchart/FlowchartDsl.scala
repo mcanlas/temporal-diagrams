@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams
 package mermaid.flowchart
 
+import scala.util.chaining.*
+
 import cats.data.*
 import cats.syntax.all.*
 
@@ -14,6 +16,7 @@ object FlowchartDsl:
   case class Subgraph(
       id: String,
       text: Option[String],
+      direction: Option[Subgraph.Direction],
       entities: Set[FlowchartDsl.Entity],
       links: Set[FlowchartDsl.Link]
   ) extends FlowchartCommon
@@ -40,10 +43,16 @@ object FlowchartDsl:
     given DiagramEncoder[Entity] with
       def encode(x: Entity): Chain[String] =
         x match
-          case sg @ Subgraph(id, oText, _, _) =>
+          case sg @ Subgraph(id, oText, oDir, _, _) =>
+            val directionXs =
+              oDir
+                .map(s => "direction " + s.declaration)
+                .toList
+                .pipe(Chain.fromSeq)
+
             val body =
-              FlowchartCommon
-                .encode(sg)
+              (directionXs ++ FlowchartCommon
+                .encode(sg))
                 .map: s =>
                   if s.isEmpty then s
                   else s"  $s"

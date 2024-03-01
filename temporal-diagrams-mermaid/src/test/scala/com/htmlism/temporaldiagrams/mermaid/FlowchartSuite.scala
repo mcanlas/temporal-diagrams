@@ -517,8 +517,25 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart(
-            Subgraph("foo", None, Set.empty, Set.empty),
-            Subgraph("bar", Some("barsub"), Set.empty, Set.empty)
+            Subgraph("foo", None, None, Set.empty, Set.empty),
+            Subgraph("bar", Some("barsub"), None, Set.empty, Set.empty)
+          )
+        )
+    )
+
+  test("Can render a subgraph, with direction"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  subgraph foo",
+        "    direction RL",
+        "  end"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart(
+            Subgraph("foo", None, Some(Subgraph.Direction.RL), Set.empty, Set.empty)
           )
         )
     )
