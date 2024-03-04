@@ -2,8 +2,8 @@ package com.htmlism.temporaldiagrams.plantuml
 
 import scala.util.chaining.*
 
-import cats.Order.*
 import cats.*
+import cats.Order.*
 import cats.data.*
 import cats.syntax.all.*
 
