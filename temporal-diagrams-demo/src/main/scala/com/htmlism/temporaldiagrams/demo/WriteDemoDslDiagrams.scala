@@ -87,7 +87,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
         .pipe(PlantUml.render)
         .mkString_("\n")
 
-    out.print(s"v2-$n.puml")(str)
+    out.print(s"demo-dsl-$n.puml")(str)
 
   private def printHighlightDiagrams(renders: Chain[Renderable[PlantUml.ComponentDiagram]], n: Int) =
     val tags =
@@ -102,5 +102,5 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
           .pipe(PlantUml.render)
           .mkString_("\n")
 
-      out.print(s"v2-$n-$t.puml")(str)
+      out.print(s"demo-dsl-$n-$t.puml")(str)
     }
