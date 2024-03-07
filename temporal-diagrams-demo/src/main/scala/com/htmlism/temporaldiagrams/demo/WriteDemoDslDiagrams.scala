@@ -74,7 +74,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
     val toTitle =
       Kleisli.fromFunction[Id, String][Chain[Renderable.WithMultiArrows[D, String]]]: s =>
         Chain(
-          DemoDsl.Echo(PlantUml.Title(List(s))).r
+          DemoDsl.Title(s).r
         )
 
     val stackGivenCfg =

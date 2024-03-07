@@ -12,7 +12,7 @@ sealed trait DemoDsl
 object DemoDsl:
   case class ClusterService(name: String, asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String)                           extends DemoDsl
-  case class Echo(x: PlantUml.Directive)                      extends DemoDsl
+  case class Title(s: String)                                 extends DemoDsl
 
   case class Arrow(src: String, dest: String)
 
@@ -61,8 +61,9 @@ object DemoDsl:
           )
             .pipe(PlantUml.ComponentDiagram.apply(_))
 
-        case Echo(x) =>
-          PlantUml.ComponentDiagram(x)
+        case Title(s) =>
+          PlantUml.ComponentDiagram:
+            PlantUml.Title(List(s))
 
   private val queueSkin =
     PlantUml
