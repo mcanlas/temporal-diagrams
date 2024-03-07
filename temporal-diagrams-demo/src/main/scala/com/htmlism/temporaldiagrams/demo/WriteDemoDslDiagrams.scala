@@ -8,6 +8,7 @@ import cats.effect.*
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.Renderable
+import com.htmlism.temporaldiagrams.Renderable.*
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.syntax.*
 
@@ -16,32 +17,48 @@ object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinter[IO]) wi
 
 class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   private val toProducer =
-    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[Renderable[PlantUml.ComponentDiagram]]]:
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[
+      Renderable.WithMultiArrows[PlantUml.ComponentDiagram, String]
+    ]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
-        Chain.one:
-          DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo")
+        Chain(
+          DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo"),
+          WithMultiArrows.Source("foo", Nil)
+        )
 
       case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
-        Chain.one:
-          DemoDsl.ClusterService("foo", None, asCluster = true).tag("foo")
+        Chain(
+          DemoDsl.ClusterService("foo", None, asCluster = true).tag("foo"),
+          WithMultiArrows.Source("foo", Nil)
+        )
 
       case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
-        Chain.one:
-          DemoDsl.Buffered("foo", None).tag("foo")
+        Chain(
+          DemoDsl.Buffered("foo", None).tag("foo"),
+          WithMultiArrows.Source("foo", Nil)
+        )
 
   private val toConsumer =
-    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[Renderable[PlantUml.ComponentDiagram]]]:
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[
+      Renderable.WithMultiArrows[PlantUml.ComponentDiagram, String]
+    ]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
-        Chain.one:
-          DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar")
+        Chain(
+          DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar"),
+          WithMultiArrows.Source("bar", Nil)
+        )
 
       case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
-        Chain.one:
-          DemoDsl.ClusterService("bar", "foo".some, asCluster = true).tag("bar")
+        Chain(
+          DemoDsl.ClusterService("bar", "foo".some, asCluster = true).tag("bar"),
+          WithMultiArrows.Source("bar", Nil)
+        )
 
       case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
-        Chain.one:
-          DemoDsl.Buffered("bar", "foo".some).tag("bar")
+        Chain(
+          DemoDsl.Buffered("bar", "foo".some).tag("bar"),
+          WithMultiArrows.Source("bar", Nil)
+        )
 
   private val toTitle =
     Kleisli.fromFunction[Id, String][Chain[Renderable[PlantUml.ComponentDiagram]]]: s =>
@@ -51,8 +68,20 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   val stackGivenCfg =
     (
       toTitle.local[DemoDsl.ConfigBasket](_.title) |+|
-        toProducer.local[DemoDsl.ConfigBasket](_.fooStyle) |+|
-        toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
+        toProducer
+          .local[DemoDsl.ConfigBasket](_.fooStyle)
+          .map(
+            WithMultiArrows
+              .renderArrows[DemoDsl.Arrow](_)
+              .getOrElse(sys.error("expected flawless arrow render in producer"))
+          ) |+|
+        toConsumer
+          .local[DemoDsl.ConfigBasket](_.barStyle)
+          .map(
+            WithMultiArrows
+              .renderArrows[DemoDsl.Arrow](_)
+              .getOrElse(sys.error("expected flawless arrow render in consumer"))
+          )
     )
       .run
       .andThen(_.extract)

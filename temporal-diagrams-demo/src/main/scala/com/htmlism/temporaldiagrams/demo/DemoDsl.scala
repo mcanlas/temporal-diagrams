@@ -14,6 +14,20 @@ object DemoDsl:
   case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
   case class Echo(x: PlantUml.Directive)                                                  extends DemoDsl
 
+  case class Arrow(src: String, dest: String)
+
+  object Arrow:
+    given MultiArrowEncoder[String, Arrow] with
+      def encodeArrow(src: String, dest: String): Arrow =
+        Arrow(src, dest)
+
+    given BrightEncoder[PlantUml.ComponentDiagram, Arrow] with
+      def encodeBrightly(x: Arrow, isBright: Boolean): PlantUml.ComponentDiagram =
+        val Arrow(src, dest) = x
+
+        PlantUml.ComponentDiagram:
+          PlantUml.Link(src, dest)
+
   given BrightEncoder[PlantUml.ComponentDiagram, DemoDsl] with
     def encodeBrightly(x: DemoDsl, isBright: Boolean): PlantUml.ComponentDiagram =
       x match
