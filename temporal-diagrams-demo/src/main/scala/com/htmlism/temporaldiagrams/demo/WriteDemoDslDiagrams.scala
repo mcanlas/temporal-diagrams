@@ -73,10 +73,8 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   val stackGivenCfg =
     (
       toTitle.local[DemoDsl.ConfigBasket](_.title) |+|
-        toProducer
-          .local[DemoDsl.ConfigBasket](_.fooStyle) |+|
-        toConsumer
-          .local[DemoDsl.ConfigBasket](_.barStyle)
+        toProducer.local[DemoDsl.ConfigBasket](_.fooStyle) |+|
+        toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
     )
       .run
       .andThen(_.extract)
@@ -109,7 +107,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
             .pipe: xs =>
               WithMultiArrows
                 .renderArrows[DemoDsl.Arrow](xs)
-                .getOrElse(sys.error("expected flawless arrow render in consumer"))
+                .getOrElse(sys.error("expected flawless arrow render"))
 
         printNormalDiagram(renders, n) *> printHighlightDiagrams(renders, n)
       }
