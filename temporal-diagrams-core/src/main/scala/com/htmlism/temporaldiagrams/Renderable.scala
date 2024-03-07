@@ -8,7 +8,7 @@ import cats.data.*
 import cats.syntax.all.*
 
 /**
-  * An alias for renderables bound to a specific diagram language
+  * An alias for renderables bound to a specific diagram language, without any multi-arrow metadata
   *
   * @tparam D
   *   The target diagram language to render to
@@ -18,6 +18,9 @@ type Renderable[D] =
 
 object Renderable:
   /**
+    * An alias for renderables bound to a specific diagram language, but containing multi-arrow metadata that must be
+    * rendered first
+    *
     * @tparam D
     *   The target diagram language
     * @tparam K
