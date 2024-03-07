@@ -10,9 +10,9 @@ import com.htmlism.temporaldiagrams.plantuml.*
 sealed trait DemoDsl
 
 object DemoDsl:
-  case class ClusterService(name: String, dependency: Option[String], asCluster: Boolean) extends DemoDsl
-  case class Buffered(name: String, dependency: Option[String])                           extends DemoDsl
-  case class Echo(x: PlantUml.Directive)                                                  extends DemoDsl
+  case class ClusterService(name: String, asCluster: Boolean) extends DemoDsl
+  case class Buffered(name: String)                           extends DemoDsl
+  case class Echo(x: PlantUml.Directive)                      extends DemoDsl
 
   case class Arrow(src: String, dest: String)
 
@@ -31,7 +31,7 @@ object DemoDsl:
   given BrightEncoder[PlantUml.ComponentDiagram, DemoDsl] with
     def encodeBrightly(x: DemoDsl, isBright: Boolean): PlantUml.ComponentDiagram =
       x match
-        case ClusterService(n, oDep, asCluster) =>
+        case ClusterService(n, asCluster) =>
           if asCluster then
             Chain(1, 2, 3, 4)
               .flatMap { i =>
@@ -39,14 +39,6 @@ object DemoDsl:
                   PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
                   skin(isBright)
                 )
-                  .applySome(oDep) { (a, d) =>
-                    a.append(
-                      PlantUml.Link(
-                        d + i.toString,
-                        n
-                      )
-                    )
-                  }
               }
               .pipe(PlantUml.ComponentDiagram.apply(_))
           else
@@ -54,17 +46,9 @@ object DemoDsl:
               PlantUml.Component(n, None, Option.when(isBright)("Service")),
               skin(isBright)
             )
-              .applySome(oDep) { (a, d) =>
-                a.append(
-                  PlantUml.Link(
-                    d,
-                    n
-                  )
-                )
-              }
               .pipe(PlantUml.ComponentDiagram.apply(_))
 
-        case Buffered(n, oDep) =>
+        case Buffered(n) =>
           Chain[PlantUml](
             PlantUml.Component(n, None, Option.when(isBright)("Service")),
             skin(isBright),
@@ -75,15 +59,6 @@ object DemoDsl:
             ),
             queueSkin
           )
-            .applySome(oDep) { (a, d) =>
-              a.append(
-                PlantUml
-                  .Link(
-                    d,
-                    n + "_queue"
-                  )
-              )
-            }
             .pipe(PlantUml.ComponentDiagram.apply(_))
 
         case Echo(x) =>
@@ -93,9 +68,9 @@ object DemoDsl:
     PlantUml
       .SkinParamGroup("queue")
       .and("fontStyle", "bold")
-      .and("fontColor", "#AAA")
-      .and("backgroundColor", "white")
-      .and("borderColor", "#AAA")
+      .and("fontColor", "#444")
+      .and("backgroundColor", "#faf2c8/#e6c72c")
+      .and("borderColor", "#807746")
       .and("borderThickness", "2")
 
   private def skin(isBright: Boolean) =
@@ -104,7 +79,7 @@ object DemoDsl:
         .SkinParamGroup("component", "Service")
         .and("fontStyle", "bold")
         .and("fontColor", "white")
-        .and("backgroundColor", "#586ba4")
+        .and("backgroundColor", "#7082b8/#283d7a")
         .and("borderColor", "#223336")
         .and("borderThickness", "2")
     else

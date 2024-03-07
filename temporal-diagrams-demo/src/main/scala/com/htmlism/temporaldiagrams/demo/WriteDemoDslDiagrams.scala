@@ -1,5 +1,6 @@
 package com.htmlism.temporaldiagrams.demo
 
+import scala.collection.immutable.ListSet
 import scala.util.chaining.*
 
 import cats.*
@@ -22,20 +23,20 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
     ]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
         Chain(
-          DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo"),
-          WithMultiArrows.Source("foo", Nil)
+          DemoDsl.ClusterService("foo", asCluster = false).tag("foo"),
+          WithMultiArrows.Source("foo", List("foo"))
         )
 
       case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
         Chain(
-          DemoDsl.ClusterService("foo", None, asCluster = true).tag("foo"),
-          WithMultiArrows.Source("foo", Nil)
+          DemoDsl.ClusterService("foo", asCluster = true).tag("foo"),
+          WithMultiArrows.Source("foo", (1 to 4).map("foo" + _).toList)
         )
 
       case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
         Chain(
-          DemoDsl.Buffered("foo", None).tag("foo"),
-          WithMultiArrows.Source("foo", Nil)
+          DemoDsl.Buffered("foo").tag("foo"),
+          WithMultiArrows.Source("foo", List("foo"))
         )
 
   private val toConsumer =
@@ -44,44 +45,38 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
     ]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
         Chain(
-          DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar"),
-          WithMultiArrows.Source("bar", Nil)
+          DemoDsl.ClusterService("bar", asCluster = false).tag("bar"),
+          WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
+          WithMultiArrows.Destination("bar", List("bar"))
         )
 
       case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
         Chain(
-          DemoDsl.ClusterService("bar", "foo".some, asCluster = true).tag("bar"),
-          WithMultiArrows.Source("bar", Nil)
+          DemoDsl.ClusterService("bar", asCluster = true).tag("bar"),
+          WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
+          WithMultiArrows.Destination("bar", (1 to 4).map("bar" + _).toList)
         )
 
       case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
         Chain(
-          DemoDsl.Buffered("bar", "foo".some).tag("bar"),
-          WithMultiArrows.Source("bar", Nil)
+          DemoDsl.Buffered("bar").tag("bar"),
+          WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
+          WithMultiArrows.Destination("bar", List("bar_queue"))
         )
 
   private val toTitle =
-    Kleisli.fromFunction[Id, String][Chain[Renderable[PlantUml.ComponentDiagram]]]: s =>
-      Chain.one:
+    Kleisli.fromFunction[Id, String][Chain[Renderable.WithMultiArrows[PlantUml.ComponentDiagram, String]]]: s =>
+      Chain(
         DemoDsl.Echo(PlantUml.Title(List(s))).r
+      )
 
   val stackGivenCfg =
     (
       toTitle.local[DemoDsl.ConfigBasket](_.title) |+|
         toProducer
-          .local[DemoDsl.ConfigBasket](_.fooStyle)
-          .map(
-            WithMultiArrows
-              .renderArrows[DemoDsl.Arrow](_)
-              .getOrElse(sys.error("expected flawless arrow render in producer"))
-          ) |+|
+          .local[DemoDsl.ConfigBasket](_.fooStyle) |+|
         toConsumer
           .local[DemoDsl.ConfigBasket](_.barStyle)
-          .map(
-            WithMultiArrows
-              .renderArrows[DemoDsl.Arrow](_)
-              .getOrElse(sys.error("expected flawless arrow render in consumer"))
-          )
     )
       .run
       .andThen(_.extract)
@@ -111,6 +106,10 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
       .traverse { case (cfg, n) =>
         val renders: Chain[Renderable[PlantUml.ComponentDiagram]] =
           stackGivenCfg(cfg)
+            .pipe: xs =>
+              WithMultiArrows
+                .renderArrows[DemoDsl.Arrow](xs)
+                .getOrElse(sys.error("expected flawless arrow render in consumer"))
 
         printNormalDiagram(renders, n) *> printHighlightDiagrams(renders, n)
       }
