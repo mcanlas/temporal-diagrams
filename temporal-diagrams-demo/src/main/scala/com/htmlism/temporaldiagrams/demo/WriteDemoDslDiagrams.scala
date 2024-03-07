@@ -16,38 +16,46 @@ object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinter[IO]) wi
 
 class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   private val toProducer =
-    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[PlantUml.ComponentDiagram]]:
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[Renderable[PlantUml.ComponentDiagram]]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
-        DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo")
+        Chain.one:
+          DemoDsl.ClusterService("foo", None, asCluster = false).tag("foo")
 
       case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
-        DemoDsl.ClusterService("foo", None, asCluster = true).tag("foo")
+        Chain.one:
+          DemoDsl.ClusterService("foo", None, asCluster = true).tag("foo")
 
       case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
-        DemoDsl.Buffered("foo", None).tag("foo")
+        Chain.one:
+          DemoDsl.Buffered("foo", None).tag("foo")
 
   private val toConsumer =
-    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Renderable[PlantUml.ComponentDiagram]]:
+    Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[Renderable[PlantUml.ComponentDiagram]]]:
       case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
-        DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar")
+        Chain.one:
+          DemoDsl.ClusterService("bar", "foo".some, asCluster = false).tag("bar")
 
       case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
-        DemoDsl.ClusterService("bar", "foo".some, asCluster = true).tag("bar")
+        Chain.one:
+          DemoDsl.ClusterService("bar", "foo".some, asCluster = true).tag("bar")
 
       case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
-        DemoDsl.Buffered("bar", "foo".some).tag("bar")
+        Chain.one:
+          DemoDsl.Buffered("bar", "foo".some).tag("bar")
 
   private val toTitle =
-    Kleisli.fromFunction[Id, String][Renderable[PlantUml.ComponentDiagram]]: s =>
-      DemoDsl.Echo(PlantUml.Title(List(s))).r
+    Kleisli.fromFunction[Id, String][Chain[Renderable[PlantUml.ComponentDiagram]]]: s =>
+      Chain.one:
+        DemoDsl.Echo(PlantUml.Title(List(s))).r
 
   val stackGivenCfg =
-    Chain(
-      toTitle.local[DemoDsl.ConfigBasket](_.title),
-      toProducer.local[DemoDsl.ConfigBasket](_.fooStyle),
-      toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
+    (
+      toTitle.local[DemoDsl.ConfigBasket](_.title) |+|
+        toProducer.local[DemoDsl.ConfigBasket](_.fooStyle) |+|
+        toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
     )
-      .traverse(_.run)
+      .run
+      .andThen(_.extract)
 
   val initialDiagramConfig =
     DemoDsl.ConfigBasket(
@@ -74,7 +82,6 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
       .traverse { case (cfg, n) =>
         val renders: Chain[Renderable[PlantUml.ComponentDiagram]] =
           stackGivenCfg(cfg)
-            .map(_.extract)
 
         printNormalDiagram(renders, n) *> printHighlightDiagrams(renders, n)
       }
