@@ -553,7 +553,7 @@ object FlowchartSuite extends FunSuite:
         )
     )
 
-  test("Can render a link: with style; with multiple, skips empty"):
+  test("Can render a link: with style; with multiple segments, skips empty"):
     expect.eql(
       Chain(
         "flowchart",
@@ -599,6 +599,74 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
+        )
+    )
+
+  test("Can render a link: with style; with multiple link groups, skips empty"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  one -- foo --> two -- bar ---> three",
+        "",
+        "  styledStart --> styledEnd",
+        "  linkStyle 2 stroke:#3ff, stroke-width:2px"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart(
+            Link.LinkChain(
+              NonEmptyList.one("one"),
+              NonEmptyList.of(
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    1,
+                    Link.Weight.Normal,
+                    Link.Direction.Single(Link.Head.Arrow),
+                    text = Some("foo"),
+                    NonEmptyList.one("two"),
+                    style = None
+                  ),
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    2,
+                    Link.Weight.Normal,
+                    Link.Direction.Single(Link.Head.Arrow),
+                    text = Some("bar"),
+                    NonEmptyList.one("three"),
+                    style = None
+                  )
+              )
+            ),
+            Link.LinkChain(
+              NonEmptyList.one("styledStart"),
+              NonEmptyList.one(
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    1,
+                    Link.Weight.Normal,
+                    Link.Direction.Single(Link.Head.Arrow),
+                    text = None,
+                    NonEmptyList.one("styledEnd"),
+                    style = NonEmptyList
+                      .of(
+                        StyleDeclaration("stroke", "#3ff"),
+                        StyleDeclaration(
+                          "stroke-width",
+                          "2px"
+                        )
+                      )
+                      .some
+                  )
+              )
+            )
+          )
         )
     )
 
