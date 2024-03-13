@@ -174,9 +174,10 @@ object FlowchartDsl:
             weight: Weight,
             direction: Direction,
             text: Option[String],
-            destinations: NonEmptyList[String]
+            destinations: NonEmptyList[String],
+            style: Option[StyleSpec]
         )
-        case Invisible(length: Int, destinations: NonEmptyList[String])
+        case Invisible(length: Int, destinations: NonEmptyList[String], style: Option[StyleSpec])
 
     enum Weight:
       case Normal

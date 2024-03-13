@@ -29,17 +29,17 @@ object LinkEncoder:
         val destinationParts =
           xs
             .toList
-            .flatMap:
-              case LinkChain.Segment.Invisible(length, destinations) =>
+            .map:
+              case LinkChain.Segment.Invisible(length, destinations, style) =>
                 val body =
                   "~" * (length + 2)
 
                 List(
                   body,
                   ampersand(destinations)
-                )
+                ) -> style
 
-              case LinkChain.Segment.Visible(length, weight, direction, oText, destinations) =>
+              case LinkChain.Segment.Visible(length, weight, direction, oText, destinations, style) =>
                 val (leftHead, rightHead) =
                   (weight, direction) match
                     case (Weight.Normal, Direction.Open) =>
@@ -106,7 +106,10 @@ object LinkEncoder:
                 List(
                   body,
                   ampersand(destinations)
-                )
+                ) -> style
+            .separate
+            ._1
+            .flatten
 
         val linkStr =
           (sourcePart :: destinationParts)

@@ -294,7 +294,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Open,
                     text = None,
-                    NonEmptyList.one("beta")
+                    NonEmptyList.one("beta"),
+                    style = None
                   ),
                 Link
                   .LinkChain
@@ -304,7 +305,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Open,
                     text = None,
-                    NonEmptyList.one("gamma")
+                    NonEmptyList.one("gamma"),
+                    style = None
                   )
               )
             )
@@ -332,7 +334,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Single(Link.Head.Arrow),
                     text = None,
-                    NonEmptyList.one("bar")
+                    NonEmptyList.one("bar"),
+                    style = None
                   )
               )
             )
@@ -360,7 +363,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Multi(Link.Head.Arrow),
                     text = None,
-                    NonEmptyList.one("bar")
+                    NonEmptyList.one("bar"),
+                    style = None
                   )
               )
             )
@@ -388,7 +392,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Open,
                     text = Some("hello"),
-                    NonEmptyList.one("bar")
+                    NonEmptyList.one("bar"),
+                    style = None
                   )
               )
             )
@@ -413,14 +418,16 @@ object FlowchartSuite extends FunSuite:
                   .Segment
                   .Invisible(
                     1,
-                    NonEmptyList.one("bar")
+                    NonEmptyList.one("bar"),
+                    style = None
                   ),
                 Link
                   .LinkChain
                   .Segment
                   .Invisible(
                     2,
-                    NonEmptyList.one("baz")
+                    NonEmptyList.one("baz"),
+                    style = None
                   )
               )
             )
@@ -448,7 +455,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Dotted,
                     Link.Direction.Open,
                     text = None,
-                    NonEmptyList.one("two")
+                    NonEmptyList.one("two"),
+                    style = None
                   ),
                 Link
                   .LinkChain
@@ -458,7 +466,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Dotted,
                     Link.Direction.Open,
                     text = None,
-                    NonEmptyList.one("three")
+                    NonEmptyList.one("three"),
+                    style = None
                   )
               )
             )
@@ -486,7 +495,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Dotted,
                     Link.Direction.Open,
                     text = Some("foo"),
-                    NonEmptyList.one("two")
+                    NonEmptyList.one("two"),
+                    style = None
                   ),
                 Link
                   .LinkChain
@@ -496,7 +506,8 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Dotted,
                     Link.Direction.Open,
                     text = Some("bar"),
-                    NonEmptyList.one("three")
+                    NonEmptyList.one("three"),
+                    style = None
                   )
               )
             )
