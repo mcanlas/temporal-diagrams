@@ -254,6 +254,14 @@ object FlowchartDsl:
               (sourcePart :: destinationParts)
                 .mkString(" ")
 
+    /**
+      * In it's most complex form, a link can have multiple sources and multiple segments chained together.
+      *
+      * @param sources
+      *   A collection of sources that a link starts from
+      * @param xs
+      *   A collection of link styles and destinations that a link goes to
+      */
     case class LinkChain(sources: NonEmptyList[String], xs: NonEmptyList[LinkChain.Segment]) extends Link
 
     object LinkChain:
