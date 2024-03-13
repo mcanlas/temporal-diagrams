@@ -14,13 +14,20 @@ import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.*
   */
 object LinkEncoder:
   def encode(xs: Set[FlowchartDsl.Link]): List[Chain[String]] =
-    xs
-      .toList
-      .map(encodeOne)
-      .sortBy(_._1)
-      .map(t => Chain.one(t._1))
+    val sortedLinks =
+      xs
+        .toList
+        .map(partiallyEncode)
+        .sortBy(_._1)
 
-  def encodeOne(x: FlowchartDsl.Link): (String, NonEmptyList[Option[Int => String]]) =
+    sortedLinks
+      .traverse: (s, _) =>
+        State((n: Int) => n + 1 -> Chain(s))
+      .run(0)
+      .value
+      ._2
+
+  private def partiallyEncode(x: FlowchartDsl.Link): (String, NonEmptyList[Option[Int => String]]) =
     x match
       case LinkChain(srcs, xs) =>
         val sourcePart =
