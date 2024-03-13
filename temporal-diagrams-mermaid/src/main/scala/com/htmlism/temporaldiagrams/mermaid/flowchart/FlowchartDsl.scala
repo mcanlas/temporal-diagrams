@@ -8,10 +8,17 @@ import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.LinkChain.Segment.Visible
 
+// https://mermaid.js.org/syntax/flowchart.html
 sealed trait FlowchartDsl
 
 object FlowchartDsl:
   sealed trait Entity extends FlowchartDsl
+
+  // https://mermaid.js.org/syntax/flowchart.html#styling-and-classes
+  type StyleSpec =
+    NonEmptyList[StyleDeclaration]
+
+  case class StyleDeclaration(property: String, value: String)
 
   case class Subgraph(
       id: String,
