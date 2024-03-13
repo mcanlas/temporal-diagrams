@@ -25,15 +25,19 @@ object LinkEncoder:
 
     sortedLinks
       .traverse: (s, styles) =>
-        val styleLines =
-          styles
-            .zipWithIndex
-            .toList
-            .flatMap: (oStyle, n) =>
-              oStyle.map(f => f(n)).toList
-            .pipe(Chain.fromSeq)
+        State: (n: Int) =>
+          val styleLines =
+            styles
+              .zipWithIndex
+              .toList
+              .flatMap: (oStyle, n) =>
+                oStyle.map(f => f(n)).toList
+              .pipe(Chain.fromSeq)
 
-        State((n: Int) => n + 1 -> (Chain(s) ++ styleLines))
+          val linkAndStyleLinks =
+            Chain(s) ++ styleLines
+
+          n + 1 -> linkAndStyleLinks
       .run(0)
       .value
       ._2

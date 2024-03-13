@@ -515,13 +515,49 @@ object FlowchartSuite extends FunSuite:
         )
     )
 
-  // TODO do another link
-  test("Can render a link: with styles"):
+  test("Can render a link: with styles, simple example"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  one -- this has style --> two",
+        "  linkStyle 0 stroke:#ff3, stroke-width:4px"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Link.LinkChain(
+              NonEmptyList.one("one"),
+              NonEmptyList.of(
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    1,
+                    Link.Weight.Normal,
+                    Link.Direction.Single(Link.Head.Arrow),
+                    text = Some("this has style"),
+                    NonEmptyList.one("two"),
+                    style = NonEmptyList
+                      .of(
+                        StyleDeclaration("stroke", "#ff3"),
+                        StyleDeclaration(
+                          "stroke-width",
+                          "4px"
+                        )
+                      )
+                      .some
+                  )
+              )
+            )
+        )
+    )
+
+  test("Can render a link: with style; with multiple, skips empty"):
     expect.eql(
       Chain(
         "flowchart",
         "  one -- foo --> two -- bar ---> three",
-        "  linkStyle 0 stroke:#ff3, stroke-width:4px",
         "  linkStyle 1 stroke:#3ff, stroke-width:2px"
       ),
       MermaidDiagram.render:
@@ -540,15 +576,7 @@ object FlowchartSuite extends FunSuite:
                     Link.Direction.Single(Link.Head.Arrow),
                     text = Some("foo"),
                     NonEmptyList.one("two"),
-                    style = NonEmptyList
-                      .of(
-                        StyleDeclaration("stroke", "#ff3"),
-                        StyleDeclaration(
-                          "stroke-width",
-                          "4px"
-                        )
-                      )
-                      .some
+                    style = None
                   ),
                 Link
                   .LinkChain
