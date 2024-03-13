@@ -20,15 +20,14 @@ object LinkEncoder:
       .sortBy(_._1)
       .map(t => Chain.one(t._1))
 
-  def encodeOne(x: FlowchartDsl.Link): (String, NonEmptyChain[Option[Int => String]]) =
+  def encodeOne(x: FlowchartDsl.Link): (String, NonEmptyList[Option[Int => String]]) =
     x match
       case LinkChain(srcs, xs) =>
         val sourcePart =
           ampersand(srcs)
 
-        val destinationParts =
+        val destinationPartsAndStyles =
           xs
-            .toList
             .map:
               case LinkChain.Segment.Invisible(length, destinations, style) =>
                 val body =
@@ -107,15 +106,23 @@ object LinkEncoder:
                   body,
                   ampersand(destinations)
                 ) -> style
-            .separate
-            ._1
+
+        val destinationParts =
+          destinationPartsAndStyles
+            .map(_._1)
+            .toList
             .flatten
+
+        val styles =
+          destinationPartsAndStyles
+            .map(_._2)
+            .map(o => o.as((_: Int) => ""))
 
         val linkStr =
           (sourcePart :: destinationParts)
             .mkString(" ")
 
-        linkStr -> NonEmptyChain.one(None)
+        linkStr -> styles
 
   private def ampersand(xs: NonEmptyList[String]) =
     xs.mkString_(" & ")
