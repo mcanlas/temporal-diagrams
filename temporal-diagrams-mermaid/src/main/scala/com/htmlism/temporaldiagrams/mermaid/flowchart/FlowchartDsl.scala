@@ -4,6 +4,7 @@ package mermaid.flowchart
 import scala.util.chaining.*
 
 import cats.data.*
+import cats.syntax.all.*
 
 // https://mermaid.js.org/syntax/flowchart.html
 sealed trait FlowchartDsl
@@ -15,7 +16,15 @@ object FlowchartDsl:
   type StyleSpec =
     NonEmptyList[StyleDeclaration]
 
-  case class StyleDeclaration(property: String, value: String)
+  object StyleSpec:
+    def encode(s: StyleSpec): String =
+      s
+        .map(_.encode)
+        .mkString_(", ")
+
+  case class StyleDeclaration(property: String, value: String):
+    def encode: String =
+      property + ":" + value
 
   case class Subgraph(
       id: String,

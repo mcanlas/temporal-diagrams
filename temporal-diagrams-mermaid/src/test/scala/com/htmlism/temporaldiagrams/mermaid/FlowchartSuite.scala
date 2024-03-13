@@ -2,6 +2,7 @@ package com.htmlism.temporaldiagrams.mermaid
 
 import cats.data.Chain
 import cats.data.NonEmptyList
+import cats.syntax.all.*
 import weaver.FunSuite
 
 import com.htmlism.temporaldiagrams.mermaid.flowchart.Flowchart.*
@@ -508,6 +509,65 @@ object FlowchartSuite extends FunSuite:
                     text = Some("bar"),
                     NonEmptyList.one("three"),
                     style = None
+                  )
+              )
+            )
+        )
+    )
+
+  // TODO do another link
+  test("Can render a link: with styles"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  one -- foo --> two -- bar ---> three",
+        "  linkStyle 0 stroke:#ff3, stroke-width:4px",
+        "  linkStyle 1 stroke:#3ff, stroke-width:2px"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Link.LinkChain(
+              NonEmptyList.one("one"),
+              NonEmptyList.of(
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    1,
+                    Link.Weight.Normal,
+                    Link.Direction.Single(Link.Head.Arrow),
+                    text = Some("foo"),
+                    NonEmptyList.one("two"),
+                    style = NonEmptyList
+                      .of(
+                        StyleDeclaration("stroke", "#ff3"),
+                        StyleDeclaration(
+                          "stroke-width",
+                          "4px"
+                        )
+                      )
+                      .some
+                  ),
+                Link
+                  .LinkChain
+                  .Segment
+                  .Visible(
+                    2,
+                    Link.Weight.Normal,
+                    Link.Direction.Single(Link.Head.Arrow),
+                    text = Some("bar"),
+                    NonEmptyList.one("three"),
+                    style = NonEmptyList
+                      .of(
+                        StyleDeclaration("stroke", "#3ff"),
+                        StyleDeclaration(
+                          "stroke-width",
+                          "2px"
+                        )
+                      )
+                      .some
                   )
               )
             )

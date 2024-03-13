@@ -1,9 +1,12 @@
 package com.htmlism.temporaldiagrams.mermaid.flowchart
 
+import scala.util.chaining.*
+
 import cats.data.*
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.*
+import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.StyleSpec
 
 /**
   * To support styling, links are implicit given IDs (starting from zero)
@@ -21,8 +24,16 @@ object LinkEncoder:
         .sortBy(_._1)
 
     sortedLinks
-      .traverse: (s, _) =>
-        State((n: Int) => n + 1 -> Chain(s))
+      .traverse: (s, styles) =>
+        val styleLines =
+          styles
+            .zipWithIndex
+            .toList
+            .flatMap: (oStyle, n) =>
+              oStyle.map(f => f(n)).toList
+            .pipe(Chain.fromSeq)
+
+        State((n: Int) => n + 1 -> (Chain(s) ++ styleLines))
       .run(0)
       .value
       ._2
@@ -123,7 +134,13 @@ object LinkEncoder:
         val styles =
           destinationPartsAndStyles
             .map(_._2)
-            .map(o => o.as((_: Int) => ""))
+            .map(o =>
+              o.map(ss =>
+                (n: Int) =>
+                  List("linkStyle", n, StyleSpec.encode(ss))
+                    .mkString(" ")
+              )
+            )
 
         val linkStr =
           (sourcePart :: destinationParts)
