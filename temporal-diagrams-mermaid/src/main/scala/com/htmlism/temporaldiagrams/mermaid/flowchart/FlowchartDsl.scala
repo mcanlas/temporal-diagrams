@@ -6,8 +6,6 @@ import scala.util.chaining.*
 import cats.data.*
 import cats.syntax.all.*
 
-import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.LinkChain.Segment.Visible
-
 // https://mermaid.js.org/syntax/flowchart.html
 sealed trait FlowchartDsl
 
