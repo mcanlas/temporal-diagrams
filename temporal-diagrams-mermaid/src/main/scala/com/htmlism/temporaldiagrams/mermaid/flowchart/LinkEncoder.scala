@@ -16,6 +16,10 @@ import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.StyleSpec
   * This encoder handles assignment of these IDs
   */
 object LinkEncoder:
+  /**
+    * An entire diagram's worth of links must be encoded at the same time because they are assigned IDs, starting from
+    * zero, in the order of their declaration
+    */
   def encode(xs: Set[FlowchartDsl.Link]): List[Chain[String]] =
     val sortedLinks =
       xs
@@ -42,6 +46,10 @@ object LinkEncoder:
       .value
       ._2
 
+  /**
+    * Encodes the link DSL to a string, and also provides a collection of (optional) style declarations that need their
+    * ID injected. The collection is non-empty because each link will consume an ID, even if it does not have a style
+    */
   private def partiallyEncode(x: FlowchartDsl.Link): (String, NonEmptyList[Option[Int => String]]) =
     x match
       case LinkChain(srcs, xs) =>
