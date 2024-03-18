@@ -7,6 +7,14 @@ enum FrontmatterPair:
   case MapPair(key: String, xs: Chain[FrontmatterPair])
 
 object FrontmatterPair:
+  object StringPair:
+    def from[A, B](a: A, b: B): StringPair =
+      StringPair(a.toString, b.toString)
+
+  object MapPair:
+    def from[A](a: A, xs: Chain[FrontmatterPair]): MapPair =
+      MapPair(a.toString, xs)
+
   def encode(x: FrontmatterPair): Chain[String] =
     x match
       case StringPair(k, v) =>
