@@ -59,7 +59,7 @@ object LinkEncoder:
         val destinationPartsAndStyles =
           xs
             .map:
-              case LinkChain.Segment.Invisible(length, destinations, style) =>
+              case Segment.Invisible(length, destinations, style) =>
                 val body =
                   "~" * (length + 2)
 
@@ -68,7 +68,7 @@ object LinkEncoder:
                   ampersand(destinations)
                 ) -> style
 
-              case LinkChain.Segment.Visible(length, weight, direction, oText, destinations, style) =>
+              case Segment.Visible(length, weight, direction, oText, destinations, style) =>
                 val (leftHead, rightHead) =
                   (weight, direction) match
                     case (Weight.Normal, Direction.Open) =>

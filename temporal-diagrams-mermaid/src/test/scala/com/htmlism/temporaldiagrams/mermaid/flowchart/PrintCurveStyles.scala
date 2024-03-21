@@ -46,7 +46,6 @@ object PrintCurveStyles extends IOApp.Simple:
             NonEmptyList.of(
               FlowchartDsl
                 .Link
-                .LinkChain
                 .Segment
                 .Visible(
                   2,
@@ -65,7 +64,6 @@ object PrintCurveStyles extends IOApp.Simple:
             NonEmptyList.of(
               FlowchartDsl
                 .Link
-                .LinkChain
                 .Segment
                 .Visible(
                   2,

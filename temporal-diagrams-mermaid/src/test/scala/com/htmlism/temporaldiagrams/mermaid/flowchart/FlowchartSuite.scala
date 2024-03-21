@@ -288,7 +288,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("alpha"),
               NonEmptyList.of(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -299,7 +298,6 @@ object FlowchartSuite extends FunSuite:
                     style = None
                   ),
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     2,
@@ -328,7 +326,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("foo"),
               NonEmptyList.one(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -357,7 +354,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("foo"),
               NonEmptyList.one(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -386,7 +382,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("foo"),
               NonEmptyList.one(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -415,7 +410,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("foo"),
               NonEmptyList.of(
                 Link
-                  .LinkChain
                   .Segment
                   .Invisible(
                     1,
@@ -423,7 +417,6 @@ object FlowchartSuite extends FunSuite:
                     style = None
                   ),
                 Link
-                  .LinkChain
                   .Segment
                   .Invisible(
                     2,
@@ -449,7 +442,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("one"),
               NonEmptyList.of(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -460,7 +452,6 @@ object FlowchartSuite extends FunSuite:
                     style = None
                   ),
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     2,
@@ -489,7 +480,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("one"),
               NonEmptyList.of(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -500,7 +490,6 @@ object FlowchartSuite extends FunSuite:
                     style = None
                   ),
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     2,
@@ -530,7 +519,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("one"),
               NonEmptyList.of(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -568,7 +556,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("one"),
               NonEmptyList.of(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -579,7 +566,6 @@ object FlowchartSuite extends FunSuite:
                     style = None
                   ),
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     2,
@@ -619,7 +605,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("one"),
               NonEmptyList.of(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,
@@ -630,7 +615,6 @@ object FlowchartSuite extends FunSuite:
                     style = None
                   ),
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     2,
@@ -646,7 +630,6 @@ object FlowchartSuite extends FunSuite:
               NonEmptyList.one("styledStart"),
               NonEmptyList.one(
                 Link
-                  .LinkChain
                   .Segment
                   .Visible(
                     1,

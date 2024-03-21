@@ -174,19 +174,18 @@ object FlowchartDsl:
       * @param xs
       *   A collection of link styles and destinations that a link goes to
       */
-    case class LinkChain(sources: NonEmptyList[String], xs: NonEmptyList[LinkChain.Segment]) extends Link
+    case class LinkChain(sources: NonEmptyList[String], xs: NonEmptyList[Segment]) extends Link
 
-    object LinkChain:
-      enum Segment:
-        case Visible(
-            length: Int,
-            weight: Weight,
-            direction: Direction,
-            text: Option[String],
-            destinations: NonEmptyList[String],
-            style: Option[StyleSpec]
-        )
-        case Invisible(length: Int, destinations: NonEmptyList[String], style: Option[StyleSpec])
+    enum Segment:
+      case Visible(
+          length: Int,
+          weight: Weight,
+          direction: Direction,
+          text: Option[String],
+          destinations: NonEmptyList[String],
+          style: Option[StyleSpec]
+      )
+      case Invisible(length: Int, destinations: NonEmptyList[String], style: Option[StyleSpec])
 
     enum Weight:
       case Normal
