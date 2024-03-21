@@ -1,4 +1,4 @@
-package com.htmlism.temporaldiagrams.mermaid
+package com.htmlism.temporaldiagrams.mermaid.flowchart
 
 import cats.data.Chain
 import cats.data.NonEmptyList

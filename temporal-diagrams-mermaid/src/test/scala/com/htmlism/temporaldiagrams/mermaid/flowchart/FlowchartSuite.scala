@@ -1,4 +1,5 @@
 package com.htmlism.temporaldiagrams.mermaid
+package flowchart
 
 import cats.data.Chain
 import cats.data.NonEmptyList
@@ -6,7 +7,6 @@ import cats.syntax.all.*
 import weaver.FunSuite
 
 import com.htmlism.temporaldiagrams.mermaid.flowchart.Flowchart.*
-import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.*
 
 object FlowchartSuite extends FunSuite:
