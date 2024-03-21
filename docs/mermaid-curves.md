@@ -1,7 +1,7 @@
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: basis
 ---
 flowchart
@@ -14,7 +14,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: bumpX
 ---
 flowchart
@@ -27,7 +27,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: bumpY
 ---
 flowchart
@@ -40,7 +40,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: cardinal
 ---
 flowchart
@@ -53,7 +53,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: catmullRom
 ---
 flowchart
@@ -66,7 +66,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: linear
 ---
 flowchart
@@ -79,7 +79,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: monotoneX
 ---
 flowchart
@@ -92,7 +92,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: monotoneY
 ---
 flowchart
@@ -105,7 +105,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: natural
 ---
 flowchart
@@ -118,7 +118,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: step
 ---
 flowchart
@@ -131,7 +131,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: stepAfter
 ---
 flowchart
@@ -144,7 +144,7 @@ flowchart
 ```mermaid
 ---
 config:
-  frontmatter:
+  flowchart:
     curve: stepBefore
 ---
 flowchart

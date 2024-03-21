@@ -33,7 +33,7 @@ object PrintCurveStyles extends IOApp.Simple:
           "config",
           Chain.one:
             FrontMatterPair.MapPair(
-              "frontmatter",
+              "flowchart",
               Chain.one:
                 FrontMatterPair.StringPair.from("curve", style)
             )
