@@ -23,7 +23,7 @@ object FrontmatterSuite extends FunSuite:
       MermaidDiagram.render(
         MermaidDiagram(
           Chain.one:
-            FrontmatterPair.StringPair("title", "asdf")
+            FrontMatterPair.StringPair("title", "asdf")
           ,
           Flowchart.empty
         )
@@ -41,7 +41,7 @@ object FrontmatterSuite extends FunSuite:
       MermaidDiagram.render(
         MermaidDiagram(
           Chain.one:
-            FrontmatterPair.StringPair("title", "asdf")
+            FrontMatterPair.StringPair("title", "asdf")
           ,
           Flowchart.empty
         )
@@ -61,11 +61,11 @@ object FrontmatterSuite extends FunSuite:
       MermaidDiagram.render(
         MermaidDiagram(
           Chain.one:
-            FrontmatterPair.MapPair(
+            FrontMatterPair.MapPair(
               "asdf",
               Chain(
-                FrontmatterPair.StringPair("foo", "123"),
-                FrontmatterPair.StringPair("bar", "456")
+                FrontMatterPair.StringPair("foo", "123"),
+                FrontMatterPair.StringPair("bar", "456")
               )
             )
           ,

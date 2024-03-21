@@ -8,7 +8,7 @@ import cats.syntax.all.*
   * @tparam A
   *   The specific diagram type
   */
-case class MermaidDiagram[A](frontmatter: Chain[FrontmatterPair], diagram: A)
+case class MermaidDiagram[A](frontmatter: Chain[FrontMatterPair], diagram: A)
 
 object MermaidDiagram:
   given [A](using A: Monoid[A]): Monoid[MermaidDiagram[A]] with
@@ -34,7 +34,7 @@ object MermaidDiagram:
       else
         x
           .frontmatter
-          .flatMap(FrontmatterPair.encode)
+          .flatMap(FrontMatterPair.encode)
           .prepend("---")
           .append("---")
 

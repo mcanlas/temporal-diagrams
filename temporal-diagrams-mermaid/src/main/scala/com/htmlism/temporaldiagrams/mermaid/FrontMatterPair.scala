@@ -2,20 +2,20 @@ package com.htmlism.temporaldiagrams.mermaid
 
 import cats.data.Chain
 
-enum FrontmatterPair:
+enum FrontMatterPair:
   case StringPair(key: String, value: String)
-  case MapPair(key: String, xs: Chain[FrontmatterPair])
+  case MapPair(key: String, xs: Chain[FrontMatterPair])
 
-object FrontmatterPair:
+object FrontMatterPair:
   object StringPair:
     def from[A, B](a: A, b: B): StringPair =
       StringPair(a.toString, b.toString)
 
   object MapPair:
-    def from[A](a: A, xs: Chain[FrontmatterPair]): MapPair =
+    def from[A](a: A, xs: Chain[FrontMatterPair]): MapPair =
       MapPair(a.toString, xs)
 
-  def encode(x: FrontmatterPair): Chain[String] =
+  def encode(x: FrontMatterPair): Chain[String] =
     x match
       case StringPair(k, v) =>
         Chain.one:

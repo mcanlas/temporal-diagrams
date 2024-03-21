@@ -10,21 +10,21 @@ object MermaidDiagramSuite extends FunSuite:
   test("Frontmatter is monoidal"):
     val foo =
       MermaidDiagram(
-        Chain.one(FrontmatterPair.StringPair("foo", "123")),
+        Chain.one(FrontMatterPair.StringPair("foo", "123")),
         Flowchart.empty
       )
 
     val bar =
       MermaidDiagram(
-        Chain.one(FrontmatterPair.StringPair("bar", "456")),
+        Chain.one(FrontMatterPair.StringPair("bar", "456")),
         Flowchart.empty
       )
 
     expect.same(
       MermaidDiagram(
         Chain(
-          FrontmatterPair.StringPair("foo", "123"),
-          FrontmatterPair.StringPair("bar", "456")
+          FrontMatterPair.StringPair("foo", "123"),
+          FrontMatterPair.StringPair("bar", "456")
         ),
         Flowchart.empty
       ),
