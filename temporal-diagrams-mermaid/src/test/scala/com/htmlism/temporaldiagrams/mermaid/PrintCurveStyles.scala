@@ -2,13 +2,15 @@ package com.htmlism.temporaldiagrams.mermaid
 
 import cats.data.Chain
 import cats.data.NonEmptyList
+import cats.effect.*
+import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.mermaid.*
 import com.htmlism.temporaldiagrams.mermaid.flowchart.*
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.Head
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.Head.Arrow
 
-object PrintCurveStyles extends App:
+object PrintCurveStyles extends IOApp.Simple:
   val styles = List(
     CurveStyle.Basis,
     CurveStyle.BumpX,
@@ -38,14 +40,14 @@ object PrintCurveStyles extends App:
         )
       ,
       Flowchart(
-        FlowchartDsl.Node.Square("source", text       = None),
+        FlowchartDsl.Node.Square("source", text       = style.s.some),
         FlowchartDsl.Node.Square("destinationA", text = None),
         FlowchartDsl.Node.Square("destinationB", text = None),
         FlowchartDsl
           .Link
           .LinkChain(
             NonEmptyList.one("source"),
-            NonEmptyList.one:
+            NonEmptyList.of(
               FlowchartDsl
                 .Link
                 .LinkChain
@@ -58,9 +60,37 @@ object PrintCurveStyles extends App:
                   NonEmptyList.one("destinationA"),
                   None
                 )
+            )
+          ),
+        FlowchartDsl
+          .Link
+          .LinkChain(
+            NonEmptyList.one("source"),
+            NonEmptyList.of(
+              FlowchartDsl
+                .Link
+                .LinkChain
+                .Segment
+                .Visible(
+                  2,
+                  FlowchartDsl.Link.Weight.Normal,
+                  FlowchartDsl.Link.Direction.Single(Head.Arrow),
+                  text = None,
+                  NonEmptyList.one("destinationB"),
+                  None
+                )
+            )
           )
       )
     )
 
-  println("```mermaid")
-  println("```")
+  def printStyle(s: CurveStyle) =
+    MermaidDiagram
+      .render(diagram(s))
+      .prepend("```mermaid")
+      .append("```")
+      .traverse(std.Console[IO].println)
+
+  def run: IO[Unit] =
+    styles
+      .traverse_(printStyle)

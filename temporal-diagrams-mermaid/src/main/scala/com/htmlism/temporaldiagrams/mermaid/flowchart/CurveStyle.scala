@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams.mermaid.flowchart
 
-sealed case class CurveStyle(s: String)
+sealed case class CurveStyle(s: String):
+  override def toString: String =
+    s
 
 object CurveStyle:
   object Basis      extends CurveStyle("basis")
