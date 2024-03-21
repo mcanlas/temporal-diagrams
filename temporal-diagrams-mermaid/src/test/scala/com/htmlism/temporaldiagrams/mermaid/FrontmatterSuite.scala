@@ -61,12 +61,9 @@ object FrontmatterSuite extends FunSuite:
       MermaidDiagram.render(
         MermaidDiagram(
           Chain.one:
-            FrontMatterPair.MapPair(
-              "asdf",
-              Chain(
-                FrontMatterPair.StringPair("foo", "123"),
-                FrontMatterPair.StringPair("bar", "456")
-              )
+            FrontMatterPair.MapPair("asdf")(
+              FrontMatterPair.StringPair("foo", "123"),
+              FrontMatterPair.StringPair("bar", "456")
             )
           ,
           Flowchart.empty

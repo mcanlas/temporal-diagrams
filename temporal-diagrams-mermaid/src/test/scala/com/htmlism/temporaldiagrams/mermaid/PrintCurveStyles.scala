@@ -29,14 +29,10 @@ object PrintCurveStyles extends IOApp.Simple:
   def diagram(style: CurveStyle): MermaidDiagram[Flowchart] =
     MermaidDiagram(
       Chain.one:
-        FrontMatterPair.MapPair(
-          "config",
-          Chain.one:
-            FrontMatterPair.MapPair(
-              "flowchart",
-              Chain.one:
-                FrontMatterPair.StringPair.from("curve", style)
-            )
+        FrontMatterPair.MapPair("config")(
+          FrontMatterPair.MapPair("flowchart")(
+            FrontMatterPair.StringPair.from("curve", style)
+          )
         )
       ,
       Flowchart(

@@ -12,6 +12,12 @@ object FrontMatterPair:
       StringPair(a.toString, b.toString)
 
   object MapPair:
+    /**
+      * A factory method for MapPair, suitable for literal syntax
+      */
+    def apply(key: String)(xs: FrontMatterPair*): MapPair =
+      MapPair(key, Chain.fromSeq(xs))
+
     def from[A](a: A, xs: Chain[FrontMatterPair]): MapPair =
       MapPair(a.toString, xs)
 
