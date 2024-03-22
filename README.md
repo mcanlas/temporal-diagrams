@@ -1,5 +1,5 @@
 # temporal-diagrams
-Exploring a temporal aspect to diagrams
+A Scala DSL for generating diagram variants
 
 ## Features (v2)
 
