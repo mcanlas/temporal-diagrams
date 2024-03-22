@@ -8,7 +8,7 @@ import cats.data.Chain
 import cats.syntax.all.*
 
 trait FlowchartCommon:
-  def entities: Set[FlowchartDsl.Entity]
+  def declarations: Set[FlowchartDsl.Declaration]
   def links: Set[FlowchartDsl.Link]
 
 object FlowchartCommon:
@@ -17,7 +17,7 @@ object FlowchartCommon:
 
   def encode(x: FlowchartCommon): Chain[String] =
     Chain(
-      x.entities.pipe(renderSubsectionSorted(summon[DiagramEncoder[FlowchartDsl.Entity]].encode)),
+      x.declarations.pipe(renderSubsectionSorted(summon[DiagramEncoder[FlowchartDsl.Declaration]].encode)),
       x.links.pipe(LinkEncoder.encode)
     )
       .filter(_.nonEmpty)           // drop empty sections

@@ -9,7 +9,7 @@ import cats.data.Chain
 
 case class Flowchart(
     direction: Option[Flowchart.Direction],
-    entities: Set[FlowchartDsl.Entity],
+    declarations: Set[FlowchartDsl.Declaration],
     links: Set[FlowchartDsl.Link]
 ) extends FlowchartCommon:
   def withDirection(dir: Flowchart.Direction): Flowchart =
@@ -22,7 +22,7 @@ object Flowchart:
   def apply(xs: FlowchartDsl*): Flowchart =
     Flowchart(
       None,
-      xs.collect { case x: FlowchartDsl.Entity => x }.toSet,
+      xs.collect { case x: FlowchartDsl.Declaration => x }.toSet,
       xs.collect { case x: FlowchartDsl.Link => x }.toSet
     )
 
@@ -49,7 +49,7 @@ object Flowchart:
     def combine(x: Flowchart, y: Flowchart): Flowchart =
       Flowchart(
         y.direction,
-        x.entities ++ y.entities,
+        x.declarations ++ y.declarations,
         x.links ++ y.links
       )
 

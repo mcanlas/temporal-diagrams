@@ -10,7 +10,7 @@ import cats.syntax.all.*
 sealed trait FlowchartDsl
 
 object FlowchartDsl:
-  sealed trait Entity extends FlowchartDsl
+  sealed trait Declaration extends FlowchartDsl
 
   // https://mermaid.js.org/syntax/flowchart.html#styling-and-classes
   type StyleSpec =
@@ -30,10 +30,10 @@ object FlowchartDsl:
       id: String,
       text: Option[String],
       direction: Option[Subgraph.Direction],
-      entities: Set[FlowchartDsl.Entity],
+      declarations: Set[FlowchartDsl.Declaration],
       links: Set[FlowchartDsl.Link]
   ) extends FlowchartCommon
-      with Entity
+      with Declaration
 
   object Subgraph:
     sealed abstract class Direction(val declaration: String)
@@ -50,11 +50,11 @@ object FlowchartDsl:
       object TopToBottom extends Direction("TB")
       object BottomToTop extends Direction("BT")
 
-  sealed trait Node extends Entity
+  sealed trait Node extends Declaration
 
-  object Entity:
-    given DiagramEncoder[Entity] with
-      def encode(x: Entity): Chain[String] =
+  object Declaration:
+    given DiagramEncoder[Declaration] with
+      def encode(x: Declaration): Chain[String] =
         x match
           case sg @ Subgraph(id, oText, oDir, _, _) =>
             val directionXs =
