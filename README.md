@@ -1,23 +1,10 @@
 # temporal-diagrams
 A Scala DSL for generating diagram variants
 
-## Features (v2)
+## Supported target languages
 
-- Supports PlantUML
-- Supports Mermaid
-- Uses `cats` style encoding, derivation, and combinators
-
-## Viewing PlantUML
-
-### With Google Chrome
-
-Install the extension [PlantUML Viewer](https://chrome.google.com/webstore/detail/plantuml-viewer/legbfeljfbjgfifnkmpoajgpgejojooj?hl=en)
-
-When viewing on GitHub, be sure to access the "raw" version of the file (as plain text, outside of the GitHub UI)
-
-### With IntelliJ
-
-Install the plugin [PlantUML Integration](https://plugins.jetbrains.com/plugin/7017-plantuml-integration)
+- :white_check_mark: [Mermaid](docs/mermaid.md)
+- :white_check_mark: [PlantUML](docs/plantuml.md)
 
 ## See also
 
@@ -43,6 +30,4 @@ PLANTUML_LIMIT_SIZE=8192 sbt run
 
 ## Elsewhere
 
-- [Mermaid](http://mermaid.js.org/)
-- [PlantUML](https://plantuml.com/)
 - https://crashedmind.github.io/PlantUMLHitchhikersGuide/layout/layout.html
