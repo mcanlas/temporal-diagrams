@@ -19,10 +19,11 @@ object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinter[IO]) wi
 
 class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
   def run: F[Unit] =
-    runFor(PlantUml.render)
+    runFor(PlantUml.render, "puml")
 
   private def runFor[D: Monoid](
-      f: D => Chain[String]
+      f: D => Chain[String],
+      extension: String
   )(using HighlightEncoder[D, DemoDsl.Arrow], HighlightEncoder[D, DemoDsl]): F[Unit] =
     val toProducer =
       Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[
@@ -112,7 +113,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
           .pipe(f)
           .mkString_("\n")
 
-      out.print(s"demo-dsl-$n.puml")(str)
+      out.print(s"demo-dsl-$n.$extension")(str)
 
     def printHighlightDiagrams(renders: Chain[Renderable[D]], n: Int) =
       val tags =
@@ -127,7 +128,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
             .pipe(f)
             .mkString_("\n")
 
-        out.print(s"demo-dsl-$n-$t.puml")(str)
+        out.print(s"demo-dsl-$n-$t.$extension")(str)
       }
 
     cfgs
