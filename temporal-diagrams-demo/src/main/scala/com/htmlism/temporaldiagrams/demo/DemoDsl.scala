@@ -4,7 +4,10 @@ package demo
 import scala.util.chaining.*
 
 import cats.data.Chain
+import cats.data.NonEmptyList
 
+import com.htmlism.temporaldiagrams.mermaid.*
+import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.*
 import com.htmlism.temporaldiagrams.plantuml.*
 
 sealed trait DemoDsl
@@ -27,6 +30,31 @@ object DemoDsl:
 
         PlantUml.ComponentDiagram:
           PlantUml.Link(src, dest)
+
+    given BrightEncoder[MermaidDiagram[Flowchart], Arrow] with
+      def encodeBrightly(x: Arrow, isBright: Boolean): MermaidDiagram[Flowchart] =
+        val Arrow(src, dest) = x
+
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart(
+            Link.LinkChain(
+              NonEmptyList.one(src),
+              NonEmptyList.of(
+                Link
+                  .Segment
+                  .Visible(
+                    1,
+                    Link.Weight.Normal,
+                    Link.Direction.Single(Link.Head.Arrow),
+                    text = None,
+                    NonEmptyList.one(dest),
+                    style = None
+                  )
+              )
+            )
+          )
+        )
 
   given BrightEncoder[PlantUml.ComponentDiagram, DemoDsl] with
     def encodeBrightly(x: DemoDsl, isBright: Boolean): PlantUml.ComponentDiagram =
@@ -64,6 +92,45 @@ object DemoDsl:
         case Title(s) =>
           PlantUml.ComponentDiagram:
             PlantUml.Title(List(s))
+
+  given BrightEncoder[MermaidDiagram[Flowchart], DemoDsl] with
+    def encodeBrightly(x: DemoDsl, isBright: Boolean): MermaidDiagram[Flowchart] =
+      x match
+        case ClusterService(n, asCluster) =>
+          MermaidDiagram.empty
+
+//          if asCluster then
+//            Chain(1, 2, 3, 4)
+//              .flatMap { i =>
+//                Chain[PlantUml](
+//                  PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
+//                  skin(isBright)
+//                )
+//              }
+//              .pipe(PlantUml.ComponentDiagram.apply(_))
+//          else
+//            Chain[PlantUml](
+//              PlantUml.Component(n, None, Option.when(isBright)("Service")),
+//              skin(isBright)
+//            )
+//              .pipe(PlantUml.ComponentDiagram.apply(_))
+
+        case Buffered(n) =>
+          MermaidDiagram.empty
+//          Chain[PlantUml](
+//            PlantUml.Component(n, None, Option.when(isBright)("Service")),
+//            skin(isBright),
+//            PlantUml.Queue(n + "_queue", None, None),
+//            PlantUml.Link(
+//              n + "_queue",
+//              n
+//            ),
+//            queueSkin
+//          )
+//            .pipe(PlantUml.ComponentDiagram.apply(_))
+
+        case Title(s) =>
+          MermaidDiagram.empty
 
   private val queueSkin =
     PlantUml

@@ -11,15 +11,19 @@ import cats.syntax.all.*
 import com.htmlism.temporaldiagrams.HighlightEncoder
 import com.htmlism.temporaldiagrams.Renderable
 import com.htmlism.temporaldiagrams.Renderable.*
+import com.htmlism.temporaldiagrams.mermaid.*
 import com.htmlism.temporaldiagrams.plantuml.PlantUml
 import com.htmlism.temporaldiagrams.syntax.*
 
 // sbt "demo/runMain com.htmlism.temporaldiagrams.demo.WriteDemoDslDiagrams"
 object WriteDemoDslDiagrams extends WriteDemoDslDiagrams[IO](FilePrinter[IO]) with IOApp.Simple
 
-class WriteDemoDslDiagrams[F[_]: Applicative](out: FilePrinter[F]):
+class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
   def run: F[Unit] =
-    runFor(PlantUml.render, "puml")
+    List(
+      runFor(MermaidDiagram.render[Flowchart], "mmd"),
+      runFor(PlantUml.render, "puml")
+    ).parSequence_
 
   private def runFor[D: Monoid](
       f: D => Chain[String],
