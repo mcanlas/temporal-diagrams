@@ -9,22 +9,22 @@ import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.*
 
 object StyleSuite extends FunSuite:
   test("Can declare styles for nodes"):
-    expect.eql(
-      Chain(
-        "flowchart LR",
-        "  id1(Start)",
-        "",
-        "  id2(Stop)",
-        "",
-        "  id1 --> id2"
-      ),
+    val mermaid =
       MermaidDiagram.render:
         MermaidDiagram(
           Chain.empty,
           Flowchart(
-            // TODO add styles
             Node.Round("id1", "Start"),
             Node.Round("id2", "Stop"),
+            Style("id1", "fill" -> "#f9f", "stroke" -> "#333", "stroke-width" -> "4px"),
+            Style(
+              "id2",
+              "fill"             -> "#bbf",
+              "stroke"           -> "#f66",
+              "stroke-width"     -> "2px",
+              "color"            -> "#fff",
+              "stroke-dasharray" -> "5 5"
+            ),
             Link.LinkChain(
               NonEmptyList.one("id1"),
               NonEmptyList.of(
@@ -43,4 +43,19 @@ object StyleSuite extends FunSuite:
           )
             .withDirection(Flowchart.Direction.LR)
         )
+
+    expect.eql(
+      Chain(
+        "flowchart LR",
+        "  id1(Start)",
+        "",
+        "  id2(Stop)",
+        "",
+        "  style id1 fill:#f9f,stroke:#333,stroke-width:4px",
+        "",
+        "  style id2 fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray:5 5",
+        "",
+        "  id1 --> id2"
+      ),
+      mermaid
     )

@@ -6,6 +6,8 @@ import scala.util.chaining.*
 import cats.data.*
 import cats.syntax.all.*
 
+import com.htmlism.temporaldiagrams.mermaid.flowchart
+
 // https://mermaid.js.org/syntax/flowchart.html
 sealed trait FlowchartDsl
 
@@ -81,6 +83,9 @@ object FlowchartDsl:
 
           case n: Node =>
             summon[DiagramEncoder[Node]].encode(n)
+
+          case s: Style =>
+            summon[DiagramEncoder[Style]].encode(s)
 
   object Node:
     private def encodeNode(left: String, right: String)(id: String, text: String) =
@@ -162,6 +167,28 @@ object FlowchartDsl:
     case class TrapezoidAlt(id: String, text: String) extends Node
 
     case class DoubleCircle(id: String, text: String) extends Node
+
+  case class Style(id: String, styles: NonEmptyList[(String, String)]) extends Declaration
+
+  object Style:
+    given DiagramEncoder[Style] with
+      def encode(x: Style): Chain[String] =
+        x match
+          case Style(id, xs) =>
+            val pairs = xs
+              .map: (k, v) =>
+                s"$k:$v"
+              .mkString_(",")
+
+            Chain.one:
+              List(
+                "style",
+                id,
+                pairs
+              ).mkString(" ")
+
+    def apply(id: String, x: (String, String), xs: (String, String)*): Style =
+      Style(id, NonEmptyList(x, xs.toList))
 
   sealed trait Link extends FlowchartDsl
 
