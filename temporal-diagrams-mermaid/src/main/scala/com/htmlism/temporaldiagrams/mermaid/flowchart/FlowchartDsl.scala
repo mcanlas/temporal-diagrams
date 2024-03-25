@@ -94,85 +94,41 @@ object FlowchartDsl:
             summon[DiagramEncoder[ClassAttachment]].encode(ca)
 
   object Node:
-    private def encodeNode(left: String, right: String)(id: String, text: String) =
-      Chain.one:
-        s"$id$left$text$right"
+    case class Simple(id: String, text: Option[String] = None, clazz: Option[String] = None) extends Node
+
+    case class WithShape(id: String, shape: Shape, text: Option[String] = None, clazz: Option[String] = None)
+        extends Node
+
+    sealed abstract class Shape(val left: String, val right: String)
+
+    object Shape:
+      case object Square           extends Shape("[", "]")
+      case object Round            extends Shape("(", ")")
+      case object Stadium          extends Shape("([", "])")
+      case object Subroutine       extends Shape("[[", "]]")
+      case object Cylinder         extends Shape("[(", ")]")
+      case object Circle           extends Shape("((", "))")
+      case object Asymmetric       extends Shape(">", "]")
+      case object Rhombus          extends Shape("{", "}")
+      case object Hexagon          extends Shape("{{", "}}")
+      case object Parallelogram    extends Shape("[/", "/]")
+      case object ParallelogramAlt extends Shape("[\\", "\\]")
+      case object Trapezoid        extends Shape("[/", "\\]")
+      case object TrapezoidAlt     extends Shape("[\\", "/]")
+      case object DoubleCircle     extends Shape("(((", ")))")
 
     given DiagramEncoder[Node] with
       def encode(x: Node): Chain[String] =
         x match
-          case Node.Square(id, oText) =>
+          case Node.Simple(id, oText, _) =>
             Chain.one:
               id + oText.map(s => s"[$s]").getOrElse("")
 
-          case Node.Round(id, text) =>
-            encodeNode("(", ")")(id, text)
+          case Node.WithShape(id, shape, oText, _) =>
+            val text = oText.getOrElse(id)
 
-          case Node.Stadium(id, text) =>
-            encodeNode("([", "])")(id, text)
-
-          case Node.Subroutine(id, text) =>
-            encodeNode("[[", "]]")(id, text)
-
-          case Node.Cylinder(id, text) =>
-            encodeNode("[(", ")]")(id, text)
-
-          case Node.Circle(id, text) =>
-            encodeNode("((", "))")(id, text)
-
-          case Node.Asymmetric(id, text) =>
-            encodeNode(">", "]")(id, text)
-
-          case Node.Rhombus(id, text) =>
-            encodeNode("{", "}")(id, text)
-
-          case Node.Hexagon(id, text) =>
-            encodeNode("{{", "}}")(id, text)
-
-          case Node.Parallelogram(id, text) =>
-            encodeNode("[/", "/]")(id, text)
-
-          case Node.ParallelogramAlt(id, text) =>
-            encodeNode("[\\", "\\]")(id, text)
-
-          case Node.Trapezoid(id, text) =>
-            encodeNode("[/", "\\]")(id, text)
-
-          case Node.TrapezoidAlt(id, text) =>
-            encodeNode("[\\", "/]")(id, text)
-
-          case Node.DoubleCircle(id, text) =>
-            encodeNode("(((", ")))")(id, text)
-
-    case class Square(id: String, text: Option[String] = None) extends Node:
-      def withText(s: String): Node =
-        copy(text = Some(s))
-
-    case class Round(id: String, text: String) extends Node
-
-    case class Stadium(id: String, text: String) extends Node
-
-    case class Subroutine(id: String, text: String) extends Node
-
-    case class Cylinder(id: String, text: String) extends Node
-
-    case class Circle(id: String, text: String) extends Node
-
-    case class Asymmetric(id: String, text: String) extends Node
-
-    case class Rhombus(id: String, text: String) extends Node
-
-    case class Hexagon(id: String, text: String) extends Node
-
-    case class Parallelogram(id: String, text: String) extends Node
-
-    case class ParallelogramAlt(id: String, text: String) extends Node
-
-    case class Trapezoid(id: String, text: String) extends Node
-
-    case class TrapezoidAlt(id: String, text: String) extends Node
-
-    case class DoubleCircle(id: String, text: String) extends Node
+            Chain.one:
+              s"$id${shape.left}$text${shape.right}"
 
   /**
     * Defines a style for a specific node, identified by ID

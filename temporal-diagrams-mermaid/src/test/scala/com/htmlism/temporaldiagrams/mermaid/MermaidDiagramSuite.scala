@@ -36,22 +36,22 @@ object MermaidDiagramSuite extends FunSuite:
       MermaidDiagram(
         Chain.empty,
         Flowchart:
-          FlowchartDsl.Node.Square("foo")
+          FlowchartDsl.Node.Simple("foo")
       )
 
     val bar =
       MermaidDiagram(
         Chain.empty,
         Flowchart:
-          FlowchartDsl.Node.Square("bar")
+          FlowchartDsl.Node.Simple("bar")
       )
 
     expect.same(
       MermaidDiagram(
         Chain.empty,
         Flowchart(
-          FlowchartDsl.Node.Square("foo"),
-          FlowchartDsl.Node.Square("bar")
+          FlowchartDsl.Node.Simple("foo"),
+          FlowchartDsl.Node.Simple("bar")
         )
       ),
       foo |+| bar

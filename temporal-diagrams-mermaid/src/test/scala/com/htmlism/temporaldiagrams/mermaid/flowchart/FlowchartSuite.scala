@@ -74,7 +74,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Square("foo")
+            Node.Simple("foo")
         )
     )
 
@@ -88,7 +88,21 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Square("foo", text = Some("bar"))
+            Node.Simple("foo", text = Some("bar"))
+        )
+    )
+
+  test("Can render node shape: square"):
+    expect.eql(
+      Chain(
+        "flowchart",
+        "  foo[bar]"
+      ),
+      MermaidDiagram.render:
+        MermaidDiagram(
+          Chain.empty,
+          Flowchart:
+            Node.WithShape(id = "foo", Node.Shape.Square, text = "bar".some)
         )
     )
 
@@ -102,7 +116,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Round(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Round, text = "bar".some)
         )
     )
 
@@ -116,7 +130,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Stadium(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Stadium, text = "bar".some)
         )
     )
 
@@ -130,7 +144,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Subroutine(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Subroutine, text = "bar".some)
         )
     )
 
@@ -144,7 +158,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Cylinder(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Cylinder, text = "bar".some)
         )
     )
 
@@ -158,7 +172,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Circle(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Circle, text = "bar".some)
         )
     )
 
@@ -172,7 +186,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Asymmetric(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Asymmetric, text = "bar".some)
         )
     )
 
@@ -186,7 +200,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Rhombus(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Rhombus, text = "bar".some)
         )
     )
 
@@ -200,7 +214,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Hexagon(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Hexagon, text = "bar".some)
         )
     )
 
@@ -214,7 +228,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Parallelogram(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Parallelogram, text = "bar".some)
         )
     )
 
@@ -228,7 +242,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.ParallelogramAlt(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.ParallelogramAlt, text = "bar".some)
         )
     )
 
@@ -242,7 +256,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Trapezoid(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.Trapezoid, text = "bar".some)
         )
     )
 
@@ -256,7 +270,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.TrapezoidAlt(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.TrapezoidAlt, text = "bar".some)
         )
     )
 
@@ -270,7 +284,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.DoubleCircle(id = "foo", text = "bar")
+            Node.WithShape(id = "foo", Node.Shape.DoubleCircle, text = "bar".some)
         )
     )
 

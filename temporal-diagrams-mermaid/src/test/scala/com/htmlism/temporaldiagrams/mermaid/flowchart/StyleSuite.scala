@@ -2,6 +2,7 @@ package com.htmlism.temporaldiagrams.mermaid
 package flowchart
 
 import cats.data.*
+import cats.syntax.all.*
 import weaver.FunSuite
 
 import com.htmlism.temporaldiagrams.mermaid.flowchart.Flowchart.*
@@ -14,8 +15,8 @@ object StyleSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart(
-            Node.Round("id1", "Start"),
-            Node.Round("id2", "Stop"),
+            Node.WithShape("id1", Node.Shape.Round, "Start".some),
+            Node.WithShape("id2", Node.Shape.Round, "Stop".some),
             Style("id1", "fill" -> "#f9f", "stroke" -> "#333", "stroke-width" -> "4px"),
             Style(
               "id2",
@@ -109,7 +110,7 @@ object StyleSuite extends FunSuite:
         Chain.empty,
         Flowchart(
           ClassAttachment(NonEmptyList.of("duck"), "foo"),
-          Node.Square(nodeIdAlphabeticallyGreaterThanClass, None)
+          Node.Simple(nodeIdAlphabeticallyGreaterThanClass)
         )
       )
 
