@@ -8,7 +8,7 @@ Notably, its rendering engine is based in JavaScript and is supported in GitHub'
 
 - :white_check_mark: [Flowchart](https://mermaid.js.org/syntax/flowchart.html#styling-and-classes)
   - :white_check_mark: Diagram direction 
-  - :white_check_mark: Node shapes
+  - :white_check_mark: [Node shapes](https://mermaid.js.org/syntax/flowchart.html#node-shapes)
   - :white_check_mark: Links between nodes
     - :white_check_mark: Multi-source links
     - :white_check_mark: Chained links
