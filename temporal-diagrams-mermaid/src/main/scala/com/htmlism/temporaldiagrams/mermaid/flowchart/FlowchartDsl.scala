@@ -173,6 +173,11 @@ object FlowchartDsl:
     */
   case class Style(id: String, styles: NonEmptyList[(String, String)]) extends Declaration
 
+  // TODO class definition
+
+  // TODO class attachment
+  // must happen after node declarations
+
   object Style:
     given DiagramEncoder[Style] with
       def encode(x: Style): Chain[String] =
