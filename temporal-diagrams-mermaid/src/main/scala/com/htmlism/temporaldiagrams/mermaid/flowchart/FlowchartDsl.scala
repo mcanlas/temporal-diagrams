@@ -179,6 +179,9 @@ object FlowchartDsl:
     */
   case class Style(id: String, styles: NonEmptyList[(String, String)]) extends Declaration
 
+  /**
+    * Defines one or more classes and styles associated with them
+    */
   case class ClassDef(ids: NonEmptyList[String], styles: NonEmptyList[(String, String)]) extends Declaration
 
   object ClassDef:
@@ -201,6 +204,9 @@ object FlowchartDsl:
                 pairs
               ).mkString(" ")
 
+  /**
+    * Defines an association between one (or more) nodes and a single class
+    */
   case class ClassAttachment(ids: NonEmptyList[String], name: String) extends Declaration
   // TODO must happen after node declarations
 
