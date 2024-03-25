@@ -144,7 +144,7 @@ object FlowchartDsl:
           case Node.DoubleCircle(id, text) =>
             encodeNode("(((", ")))")(id, text)
 
-    case class Square(id: String, text: Option[String]) extends Node:
+    case class Square(id: String, text: Option[String] = None) extends Node:
       def withText(s: String): Node =
         copy(text = Some(s))
 

@@ -36,9 +36,9 @@ object PrintCurveStyles extends IOApp.Simple:
         )
       ,
       Flowchart(
-        FlowchartDsl.Node.Square("source", text       = style.s.some),
-        FlowchartDsl.Node.Square("destinationA", text = None),
-        FlowchartDsl.Node.Square("destinationB", text = None),
+        FlowchartDsl.Node.Square("source", text = style.s.some),
+        FlowchartDsl.Node.Square("destinationA"),
+        FlowchartDsl.Node.Square("destinationB"),
         FlowchartDsl
           .Link
           .LinkChain(

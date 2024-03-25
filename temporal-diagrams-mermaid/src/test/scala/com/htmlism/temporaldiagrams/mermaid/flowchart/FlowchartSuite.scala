@@ -74,7 +74,7 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(
           Chain.empty,
           Flowchart:
-            Node.Square("foo", text = None)
+            Node.Square("foo")
         )
     )
 
