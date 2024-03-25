@@ -47,9 +47,7 @@ object DemoDsl:
                     1,
                     Link.Weight.Normal,
                     Link.Direction.Single(Link.Head.Arrow),
-                    text = None,
-                    NonEmptyList.one(dest),
-                    style = None
+                    NonEmptyList.one(dest)
                   )
               )
             )

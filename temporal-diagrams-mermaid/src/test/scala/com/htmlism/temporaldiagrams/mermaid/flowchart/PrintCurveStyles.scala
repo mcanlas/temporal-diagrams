@@ -51,9 +51,7 @@ object PrintCurveStyles extends IOApp.Simple:
                   2,
                   FlowchartDsl.Link.Weight.Normal,
                   FlowchartDsl.Link.Direction.Single(Head.Arrow),
-                  text = None,
-                  NonEmptyList.one("destinationA"),
-                  None
+                  NonEmptyList.one("destinationA")
                 )
             )
           ),
@@ -69,9 +67,7 @@ object PrintCurveStyles extends IOApp.Simple:
                   2,
                   FlowchartDsl.Link.Weight.Normal,
                   FlowchartDsl.Link.Direction.Single(Head.Arrow),
-                  text = None,
-                  NonEmptyList.one("destinationB"),
-                  None
+                  NonEmptyList.one("destinationB")
                 )
             )
           )

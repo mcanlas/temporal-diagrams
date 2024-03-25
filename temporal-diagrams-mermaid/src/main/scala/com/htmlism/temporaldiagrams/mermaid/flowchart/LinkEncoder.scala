@@ -68,7 +68,7 @@ object LinkEncoder:
                   ampersand(destinations)
                 ) -> style
 
-              case Segment.Visible(length, weight, direction, oText, destinations, style) =>
+              case Segment.Visible(length, weight, direction, destinations, oText, style) =>
                 val (leftHead, rightHead) =
                   (weight, direction) match
                     case (Weight.Normal, Direction.Open) =>

@@ -34,9 +34,7 @@ object StyleSuite extends FunSuite:
                     1,
                     Link.Weight.Normal,
                     Link.Direction.Single(Link.Head.Arrow),
-                    text = None,
-                    NonEmptyList.one("id2"),
-                    style = None
+                    NonEmptyList.one("id2")
                   )
               )
             )
