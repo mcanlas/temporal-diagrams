@@ -7,6 +7,9 @@ import cats.Order.*
 import cats.data.Chain
 import cats.syntax.all.*
 
+/**
+  * Inputs for rendering shared by top-level flowcharts and sub-graphs
+  */
 trait FlowchartCommon:
   def declarations: Set[FlowchartDsl.Declaration]
   def links: Set[FlowchartDsl.Link]
