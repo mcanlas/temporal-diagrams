@@ -208,7 +208,6 @@ object FlowchartDsl:
     * Defines an association between one (or more) nodes and a single class
     */
   case class ClassAttachment(ids: NonEmptyList[String], name: String) extends Declaration
-  // TODO must happen after node declarations
 
   object ClassAttachment:
     given DiagramEncoder[ClassAttachment] with

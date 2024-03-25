@@ -12,12 +12,28 @@ trait FlowchartCommon:
   def links: Set[FlowchartDsl.Link]
 
 object FlowchartCommon:
-  private def renderSubsectionSorted[A](f: A => Chain[String])(xs: Set[A]) =
-    xs.toList.map(f).sorted
-
   def encode(x: FlowchartCommon): Chain[String] =
+    val enc =
+      summon[DiagramEncoder[FlowchartDsl.Declaration]]
+
+    val encodedDeclarations =
+      x
+        .declarations
+        .iterator
+        .map:
+          case x: FlowchartDsl.Node =>
+            0 -> x
+          case x =>
+            1 -> x
+        .map: (n, x) =>
+          n -> enc.encode(x)
+        .toList
+        .sorted
+        .map: (_, str) =>
+          str
+
     Chain(
-      x.declarations.pipe(renderSubsectionSorted(summon[DiagramEncoder[FlowchartDsl.Declaration]].encode)),
+      encodedDeclarations,
       x.links.pipe(LinkEncoder.encode)
     )
       .filter(_.nonEmpty)           // drop empty sections

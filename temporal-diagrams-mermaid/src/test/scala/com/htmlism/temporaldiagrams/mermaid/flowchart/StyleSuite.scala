@@ -93,3 +93,26 @@ object StyleSuite extends FunSuite:
       )
 
     expect.eql(expected, MermaidDiagram.render(mermaid))
+
+  test("Class attachments are encoded after nodes are defined"):
+    val expected =
+      Chain(
+        "flowchart",
+        "  duck",
+        "",
+        "  class duck foo"
+      )
+
+    val nodeIdAlphabeticallyGreaterThanClass =
+      "duck"
+
+    val mermaid =
+      MermaidDiagram(
+        Chain.empty,
+        Flowchart(
+          ClassAttachment(NonEmptyList.of("duck"), "foo"),
+          Node.Square(nodeIdAlphabeticallyGreaterThanClass, None)
+        )
+      )
+
+    expect.eql(expected, MermaidDiagram.render(mermaid))
