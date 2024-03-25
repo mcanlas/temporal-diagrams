@@ -179,7 +179,6 @@ object FlowchartDsl:
     */
   case class Style(id: String, styles: NonEmptyList[(String, String)]) extends Declaration
 
-  // TODO test class definition
   case class ClassDef(ids: NonEmptyList[String], styles: NonEmptyList[(String, String)]) extends Declaration
 
   object ClassDef:
@@ -202,9 +201,8 @@ object FlowchartDsl:
                 pairs
               ).mkString(" ")
 
-  // TODO test class attachment
   case class ClassAttachment(ids: NonEmptyList[String], name: String) extends Declaration
-  // must happen after node declarations
+  // TODO must happen after node declarations
 
   object ClassAttachment:
     given DiagramEncoder[ClassAttachment] with

@@ -59,3 +59,37 @@ object StyleSuite extends FunSuite:
       ),
       mermaid
     )
+
+  test("Can define classes"):
+    val expected =
+      Chain(
+        "flowchart",
+        "  classDef alpha,beta a:b,c:d"
+      )
+
+    val mermaid =
+      MermaidDiagram(
+        Chain.empty,
+        Flowchart(
+          ClassDef(NonEmptyList.of("alpha", "beta"), NonEmptyList.of("a" -> "b", "c" -> "d"))
+        )
+      )
+
+    expect.eql(expected, MermaidDiagram.render(mermaid))
+
+  test("Can attach classes to nodes with declarations"):
+    val expected =
+      Chain(
+        "flowchart",
+        "  class alpha,beta foo"
+      )
+
+    val mermaid =
+      MermaidDiagram(
+        Chain.empty,
+        Flowchart(
+          ClassAttachment(NonEmptyList.of("alpha", "beta"), "foo")
+        )
+      )
+
+    expect.eql(expected, MermaidDiagram.render(mermaid))
