@@ -87,6 +87,12 @@ object FlowchartDsl:
           case s: Style =>
             summon[DiagramEncoder[Style]].encode(s)
 
+          case cd: ClassDef =>
+            summon[DiagramEncoder[ClassDef]].encode(cd)
+
+          case ca: ClassAttachment =>
+            summon[DiagramEncoder[ClassAttachment]].encode(ca)
+
   object Node:
     private def encodeNode(left: String, right: String)(id: String, text: String) =
       Chain.one:
@@ -173,10 +179,47 @@ object FlowchartDsl:
     */
   case class Style(id: String, styles: NonEmptyList[(String, String)]) extends Declaration
 
-  // TODO class definition
+  // TODO test class definition
+  case class ClassDef(ids: NonEmptyList[String], styles: NonEmptyList[(String, String)]) extends Declaration
 
-  // TODO class attachment
+  object ClassDef:
+    given DiagramEncoder[ClassDef] with
+      def encode(x: ClassDef): Chain[String] =
+        x match
+          case ClassDef(ids, styles) =>
+            val pairs = styles
+              .map: (k, v) =>
+                s"$k:$v"
+              .mkString_(",")
+
+            val idsStr =
+              ids.mkString_(",")
+
+            Chain.one:
+              List(
+                "classDef",
+                idsStr,
+                pairs
+              ).mkString(" ")
+
+  // TODO test class attachment
+  case class ClassAttachment(ids: NonEmptyList[String], name: String) extends Declaration
   // must happen after node declarations
+
+  object ClassAttachment:
+    given DiagramEncoder[ClassAttachment] with
+      def encode(x: ClassAttachment): Chain[String] =
+        x match
+          case ClassAttachment(ids, name) =>
+            val idsStr =
+              ids.mkString_(",")
+
+            Chain.one:
+              List(
+                "class",
+                idsStr,
+                name
+              ).mkString(" ")
 
   object Style:
     given DiagramEncoder[Style] with
