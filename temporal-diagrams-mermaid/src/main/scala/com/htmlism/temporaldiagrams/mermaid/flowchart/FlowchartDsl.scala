@@ -168,6 +168,9 @@ object FlowchartDsl:
 
     case class DoubleCircle(id: String, text: String) extends Node
 
+  /**
+    * Defines a style for a specific node, identified by ID
+    */
   case class Style(id: String, styles: NonEmptyList[(String, String)]) extends Declaration
 
   object Style:
