@@ -94,9 +94,9 @@ object FlowchartDsl:
             summon[DiagramEncoder[ClassAttachment]].encode(ca)
 
   object Node:
-    case class Simple(id: String, text: Option[String] = None, clazz: Option[String] = None) extends Node
+    case class Simple(id: String, text: Option[String] = None, nodeClass: Option[String] = None) extends Node
 
-    case class WithShape(id: String, shape: Shape, text: Option[String] = None, clazz: Option[String] = None)
+    case class WithShape(id: String, shape: Shape, text: Option[String] = None, nodeClass: Option[String] = None)
         extends Node
 
     sealed abstract class Shape(val left: String, val right: String)
@@ -120,15 +120,24 @@ object FlowchartDsl:
     given DiagramEncoder[Node] with
       def encode(x: Node): Chain[String] =
         x match
-          case Node.Simple(id, oText, _) =>
-            Chain.one:
-              id + oText.map(s => s"[$s]").getOrElse("")
+          case Node.Simple(id, oText, oClass) =>
+            val text =
+              oText.map(s => s"[$s]").getOrElse("")
 
-          case Node.WithShape(id, shape, oText, _) =>
+            val classStr =
+              oClass.map(":::" + _).getOrElse("")
+
+            Chain.one:
+              id + text + classStr
+
+          case Node.WithShape(id, shape, oText, oClass) =>
             val text = oText.getOrElse(id)
 
+            val classStr =
+              oClass.map(":::" + _).getOrElse("")
+
             Chain.one:
-              s"$id${shape.left}$text${shape.right}"
+              s"$id${shape.left}$text${shape.right}$classStr"
 
   /**
     * Defines a style for a specific node, identified by ID

@@ -115,3 +115,23 @@ object StyleSuite extends FunSuite:
       )
 
     expect.eql(expected, MermaidDiagram.render(mermaid))
+
+  test("Nodes can have classes"):
+    val expected =
+      Chain(
+        "flowchart",
+        "  a:::class",
+        "",
+        "  b[b]:::class"
+      )
+
+    val mermaid =
+      MermaidDiagram(
+        Chain.empty,
+        Flowchart(
+          Node.Simple("a", nodeClass                       = "class".some),
+          Node.WithShape("b", Node.Shape.Square, nodeClass = "class".some)
+        )
+      )
+
+    expect.eql(expected, MermaidDiagram.render(mermaid))

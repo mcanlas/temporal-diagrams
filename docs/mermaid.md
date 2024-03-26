@@ -16,7 +16,7 @@ Notably, its rendering engine is based in JavaScript and is supported in GitHub'
   - :white_check_mark: [Subgraphs](https://mermaid.js.org/syntax/flowchart.html#subgraphs)
   - :white_check_mark: [Link styling](https://mermaid.js.org/syntax/flowchart.html#styling-links)
   - :white_check_mark: [Node styling by ID](https://mermaid.js.org/syntax/flowchart.html#styling-a-node)
-  - [ ] Node classes
+  - :white_check_mark: [Node classes](https://mermaid.js.org/syntax/flowchart.html#classes)
 
 ## Viewing Mermaid
 
