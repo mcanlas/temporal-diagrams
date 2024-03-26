@@ -48,8 +48,8 @@ object PlantUml:
         )
 
     /**
-      * A sequence-builder-style factory method for constructing [[ComponentDiagram]] where the user doesn't need to
-      * keep track of the different diagram parts
+      * A collection builder style factory method for constructing [[ComponentDiagram]] where the user doesn't need
+      * to keep track of the different diagram parts
       */
     def apply(xs: PlantUml*): ComponentDiagram =
       ComponentDiagram(
