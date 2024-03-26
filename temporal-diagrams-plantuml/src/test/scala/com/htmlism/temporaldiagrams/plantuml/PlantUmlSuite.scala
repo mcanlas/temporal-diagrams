@@ -85,3 +85,19 @@ object PlantUmlSuite extends FunSuite:
         )
         .pipe(PlantUml.render)
     )
+
+  test("A component diagram can be built with varargs style or a foldable collection"):
+    val xs =
+      List(
+        PlantUml.Component("foo", None, None),
+        PlantUml.Component("bar", None, None)
+      )
+
+    val byVarargs =
+      PlantUml
+        .ComponentDiagram(xs*)
+
+    val byFoldable =
+      PlantUml.ComponentDiagram(xs)
+
+    expect.same(byVarargs, byFoldable)

@@ -48,8 +48,8 @@ object PlantUml:
         )
 
     /**
-      * A collection builder style factory method for constructing [[ComponentDiagram]] where the user doesn't need
-      * to keep track of the different diagram parts
+      * A collection builder style factory method for constructing [[ComponentDiagram]] where the user doesn't need to
+      * keep track of the different diagram parts
       */
     def apply(xs: PlantUml*): ComponentDiagram =
       ComponentDiagram(
@@ -58,6 +58,10 @@ object PlantUml:
         xs.collect { case x: PlantUml.Link => x }.toSet
       )
 
+    /**
+      * A factory method that accepts a collection. Useful when complex inputs are constructed conditionally, rather
+      * than specified inline
+      */
     def apply[F[_]: Foldable: Functor](xs: F[PlantUml]): ComponentDiagram =
       xs
         .map(ComponentDiagram(_))
