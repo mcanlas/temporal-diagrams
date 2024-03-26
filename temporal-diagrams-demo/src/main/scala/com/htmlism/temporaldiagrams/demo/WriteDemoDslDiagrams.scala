@@ -73,6 +73,9 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
           Chain(
             DemoDsl.Buffered("bar").tag("bar"),
             WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
+            WithMultiArrows.Source("barqueue", List("bar_queue")),
+            WithMultiArrows.Destination("barraw", List("bar")),
+            WithMultiArrows.MultiArrow("barqueue", "barraw", ListSet.empty),
             WithMultiArrows.Destination("bar", List("bar_queue"))
           )
 
