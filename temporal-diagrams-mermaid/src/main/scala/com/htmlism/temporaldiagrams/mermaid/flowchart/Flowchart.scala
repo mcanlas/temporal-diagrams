@@ -6,6 +6,7 @@ import scala.util.chaining.*
 
 import cats.*
 import cats.data.Chain
+import cats.syntax.all.*
 
 case class Flowchart(
     direction: Option[Flowchart.Direction],
@@ -25,6 +26,15 @@ object Flowchart:
       xs.collect { case x: FlowchartDsl.Declaration => x }.toSet,
       xs.collect { case x: FlowchartDsl.Link => x }.toSet
     )
+
+  /**
+    * A factory method that accepts a collection. Useful when complex inputs are constructed conditionally, rather than
+    * specified inline
+    */
+  def apply[F[_]: Foldable: Functor](xs: F[FlowchartDsl]): Flowchart =
+    xs
+      .map(Flowchart(_))
+      .fold
 
   sealed abstract class Direction(val declaration: String)
 

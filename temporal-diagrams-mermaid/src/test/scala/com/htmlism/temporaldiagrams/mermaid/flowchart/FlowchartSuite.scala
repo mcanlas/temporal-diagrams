@@ -64,6 +64,21 @@ object FlowchartSuite extends FunSuite:
         MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.BT))
     )
 
+  test("A component diagram can be built with varargs style or a foldable collection"):
+    val xs =
+      List(
+        Node.Simple("foo", None, None),
+        Node.Simple("bar", None, None)
+      )
+
+    val byVarargs =
+      Flowchart(xs*)
+
+    val byFoldable =
+      Flowchart(xs)
+
+    expect.same(byVarargs, byFoldable)
+
   test("Supports nodes, without text"):
     expect.eql(
       Chain(
