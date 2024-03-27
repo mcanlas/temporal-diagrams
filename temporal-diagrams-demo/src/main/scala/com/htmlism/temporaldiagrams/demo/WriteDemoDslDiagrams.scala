@@ -83,9 +83,14 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
 
     val toService =
       (n: Int) =>
-        Chain(
-          DemoDsl.Service("reader-service", n).r
-        )
+        if n == 1 then
+          Chain(
+            DemoDsl.Service("reader-service", n).r
+          )
+        else
+          (1 to n)
+            .map(m => DemoDsl.Service(s"reader-service-$m", m).r)
+            .pipe(Chain.fromSeq)
 
     val toDatabase =
       (n: Int) =>
@@ -126,7 +131,9 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       List[DemoDsl.Config => DemoDsl.Config](
         _.copy(fooStyle = DemoDsl.Config.ServiceAppearance.AsCluster),
         _.copy(barStyle = DemoDsl.Config.ServiceAppearance.AsCluster),
-        _.copy(barStyle = DemoDsl.Config.ServiceAppearance.WithBuffer)
+        _.copy(barStyle = DemoDsl.Config.ServiceAppearance.WithBuffer),
+        _.copy(databaseReplicas = 2),
+        _.copy(serviceInstances = 3)
       )
         .mapAccumulate(initialDiagramConfig)((s, f) => f(s) -> f(s))
         ._2
