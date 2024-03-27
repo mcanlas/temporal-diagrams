@@ -5,6 +5,7 @@ import scala.util.chaining.*
 
 import cats.data.Chain
 import cats.data.NonEmptyList
+import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.mermaid.*
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.*
@@ -72,7 +73,10 @@ object DemoDsl:
 
         case Database(name, replicas) =>
           PlantUml.ComponentDiagram(
-            PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty),
+            PlantUml.Package(
+              "Persistence",
+              PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty)
+            ),
             skinPlantUml(isBright)
           )
 
@@ -122,8 +126,15 @@ object DemoDsl:
         case Database(name, replicas) =>
           MermaidDiagram.of:
             Flowchart:
-              Node.WithShape(name, Node.Shape.Cylinder, nodeClass = Option.when(isBright)("Database")) ::
-                skinMermaid(isBright)
+              Subgraph(
+                id        = "persistence",
+                text      = "Persistence".some,
+                direction = None,
+                declarations =
+                  (Node.WithShape(name, Node.Shape.Cylinder, nodeClass = Option.when(isBright)("Database")) ::
+                    skinMermaid(isBright)).toSet,
+                links = Set.empty
+              )
 
         case ClusterService(n, asCluster) =>
           if asCluster then
