@@ -62,14 +62,14 @@ object DemoDsl:
         case Lambda(name) =>
           PlantUml.ComponentDiagram(
             PlantUml.Component(name, None, Option.when(isBright)("Lambda")),
-            if isBright then skinPlantUmlRed("component", "Lambda") else skinPlantUmlWhite,
+            if isBright then skinPlantUmlRed("component", "Lambda") else skinPlantUmlWhite("component"),
             PlantUml.Link(name, "database").withText("writes to")
           )
 
         case Service(name, instances) =>
           PlantUml.ComponentDiagram(
             PlantUml.Component(name, None, Option.when(isBright)("Service")),
-            if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite
+            if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component")
           )
 
         case Database(name, replicas) =>
@@ -78,7 +78,7 @@ object DemoDsl:
               "Persistence",
               PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty)
             ),
-            if isBright then skinPlantUmlBlue("component", "Database") else skinPlantUmlWhite
+            if isBright then skinPlantUmlYellow("database", "Database") else skinPlantUmlWhite("database")
           )
 
         case ClusterService(n, asCluster) =>
@@ -87,20 +87,20 @@ object DemoDsl:
               .flatMap { i =>
                 Chain[PlantUml](
                   PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
-                  if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite
+                  if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component")
                 )
               }
               .pipe(PlantUml.ComponentDiagram.apply(_))
           else
             PlantUml.ComponentDiagram(
               PlantUml.Component(n, None, Option.when(isBright)("Service")),
-              if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite
+              if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component")
             )
 
         case Buffered(n) =>
           PlantUml.ComponentDiagram(
             PlantUml.Component(n, None, Option.when(isBright)("Service")),
-            if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite,
+            if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component"),
             PlantUml.Queue(n + "_queue", None, None),
             queueSkin
           )
@@ -187,6 +187,15 @@ object DemoDsl:
       .and("borderColor", "#807746")
       .and("borderThickness", "2")
 
+  private def skinPlantUmlYellow(name: String, stereotype: String) =
+    PlantUml
+      .SkinParamGroup(name, stereotype)
+      .and("fontStyle", "bold")
+      .and("fontColor", "#444")
+      .and("backgroundColor", "#faf2c8/#e6c72c")
+      .and("borderColor", "#807746")
+      .and("borderThickness", "2")
+
   private def skinPlantUmlBlue(name: String, stereotype: String) =
     PlantUml
       .SkinParamGroup(name, stereotype)
@@ -196,9 +205,9 @@ object DemoDsl:
       .and("borderColor", "#223336")
       .and("borderThickness", "2")
 
-  private val skinPlantUmlWhite =
+  private def skinPlantUmlWhite(stereotype: String) =
     PlantUml
-      .SkinParamGroup("component")
+      .SkinParamGroup(stereotype)
       .and("fontStyle", "bold")
       .and("fontColor", "#AAA")
       .and("backgroundColor", "white")
