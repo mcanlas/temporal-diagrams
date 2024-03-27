@@ -35,8 +35,7 @@ object DemoDsl:
       def encodeBrightly(x: Arrow, isBright: Boolean): MermaidDiagram[Flowchart] =
         val Arrow(src, dest) = x
 
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart(
             Link.LinkChain(
               NonEmptyList.one(src),
@@ -52,7 +51,6 @@ object DemoDsl:
               )
             )
           )
-        )
 
   given BrightEncoder[PlantUml.ComponentDiagram, DemoDsl] with
     def encodeBrightly(x: DemoDsl, isBright: Boolean): PlantUml.ComponentDiagram =
@@ -96,27 +94,21 @@ object DemoDsl:
                   Node.Simple(n + i.toString, nodeClass = Option.when(isBright)("Service"))
                 .toList
 
-            MermaidDiagram(
-              Chain.empty,
+            MermaidDiagram.of:
               Flowchart:
                 nodes ::: skinMermaid(isBright)
-            )
           else
-            MermaidDiagram(
-              Chain.empty,
+            MermaidDiagram.of:
               Flowchart:
                 Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
                   skinMermaid(isBright)
-            )
 
         case Buffered(n) =>
-          MermaidDiagram(
-            Chain.empty,
+          MermaidDiagram.of:
             Flowchart:
               Node.WithShape(n + "_queue", Node.Shape.Cylinder) ::
                 Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
                 skinMermaid(isBright)
-          )
 
         case Title(s) =>
           MermaidDiagram.empty

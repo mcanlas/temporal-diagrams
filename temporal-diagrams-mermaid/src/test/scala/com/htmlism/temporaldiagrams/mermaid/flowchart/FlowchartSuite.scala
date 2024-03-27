@@ -25,7 +25,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart LR"
       ,
       MermaidDiagram.render:
-        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.LR))
+        MermaidDiagram.of(Flowchart.empty.withDirection(Direction.LR))
     )
 
   test("Can render an empty flowchart, right to left"):
@@ -34,7 +34,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart RL"
       ,
       MermaidDiagram.render:
-        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.RL))
+        MermaidDiagram.of(Flowchart.empty.withDirection(Direction.RL))
     )
 
   test("Can render an empty flowchart, top down"):
@@ -43,7 +43,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart TD"
       ,
       MermaidDiagram.render:
-        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.TD))
+        MermaidDiagram.of(Flowchart.empty.withDirection(Direction.TD))
     )
 
   test("Can render an empty flowchart, top to bottom"):
@@ -52,7 +52,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart TB"
       ,
       MermaidDiagram.render:
-        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.TB))
+        MermaidDiagram.of(Flowchart.empty.withDirection(Direction.TB))
     )
 
   test("Can render an empty flowchart, bottom to top"):
@@ -61,7 +61,7 @@ object FlowchartSuite extends FunSuite:
         "flowchart BT"
       ,
       MermaidDiagram.render:
-        MermaidDiagram(Chain.empty, Flowchart.empty.withDirection(Direction.BT))
+        MermaidDiagram.of(Flowchart.empty.withDirection(Direction.BT))
     )
 
   test("A component diagram can be built with varargs style or a foldable collection"):
@@ -86,11 +86,9 @@ object FlowchartSuite extends FunSuite:
         "  foo"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.Simple("foo")
-        )
     )
 
   test("Supports nodes, with text"):
@@ -100,11 +98,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[bar]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.Simple("foo", text = Some("bar"))
-        )
     )
 
   test("Can render node shape: square"):
@@ -114,11 +110,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[bar]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Square, text = "bar".some)
-        )
     )
 
   test("Can render node shape: round"):
@@ -128,11 +122,9 @@ object FlowchartSuite extends FunSuite:
         "  foo(bar)"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Round, text = "bar".some)
-        )
     )
 
   test("Can render node shape: stadium"):
@@ -142,11 +134,9 @@ object FlowchartSuite extends FunSuite:
         "  foo([bar])"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Stadium, text = "bar".some)
-        )
     )
 
   test("Can render node shape: subroutine"):
@@ -156,11 +146,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[[bar]]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Subroutine, text = "bar".some)
-        )
     )
 
   test("Can render node shape: cylinder"):
@@ -170,11 +158,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[(bar)]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Cylinder, text = "bar".some)
-        )
     )
 
   test("Can render node shape: circle"):
@@ -184,11 +170,9 @@ object FlowchartSuite extends FunSuite:
         "  foo((bar))"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Circle, text = "bar".some)
-        )
     )
 
   test("Can render node shape: asymmetric"):
@@ -198,11 +182,9 @@ object FlowchartSuite extends FunSuite:
         "  foo>bar]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Asymmetric, text = "bar".some)
-        )
     )
 
   test("Can render node shape: rhombus"):
@@ -212,11 +194,9 @@ object FlowchartSuite extends FunSuite:
         "  foo{bar}"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Rhombus, text = "bar".some)
-        )
     )
 
   test("Can render node shape: hexagon"):
@@ -226,11 +206,9 @@ object FlowchartSuite extends FunSuite:
         "  foo{{bar}}"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Hexagon, text = "bar".some)
-        )
     )
 
   test("Can render node shape: parallelogram"):
@@ -240,11 +218,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[/bar/]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Parallelogram, text = "bar".some)
-        )
     )
 
   test("Can render node shape: parallelogram alt"):
@@ -254,11 +230,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[\\bar\\]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.ParallelogramAlt, text = "bar".some)
-        )
     )
 
   test("Can render node shape: trapezoid"):
@@ -268,11 +242,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[/bar\\]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.Trapezoid, text = "bar".some)
-        )
     )
 
   test("Can render node shape: trapezoid alt"):
@@ -282,11 +254,9 @@ object FlowchartSuite extends FunSuite:
         "  foo[\\bar/]"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.TrapezoidAlt, text = "bar".some)
-        )
     )
 
   test("Can render node shape: double circle"):
@@ -296,11 +266,9 @@ object FlowchartSuite extends FunSuite:
         "  foo(((bar)))"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Node.WithShape(id = "foo", Node.Shape.DoubleCircle, text = "bar".some)
-        )
     )
 
   test("Can render a link: open with lengths and text"):
@@ -310,8 +278,7 @@ object FlowchartSuite extends FunSuite:
         "  alpha --- beta ---- gamma"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("alpha"),
@@ -334,7 +301,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: arrow"):
@@ -344,8 +310,7 @@ object FlowchartSuite extends FunSuite:
         "  foo --> bar"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("foo"),
@@ -360,7 +325,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: multi direction"):
@@ -370,8 +334,7 @@ object FlowchartSuite extends FunSuite:
         "  foo <--> bar"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("foo"),
@@ -386,7 +349,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: with text"):
@@ -396,8 +358,7 @@ object FlowchartSuite extends FunSuite:
         "  foo -- hello --- bar"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("foo"),
@@ -413,7 +374,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: invisible segment, with lengths"):
@@ -423,8 +383,7 @@ object FlowchartSuite extends FunSuite:
         "  foo ~~~ bar ~~~~ baz"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("foo"),
@@ -443,7 +402,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: dotted weight, no text"):
@@ -453,8 +411,7 @@ object FlowchartSuite extends FunSuite:
         "  one -.- two -..- three"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("one"),
@@ -477,7 +434,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: dotted weight, with text"):
@@ -487,8 +443,7 @@ object FlowchartSuite extends FunSuite:
         "  one -. foo .- two -. bar ..- three"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("one"),
@@ -513,7 +468,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: with styles, simple example"):
@@ -524,8 +478,7 @@ object FlowchartSuite extends FunSuite:
         "  linkStyle 0 stroke:#ff3, stroke-width:4px"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("one"),
@@ -550,7 +503,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: with style; with multiple segments, skips empty"):
@@ -561,8 +513,7 @@ object FlowchartSuite extends FunSuite:
         "  linkStyle 1 stroke:#3ff, stroke-width:2px"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart:
             Link.LinkChain(
               NonEmptyList.one("one"),
@@ -596,7 +547,6 @@ object FlowchartSuite extends FunSuite:
                   )
               )
             )
-        )
     )
 
   test("Can render a link: with style; with multiple link groups, skips empty"):
@@ -609,8 +559,7 @@ object FlowchartSuite extends FunSuite:
         "  linkStyle 2 stroke:#3ff, stroke-width:2px"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart(
             Link.LinkChain(
               NonEmptyList.one("one"),
@@ -659,7 +608,6 @@ object FlowchartSuite extends FunSuite:
               )
             )
           )
-        )
     )
 
   test("Can render a subgraph"):
@@ -673,13 +621,11 @@ object FlowchartSuite extends FunSuite:
         "  end"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart(
             Subgraph("foo", None, None, Set.empty, Set.empty),
             Subgraph("bar", Some("barsub"), None, Set.empty, Set.empty)
           )
-        )
     )
 
   test("Can render a subgraph, with direction"):
@@ -691,10 +637,8 @@ object FlowchartSuite extends FunSuite:
         "  end"
       ),
       MermaidDiagram.render:
-        MermaidDiagram(
-          Chain.empty,
+        MermaidDiagram.of:
           Flowchart(
             Subgraph("foo", None, Some(Subgraph.Direction.RL), Set.empty, Set.empty)
           )
-        )
     )

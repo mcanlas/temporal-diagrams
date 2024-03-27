@@ -24,6 +24,9 @@ object MermaidDiagram:
   def empty[A](using A: Monoid[A]): MermaidDiagram[A] =
     MermaidDiagram(Chain.empty, A.empty)
 
+  def of[A](x: A): MermaidDiagram[A] =
+    MermaidDiagram(Chain.empty, x)
+
   /**
     * @tparam A
     *   The specific diagram type

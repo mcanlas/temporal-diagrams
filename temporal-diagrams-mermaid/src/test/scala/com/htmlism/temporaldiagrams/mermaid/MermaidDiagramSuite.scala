@@ -33,26 +33,21 @@ object MermaidDiagramSuite extends FunSuite:
 
   test("Declarations are monoidal"):
     val foo =
-      MermaidDiagram(
-        Chain.empty,
+      MermaidDiagram.of:
         Flowchart:
           FlowchartDsl.Node.Simple("foo")
-      )
 
     val bar =
-      MermaidDiagram(
-        Chain.empty,
+      MermaidDiagram.of:
         Flowchart:
           FlowchartDsl.Node.Simple("bar")
-      )
 
     expect.same(
-      MermaidDiagram(
-        Chain.empty,
+      MermaidDiagram.of:
         Flowchart(
           FlowchartDsl.Node.Simple("foo"),
           FlowchartDsl.Node.Simple("bar")
         )
-      ),
+      ,
       foo |+| bar
     )
