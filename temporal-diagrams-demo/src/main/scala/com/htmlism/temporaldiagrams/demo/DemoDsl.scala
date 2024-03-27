@@ -68,20 +68,18 @@ object DemoDsl:
               }
               .pipe(PlantUml.ComponentDiagram.apply(_))
           else
-            Chain[PlantUml](
+            PlantUml.ComponentDiagram(
               PlantUml.Component(n, None, Option.when(isBright)("Service")),
               skinPlantUml(isBright)
             )
-              .pipe(PlantUml.ComponentDiagram.apply(_))
 
         case Buffered(n) =>
-          Chain[PlantUml](
+          PlantUml.ComponentDiagram(
             PlantUml.Component(n, None, Option.when(isBright)("Service")),
             skinPlantUml(isBright),
             PlantUml.Queue(n + "_queue", None, None),
             queueSkin
           )
-            .pipe(PlantUml.ComponentDiagram.apply(_))
 
         case Title(s) =>
           PlantUml.ComponentDiagram:
@@ -100,27 +98,24 @@ object DemoDsl:
 
             MermaidDiagram(
               Chain.empty,
-              Flowchart(
-                (nodes ::: skinMermaid(isBright).toList)*
-              )
+              Flowchart:
+                nodes ::: skinMermaid(isBright)
             )
           else
             MermaidDiagram(
               Chain.empty,
-              Flowchart(
-                (Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
-                  skinMermaid(isBright).toList)*
-              )
+              Flowchart:
+                Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
+                  skinMermaid(isBright)
             )
 
         case Buffered(n) =>
           MermaidDiagram(
             Chain.empty,
-            Flowchart(
-              (Node.WithShape(n + "_queue", Node.Shape.Cylinder) ::
+            Flowchart:
+              Node.WithShape(n + "_queue", Node.Shape.Cylinder) ::
                 Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
-                skinMermaid(isBright).toList)*
-            )
+                skinMermaid(isBright)
           )
 
         case Title(s) =>
@@ -154,8 +149,10 @@ object DemoDsl:
         .and("borderThickness", "2")
 
   private def skinMermaid(isBright: Boolean) =
-    Option.when(isBright):
-      ClassDef(NonEmptyList.one("Service"), NonEmptyList.of("fill" -> "#586ba4"))
+    Option
+      .when(isBright):
+        ClassDef(NonEmptyList.one("Service"), NonEmptyList.of("fill" -> "#586ba4"))
+      .toList
 
   case class ConfigBasket(
       fooStyle: ConfigBasket.ServiceAppearance,
