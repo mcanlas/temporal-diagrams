@@ -15,7 +15,7 @@ sealed trait DemoDsl
 
 object DemoDsl:
   case class Lambda(name: String)                             extends DemoDsl
-  case class Service(name: String, instances: Int)            extends DemoDsl
+  case class Service(name: String)                            extends DemoDsl
   case class Database(name: String, replicas: Int)            extends DemoDsl
   case class ClusterService(name: String, asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String)                           extends DemoDsl
@@ -66,7 +66,7 @@ object DemoDsl:
             PlantUml.Link(name, "database").withText("writes to")
           )
 
-        case Service(name, instances) =>
+        case Service(name) =>
           PlantUml.ComponentDiagram(
             PlantUml.Component(name, None, Option.when(isBright)("Service")),
             if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component")
@@ -132,7 +132,7 @@ object DemoDsl:
                 Node.Simple(name, nodeClass = Option.when(isBright)("Lambda")) ::
                 skinMermaidRed(isBright)
 
-        case Service(name, instances) =>
+        case Service(name) =>
           MermaidDiagram.of:
             Flowchart:
               Node.Simple(name, nodeClass = Option.when(isBright)("Service")) ::

@@ -85,11 +85,11 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       (n: Int) =>
         if n == 1 then
           Chain(
-            DemoDsl.Service("reader-service", n).r
+            DemoDsl.Service("reader-service").r
           )
         else
           (1 to n)
-            .map(m => DemoDsl.Service(s"reader-service-$m", m).r)
+            .map(m => DemoDsl.Service(s"reader-service-$m").r)
             .pipe(Chain.fromSeq)
 
     val toDatabase =
