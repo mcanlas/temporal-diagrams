@@ -69,11 +69,16 @@ object DemoDsl:
             if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component")
           )
 
-        case Database(name, replicas) =>
+        case Database(name, numReplicas) =>
+          val replicas =
+            (1 to numReplicas)
+              .map(n => PlantUml.Database(s"replica-$n", None, Option.when(isBright)("Database"), xs = Set.empty))
+              .toSet[PlantUml.Entity]
+
           PlantUml.ComponentDiagram(
             PlantUml.Package(
               "Persistence",
-              PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty)
+              replicas + PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty)
             ),
             if isBright then skinPlantUmlYellow("database", "Database") else skinPlantUmlWhite("database")
           )
