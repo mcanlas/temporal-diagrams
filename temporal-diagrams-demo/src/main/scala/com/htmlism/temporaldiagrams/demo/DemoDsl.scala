@@ -62,13 +62,14 @@ object DemoDsl:
         case Lambda(name) =>
           PlantUml.ComponentDiagram(
             PlantUml.Component(name, None, Option.when(isBright)("Lambda")),
-            skinPlantUml(isBright)
+            if isBright then skinPlantUmlRed("component", "Lambda") else skinPlantUmlWhite,
+            PlantUml.Link(name, "database").withText("writes to")
           )
 
         case Service(name, instances) =>
           PlantUml.ComponentDiagram(
             PlantUml.Component(name, None, Option.when(isBright)("Service")),
-            skinPlantUml(isBright)
+            if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite
           )
 
         case Database(name, replicas) =>
@@ -77,7 +78,7 @@ object DemoDsl:
               "Persistence",
               PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty)
             ),
-            skinPlantUml(isBright)
+            if isBright then skinPlantUmlBlue("component", "Database") else skinPlantUmlWhite
           )
 
         case ClusterService(n, asCluster) =>
@@ -86,20 +87,20 @@ object DemoDsl:
               .flatMap { i =>
                 Chain[PlantUml](
                   PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
-                  skinPlantUml(isBright)
+                  if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite
                 )
               }
               .pipe(PlantUml.ComponentDiagram.apply(_))
           else
             PlantUml.ComponentDiagram(
               PlantUml.Component(n, None, Option.when(isBright)("Service")),
-              skinPlantUml(isBright)
+              if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite
             )
 
         case Buffered(n) =>
           PlantUml.ComponentDiagram(
             PlantUml.Component(n, None, Option.when(isBright)("Service")),
-            skinPlantUml(isBright),
+            if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite,
             PlantUml.Queue(n + "_queue", None, None),
             queueSkin
           )
@@ -114,14 +115,28 @@ object DemoDsl:
         case Lambda(name) =>
           MermaidDiagram.of:
             Flowchart:
-              Node.Simple(name, nodeClass = Option.when(isBright)("Lambda")) ::
-                skinMermaid(isBright)
+              Link.LinkChain(
+                NonEmptyList.one(name),
+                NonEmptyList.of(
+                  Link
+                    .Segment
+                    .Visible(
+                      1,
+                      Link.Weight.Normal,
+                      Link.Direction.Single(Link.Head.Arrow),
+                      NonEmptyList.one("database"),
+                      text = "writes to".some
+                    )
+                )
+              ) ::
+                Node.Simple(name, nodeClass = Option.when(isBright)("Lambda")) ::
+                skinMermaidRed(isBright)
 
         case Service(name, instances) =>
           MermaidDiagram.of:
             Flowchart:
               Node.Simple(name, nodeClass = Option.when(isBright)("Service")) ::
-                skinMermaid(isBright)
+                skinMermaidBlue(isBright)
 
         case Database(name, replicas) =>
           MermaidDiagram.of:
@@ -132,7 +147,7 @@ object DemoDsl:
                 direction = None,
                 declarations =
                   (Node.WithShape(name, Node.Shape.Cylinder, nodeClass = Option.when(isBright)("Database")) ::
-                    skinMermaid(isBright)).toSet,
+                    skinMermaidBlue(isBright)).toSet,
                 links = Set.empty
               )
 
@@ -146,19 +161,19 @@ object DemoDsl:
 
             MermaidDiagram.of:
               Flowchart:
-                nodes ::: skinMermaid(isBright)
+                nodes ::: skinMermaidBlue(isBright)
           else
             MermaidDiagram.of:
               Flowchart:
                 Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
-                  skinMermaid(isBright)
+                  skinMermaidBlue(isBright)
 
         case Buffered(n) =>
           MermaidDiagram.of:
             Flowchart:
               Node.WithShape(n + "_queue", Node.Shape.Cylinder) ::
                 Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
-                skinMermaid(isBright)
+                skinMermaidBlue(isBright)
 
         case Title(s) =>
           MermaidDiagram.empty
@@ -172,28 +187,43 @@ object DemoDsl:
       .and("borderColor", "#807746")
       .and("borderThickness", "2")
 
-  private def skinPlantUml(isBright: Boolean) =
-    if isBright then
-      PlantUml
-        .SkinParamGroup("component", "Service")
-        .and("fontStyle", "bold")
-        .and("fontColor", "white")
-        .and("backgroundColor", "#7082b8/#283d7a")
-        .and("borderColor", "#223336")
-        .and("borderThickness", "2")
-    else
-      PlantUml
-        .SkinParamGroup("component")
-        .and("fontStyle", "bold")
-        .and("fontColor", "#AAA")
-        .and("backgroundColor", "white")
-        .and("borderColor", "#AAA")
-        .and("borderThickness", "2")
+  private def skinPlantUmlBlue(name: String, stereotype: String) =
+    PlantUml
+      .SkinParamGroup(name, stereotype)
+      .and("fontStyle", "bold")
+      .and("fontColor", "white")
+      .and("backgroundColor", "#7082b8/#283d7a")
+      .and("borderColor", "#223336")
+      .and("borderThickness", "2")
 
-  private def skinMermaid(isBright: Boolean) =
+  private val skinPlantUmlWhite =
+    PlantUml
+      .SkinParamGroup("component")
+      .and("fontStyle", "bold")
+      .and("fontColor", "#AAA")
+      .and("backgroundColor", "white")
+      .and("borderColor", "#AAA")
+      .and("borderThickness", "2")
+
+  private def skinPlantUmlRed(name: String, stereotype: String) =
+    PlantUml
+      .SkinParamGroup(name, stereotype)
+      .and("fontStyle", "bold")
+      .and("fontColor", "white")
+      .and("backgroundColor", "#d47777/#822323")
+      .and("borderColor", "#642a2a")
+      .and("borderThickness", "2")
+
+  private def skinMermaidBlue(isBright: Boolean) =
     Option
       .when(isBright):
         ClassDef(NonEmptyList.one("Service"), NonEmptyList.of("fill" -> "#586ba4"))
+      .toList
+
+  private def skinMermaidRed(isBright: Boolean) =
+    Option
+      .when(isBright):
+        ClassDef(NonEmptyList.one("Lambda"), NonEmptyList.of("fill" -> "#bc4f4f"))
       .toList
 
   case class Config(
