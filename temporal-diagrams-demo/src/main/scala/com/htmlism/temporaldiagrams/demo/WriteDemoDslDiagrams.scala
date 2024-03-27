@@ -1,6 +1,5 @@
 package com.htmlism.temporaldiagrams.demo
 
-import scala.collection.immutable.ListSet
 import scala.util.chaining.*
 
 import cats.*
@@ -29,52 +28,6 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       f: D => Chain[String],
       extension: String
   )(using HighlightEncoder[D, DemoDsl.Arrow], HighlightEncoder[D, DemoDsl]): F[Unit] =
-    val toProducer =
-      (_: DemoDsl.Config.ServiceAppearance) match
-        case DemoDsl.Config.ServiceAppearance.AsSingleton =>
-          Chain(
-            DemoDsl.ClusterService("foo", asCluster = false).tag("foo"),
-            WithMultiArrows.Source("foo", List("foo"))
-          )
-
-        case DemoDsl.Config.ServiceAppearance.AsCluster =>
-          Chain(
-            DemoDsl.ClusterService("foo", asCluster = true).tag("foo"),
-            WithMultiArrows.Source("foo", (1 to 4).map("foo" + _).toList)
-          )
-
-        case DemoDsl.Config.ServiceAppearance.WithBuffer =>
-          Chain(
-            DemoDsl.Buffered("foo").tag("foo"),
-            WithMultiArrows.Source("foo", List("foo"))
-          )
-
-    val toConsumer =
-      (_: DemoDsl.Config.ServiceAppearance) match
-        case DemoDsl.Config.ServiceAppearance.AsSingleton =>
-          Chain(
-            DemoDsl.ClusterService("bar", asCluster = false).tag("bar"),
-            WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
-            WithMultiArrows.Destination("bar", List("bar"))
-          )
-
-        case DemoDsl.Config.ServiceAppearance.AsCluster =>
-          Chain(
-            DemoDsl.ClusterService("bar", asCluster = true).tag("bar"),
-            WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
-            WithMultiArrows.Destination("bar", (1 to 4).map("bar" + _).toList)
-          )
-
-        case DemoDsl.Config.ServiceAppearance.WithBuffer =>
-          Chain(
-            DemoDsl.Buffered("bar").tag("bar"),
-            WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
-            WithMultiArrows.Source("barqueue", List("bar_queue")),
-            WithMultiArrows.Destination("barraw", List("bar")),
-            WithMultiArrows.MultiArrow("barqueue", "barraw", ListSet.empty),
-            WithMultiArrows.Destination("bar", List("bar_queue"))
-          )
-
     val toLambda =
       (_: Unit) =>
         Chain(
@@ -122,8 +75,6 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       NonEmptyList
         .of(
           toTitle.compose[DemoDsl.Config](_.title),
-          toProducer.compose[DemoDsl.Config](_.fooStyle),
-          toConsumer.compose[DemoDsl.Config](_.barStyle),
           toLambda.compose[DemoDsl.Config](_ => ()),
           toService.compose[DemoDsl.Config](_.serviceInstances),
           toDatabase.compose[DemoDsl.Config](_.databaseReplicas)
@@ -132,8 +83,6 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
 
     val initialDiagramConfig =
       DemoDsl.Config(
-        fooStyle = DemoDsl.Config.ServiceAppearance.AsSingleton,
-        DemoDsl.Config.ServiceAppearance.AsSingleton,
         title            = "Component diagram",
         databaseReplicas = 0,
         serviceInstances = 1
@@ -141,9 +90,6 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
 
     val episodesDeltas =
       List[DemoDsl.Config => DemoDsl.Config](
-        _.copy(fooStyle = DemoDsl.Config.ServiceAppearance.AsCluster),
-        _.copy(barStyle = DemoDsl.Config.ServiceAppearance.AsCluster),
-        _.copy(barStyle = DemoDsl.Config.ServiceAppearance.WithBuffer),
         _.copy(databaseReplicas = 2),
         _.copy(serviceInstances = 3)
       )

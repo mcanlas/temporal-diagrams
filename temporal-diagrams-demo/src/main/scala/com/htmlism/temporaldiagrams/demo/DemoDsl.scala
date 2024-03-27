@@ -3,7 +3,6 @@ package demo
 
 import scala.util.chaining.*
 
-import cats.data.Chain
 import cats.data.NonEmptyList
 import cats.syntax.all.*
 
@@ -14,12 +13,10 @@ import com.htmlism.temporaldiagrams.plantuml.*
 sealed trait DemoDsl
 
 object DemoDsl:
-  case class Lambda(name: String)                             extends DemoDsl
-  case class Service(name: String)                            extends DemoDsl
-  case class Database(name: String, replicas: Int)            extends DemoDsl
-  case class ClusterService(name: String, asCluster: Boolean) extends DemoDsl
-  case class Buffered(name: String)                           extends DemoDsl
-  case class Title(s: String)                                 extends DemoDsl
+  case class Lambda(name: String)                  extends DemoDsl
+  case class Service(name: String)                 extends DemoDsl
+  case class Database(name: String, replicas: Int) extends DemoDsl
+  case class Title(s: String)                      extends DemoDsl
 
   case class Arrow(src: String, dest: String)
 
@@ -81,30 +78,6 @@ object DemoDsl:
             if isBright then skinPlantUmlYellow("database", "Database") else skinPlantUmlWhite("database")
           )
 
-        case ClusterService(n, asCluster) =>
-          if asCluster then
-            Chain(1, 2, 3, 4)
-              .flatMap { i =>
-                Chain[PlantUml](
-                  PlantUml.Component(n + i.toString, None, Option.when(isBright)("Service")),
-                  if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component")
-                )
-              }
-              .pipe(PlantUml.ComponentDiagram.apply(_))
-          else
-            PlantUml.ComponentDiagram(
-              PlantUml.Component(n, None, Option.when(isBright)("Service")),
-              if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component")
-            )
-
-        case Buffered(n) =>
-          PlantUml.ComponentDiagram(
-            PlantUml.Component(n, None, Option.when(isBright)("Service")),
-            if isBright then skinPlantUmlBlue("component", "Service") else skinPlantUmlWhite("component"),
-            PlantUml.Queue(n + "_queue", None, None),
-            queueSkin
-          )
-
         case Title(s) =>
           PlantUml.ComponentDiagram:
             PlantUml.Title(List(s))
@@ -150,42 +123,8 @@ object DemoDsl:
                     skinMermaidBlue(isBright)).toSet,
                 links = Set.empty
               )
-
-        case ClusterService(n, asCluster) =>
-          if asCluster then
-            val nodes =
-              (1 to 4)
-                .map: i =>
-                  Node.Simple(n + i.toString, nodeClass = Option.when(isBright)("Service"))
-                .toList
-
-            MermaidDiagram.of:
-              Flowchart:
-                nodes ::: skinMermaidBlue(isBright)
-          else
-            MermaidDiagram.of:
-              Flowchart:
-                Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
-                  skinMermaidBlue(isBright)
-
-        case Buffered(n) =>
-          MermaidDiagram.of:
-            Flowchart:
-              Node.WithShape(n + "_queue", Node.Shape.Cylinder) ::
-                Node.Simple(n, nodeClass = Option.when(isBright)("Service")) ::
-                skinMermaidBlue(isBright)
-
         case Title(s) =>
           MermaidDiagram.empty
-
-  private val queueSkin =
-    PlantUml
-      .SkinParamGroup("queue")
-      .and("fontStyle", "bold")
-      .and("fontColor", "#444")
-      .and("backgroundColor", "#faf2c8/#e6c72c")
-      .and("borderColor", "#807746")
-      .and("borderThickness", "2")
 
   private def skinPlantUmlYellow(name: String, stereotype: String) =
     PlantUml
@@ -236,19 +175,7 @@ object DemoDsl:
       .toList
 
   case class Config(
-      fooStyle: Config.ServiceAppearance,
-      barStyle: Config.ServiceAppearance,
       title: String,
       databaseReplicas: Int,
       serviceInstances: Int
   )
-
-  object Config:
-    sealed trait ServiceAppearance
-
-    object ServiceAppearance:
-      case object AsSingleton extends ServiceAppearance
-
-      case object AsCluster extends ServiceAppearance
-
-      case object WithBuffer extends ServiceAppearance
