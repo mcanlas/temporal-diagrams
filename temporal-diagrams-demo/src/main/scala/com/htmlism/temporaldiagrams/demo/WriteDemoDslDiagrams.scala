@@ -30,9 +30,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       extension: String
   )(using HighlightEncoder[D, DemoDsl.Arrow], HighlightEncoder[D, DemoDsl]): F[Unit] =
     val toProducer =
-      Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[
-        Renderable.WithMultiArrows[D, String]
-      ]]:
+      (_: DemoDsl.ConfigBasket.ServiceAppearance) match
         case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
           Chain(
             DemoDsl.ClusterService("foo", asCluster = false).tag("foo"),
@@ -52,9 +50,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
           )
 
     val toConsumer =
-      Kleisli.fromFunction[Id, DemoDsl.ConfigBasket.ServiceAppearance][Chain[
-        Renderable.WithMultiArrows[D, String]
-      ]]:
+      (_: DemoDsl.ConfigBasket.ServiceAppearance) match
         case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
           Chain(
             DemoDsl.ClusterService("bar", asCluster = false).tag("bar"),
@@ -80,46 +76,42 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
           )
 
     val toLambda =
-      Kleisli.fromFunction[Id, Unit][Chain[
-        Renderable.WithMultiArrows[D, String]
-      ]]: _ =>
+      (_: Unit) =>
         Chain(
           DemoDsl.Lambda("writer-lambda").tag("persistence")
         )
 
     val toService =
-      Kleisli.fromFunction[Id, Int][Chain[
-        Renderable.WithMultiArrows[D, String]
-      ]]: n =>
+      (n: Int) =>
         Chain(
           DemoDsl.Service("reader-service", n).r
         )
 
     val toDatabase =
-      Kleisli.fromFunction[Id, Int][Chain[
-        Renderable.WithMultiArrows[D, String]
-      ]]: n =>
+      (n: Int) =>
         Chain(
           DemoDsl.Database("database", n).tag("persistence")
         )
 
     val toTitle =
-      Kleisli.fromFunction[Id, String][Chain[Renderable.WithMultiArrows[D, String]]]: s =>
+      (s: String) =>
         Chain(
           DemoDsl.Title(s).r
         )
 
+    // use the LUB properties of list construction to coerce the non-multi-arrow and multi-arrow types together;
+    // attempting to semigroup them individually will result in compilation errors
     val stackGivenCfg =
-      (
-        toTitle.local[DemoDsl.ConfigBasket](_.title) |+|
-          toProducer.local[DemoDsl.ConfigBasket](_.fooStyle) |+|
-          toConsumer.local[DemoDsl.ConfigBasket](_.barStyle) |+|
-          toLambda.local[DemoDsl.ConfigBasket](_ => ()) |+|
-          toService.local[DemoDsl.ConfigBasket](_.serviceInstances) |+|
-          toDatabase.local[DemoDsl.ConfigBasket](_.databaseReplicas)
-      )
-        .run
-        .andThen(_.extract)
+      NonEmptyList
+        .of(
+          toTitle.compose[DemoDsl.ConfigBasket](_.title),
+          toProducer.compose[DemoDsl.ConfigBasket](_.fooStyle),
+          toConsumer.compose[DemoDsl.ConfigBasket](_.barStyle),
+          toLambda.compose[DemoDsl.ConfigBasket](_ => ()),
+          toService.compose[DemoDsl.ConfigBasket](_.serviceInstances),
+          toDatabase.compose[DemoDsl.ConfigBasket](_.databaseReplicas)
+        )
+        .reduce
 
     val initialDiagramConfig =
       DemoDsl.ConfigBasket(
