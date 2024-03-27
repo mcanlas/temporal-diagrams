@@ -58,10 +58,21 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
 
     val toDatabase =
       (n: Int) =>
-        Chain(
-          DemoDsl.Database("database", n).tag("persistence"),
-          WithMultiArrows.Destination("database-read", List("database"))
-        )
+        if n == 0 then
+          Chain(
+            DemoDsl.Database("database", n).tag("persistence"),
+            WithMultiArrows.Destination("database-read", List("database"))
+          )
+        else
+          val destinations =
+            (1 to n)
+              .map(m => s"replica-$m")
+              .toList
+
+          Chain(
+            DemoDsl.Database("database", n).tag("persistence"),
+            WithMultiArrows.Destination("database-read", destinations)
+          )
 
     val toTitle =
       (s: String) =>

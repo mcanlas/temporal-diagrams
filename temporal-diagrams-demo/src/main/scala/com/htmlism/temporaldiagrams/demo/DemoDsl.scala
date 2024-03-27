@@ -72,16 +72,22 @@ object DemoDsl:
         case Database(name, numReplicas) =>
           val replicas =
             (1 to numReplicas)
-              .map(n => PlantUml.Database(s"replica-$n", None, Option.when(isBright)("Database"), xs = Set.empty))
+              .map: n =>
+                PlantUml.Database(s"replica-$n", None, Option.when(isBright)("Replica"), xs = Set.empty)
               .toSet[PlantUml.Entity]
 
-          PlantUml.ComponentDiagram(
-            PlantUml.Package(
-              "Persistence",
-              replicas + PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty)
-            ),
-            if isBright then skinPlantUmlYellow("database", "Database") else skinPlantUmlWhite("database")
-          )
+          val replicaSkin =
+            if isBright then skinPlantUmlGray("database", "Replica") else skinPlantUmlWhite("database")
+
+          PlantUml
+            .ComponentDiagram(
+              PlantUml.Package(
+                "Persistence",
+                replicas + PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty)
+              ),
+              if isBright then skinPlantUmlYellow("database", "Database") else skinPlantUmlWhite("database"),
+              replicaSkin
+            )
 
         case Title(s) =>
           PlantUml.ComponentDiagram:
@@ -116,17 +122,28 @@ object DemoDsl:
               Node.Simple(name, nodeClass = Option.when(isBright)("Service")) ::
                 skinMermaidBlue(isBright)
 
-        case Database(name, replicas) =>
+        case Database(name, numReplicas) =>
+          val replicas =
+            (1 to numReplicas)
+              .map: n =>
+                Node.WithShape(
+                  s"replica-$n",
+                  Node.Shape.Cylinder,
+                  nodeClass = Option.when(isBright)("Database")
+                )
+              .toList
+
+          val primary =
+            Node.WithShape(name, Node.Shape.Cylinder, nodeClass = Option.when(isBright)("Database"))
+
           MermaidDiagram.of:
             Flowchart:
               Subgraph(
-                id        = "persistence",
-                text      = "Persistence".some,
-                direction = None,
-                declarations =
-                  (Node.WithShape(name, Node.Shape.Cylinder, nodeClass = Option.when(isBright)("Database")) ::
-                    skinMermaidBlue(isBright)).toSet,
-                links = Set.empty
+                id           = "persistence",
+                text         = "Persistence".some,
+                direction    = None,
+                declarations = ((replicas :+ primary) ::: skinMermaidBlue(isBright)).toSet,
+                links        = Set.empty
               )
         case Title(s) =>
           MermaidDiagram.empty
@@ -156,6 +173,15 @@ object DemoDsl:
       .and("fontColor", "#AAA")
       .and("backgroundColor", "white")
       .and("borderColor", "#AAA")
+      .and("borderThickness", "2")
+
+  private def skinPlantUmlGray(name: String, stereotype: String) =
+    PlantUml
+      .SkinParamGroup(name, stereotype)
+      .and("fontStyle", "bold")
+      .and("fontColor", "#333")
+      .and("backgroundColor", "white/#CCC")
+      .and("borderColor", "#888")
       .and("borderThickness", "2")
 
   private def skinPlantUmlRed(name: String, stereotype: String) =
