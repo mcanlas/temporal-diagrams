@@ -30,42 +30,42 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       extension: String
   )(using HighlightEncoder[D, DemoDsl.Arrow], HighlightEncoder[D, DemoDsl]): F[Unit] =
     val toProducer =
-      (_: DemoDsl.ConfigBasket.ServiceAppearance) match
-        case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
+      (_: DemoDsl.Config.ServiceAppearance) match
+        case DemoDsl.Config.ServiceAppearance.AsSingleton =>
           Chain(
             DemoDsl.ClusterService("foo", asCluster = false).tag("foo"),
             WithMultiArrows.Source("foo", List("foo"))
           )
 
-        case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
+        case DemoDsl.Config.ServiceAppearance.AsCluster =>
           Chain(
             DemoDsl.ClusterService("foo", asCluster = true).tag("foo"),
             WithMultiArrows.Source("foo", (1 to 4).map("foo" + _).toList)
           )
 
-        case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
+        case DemoDsl.Config.ServiceAppearance.WithBuffer =>
           Chain(
             DemoDsl.Buffered("foo").tag("foo"),
             WithMultiArrows.Source("foo", List("foo"))
           )
 
     val toConsumer =
-      (_: DemoDsl.ConfigBasket.ServiceAppearance) match
-        case DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton =>
+      (_: DemoDsl.Config.ServiceAppearance) match
+        case DemoDsl.Config.ServiceAppearance.AsSingleton =>
           Chain(
             DemoDsl.ClusterService("bar", asCluster = false).tag("bar"),
             WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
             WithMultiArrows.Destination("bar", List("bar"))
           )
 
-        case DemoDsl.ConfigBasket.ServiceAppearance.AsCluster =>
+        case DemoDsl.Config.ServiceAppearance.AsCluster =>
           Chain(
             DemoDsl.ClusterService("bar", asCluster = true).tag("bar"),
             WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
             WithMultiArrows.Destination("bar", (1 to 4).map("bar" + _).toList)
           )
 
-        case DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer =>
+        case DemoDsl.Config.ServiceAppearance.WithBuffer =>
           Chain(
             DemoDsl.Buffered("bar").tag("bar"),
             WithMultiArrows.MultiArrow("foo", "bar", ListSet.empty),
@@ -104,29 +104,29 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
     val stackGivenCfg =
       NonEmptyList
         .of(
-          toTitle.compose[DemoDsl.ConfigBasket](_.title),
-          toProducer.compose[DemoDsl.ConfigBasket](_.fooStyle),
-          toConsumer.compose[DemoDsl.ConfigBasket](_.barStyle),
-          toLambda.compose[DemoDsl.ConfigBasket](_ => ()),
-          toService.compose[DemoDsl.ConfigBasket](_.serviceInstances),
-          toDatabase.compose[DemoDsl.ConfigBasket](_.databaseReplicas)
+          toTitle.compose[DemoDsl.Config](_.title),
+          toProducer.compose[DemoDsl.Config](_.fooStyle),
+          toConsumer.compose[DemoDsl.Config](_.barStyle),
+          toLambda.compose[DemoDsl.Config](_ => ()),
+          toService.compose[DemoDsl.Config](_.serviceInstances),
+          toDatabase.compose[DemoDsl.Config](_.databaseReplicas)
         )
         .reduce
 
     val initialDiagramConfig =
-      DemoDsl.ConfigBasket(
-        fooStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton,
-        DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton,
+      DemoDsl.Config(
+        fooStyle = DemoDsl.Config.ServiceAppearance.AsSingleton,
+        DemoDsl.Config.ServiceAppearance.AsSingleton,
         title            = "Component diagram",
         databaseReplicas = 0,
         serviceInstances = 1
       )
 
     val episodesDeltas =
-      List[DemoDsl.ConfigBasket => DemoDsl.ConfigBasket](
-        _.copy(fooStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsCluster),
-        _.copy(barStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsCluster),
-        _.copy(barStyle = DemoDsl.ConfigBasket.ServiceAppearance.WithBuffer)
+      List[DemoDsl.Config => DemoDsl.Config](
+        _.copy(fooStyle = DemoDsl.Config.ServiceAppearance.AsCluster),
+        _.copy(barStyle = DemoDsl.Config.ServiceAppearance.AsCluster),
+        _.copy(barStyle = DemoDsl.Config.ServiceAppearance.WithBuffer)
       )
         .mapAccumulate(initialDiagramConfig)((s, f) => f(s) -> f(s))
         ._2

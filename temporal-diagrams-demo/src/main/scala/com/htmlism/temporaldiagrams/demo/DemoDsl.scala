@@ -185,15 +185,15 @@ object DemoDsl:
         ClassDef(NonEmptyList.one("Service"), NonEmptyList.of("fill" -> "#586ba4"))
       .toList
 
-  case class ConfigBasket(
-      fooStyle: ConfigBasket.ServiceAppearance,
-      barStyle: ConfigBasket.ServiceAppearance,
+  case class Config(
+      fooStyle: Config.ServiceAppearance,
+      barStyle: Config.ServiceAppearance,
       title: String,
       databaseReplicas: Int,
       serviceInstances: Int
   )
 
-  object ConfigBasket:
+  object Config:
     sealed trait ServiceAppearance
 
     object ServiceAppearance:
