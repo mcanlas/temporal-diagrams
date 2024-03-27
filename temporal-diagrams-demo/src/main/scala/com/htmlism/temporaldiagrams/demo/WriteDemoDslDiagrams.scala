@@ -79,6 +79,30 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
             WithMultiArrows.Destination("bar", List("bar_queue"))
           )
 
+    val toLambda =
+      Kleisli.fromFunction[Id, Unit][Chain[
+        Renderable.WithMultiArrows[D, String]
+      ]]: _ =>
+        Chain(
+          DemoDsl.Lambda("writer-lambda").tag("persistence")
+        )
+
+    val toService =
+      Kleisli.fromFunction[Id, Int][Chain[
+        Renderable.WithMultiArrows[D, String]
+      ]]: n =>
+        Chain(
+          DemoDsl.Service("reader-service", n).r
+        )
+
+    val toDatabase =
+      Kleisli.fromFunction[Id, Int][Chain[
+        Renderable.WithMultiArrows[D, String]
+      ]]: n =>
+        Chain(
+          DemoDsl.Database("database", n).tag("persistence")
+        )
+
     val toTitle =
       Kleisli.fromFunction[Id, String][Chain[Renderable.WithMultiArrows[D, String]]]: s =>
         Chain(
@@ -89,7 +113,10 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       (
         toTitle.local[DemoDsl.ConfigBasket](_.title) |+|
           toProducer.local[DemoDsl.ConfigBasket](_.fooStyle) |+|
-          toConsumer.local[DemoDsl.ConfigBasket](_.barStyle)
+          toConsumer.local[DemoDsl.ConfigBasket](_.barStyle) |+|
+          toLambda.local[DemoDsl.ConfigBasket](_ => ()) |+|
+          toService.local[DemoDsl.ConfigBasket](_.serviceInstances) |+|
+          toDatabase.local[DemoDsl.ConfigBasket](_.databaseReplicas)
       )
         .run
         .andThen(_.extract)
@@ -98,7 +125,9 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       DemoDsl.ConfigBasket(
         fooStyle = DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton,
         DemoDsl.ConfigBasket.ServiceAppearance.AsSingleton,
-        title = "Component diagram"
+        title            = "Component diagram",
+        databaseReplicas = 0,
+        serviceInstances = 1
       )
 
     val episodesDeltas =

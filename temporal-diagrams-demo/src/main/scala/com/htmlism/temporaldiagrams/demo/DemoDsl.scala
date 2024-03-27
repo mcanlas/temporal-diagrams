@@ -188,7 +188,9 @@ object DemoDsl:
   case class ConfigBasket(
       fooStyle: ConfigBasket.ServiceAppearance,
       barStyle: ConfigBasket.ServiceAppearance,
-      title: String
+      title: String,
+      databaseReplicas: Int,
+      serviceInstances: Int
   )
 
   object ConfigBasket:
