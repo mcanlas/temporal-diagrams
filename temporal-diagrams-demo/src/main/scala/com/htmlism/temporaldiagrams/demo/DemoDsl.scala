@@ -13,6 +13,9 @@ import com.htmlism.temporaldiagrams.plantuml.*
 sealed trait DemoDsl
 
 object DemoDsl:
+  case class Lambda(name: String)                             extends DemoDsl
+  case class Service(name: String, instances: Int)            extends DemoDsl
+  case class Database(name: String, replicas: Int)            extends DemoDsl
   case class ClusterService(name: String, asCluster: Boolean) extends DemoDsl
   case class Buffered(name: String)                           extends DemoDsl
   case class Title(s: String)                                 extends DemoDsl
@@ -55,6 +58,24 @@ object DemoDsl:
   given BrightEncoder[PlantUml.ComponentDiagram, DemoDsl] with
     def encodeBrightly(x: DemoDsl, isBright: Boolean): PlantUml.ComponentDiagram =
       x match
+        case Lambda(name) =>
+          PlantUml.ComponentDiagram(
+            PlantUml.Component(name, None, Option.when(isBright)("Lambda")),
+            skinPlantUml(isBright)
+          )
+
+        case Service(name, instances) =>
+          PlantUml.ComponentDiagram(
+            PlantUml.Component(name, None, Option.when(isBright)("Service")),
+            skinPlantUml(isBright)
+          )
+
+        case Database(name, replicas) =>
+          PlantUml.ComponentDiagram(
+            PlantUml.Database(name, None, Option.when(isBright)("Database"), xs = Set.empty),
+            skinPlantUml(isBright)
+          )
+
         case ClusterService(n, asCluster) =>
           if asCluster then
             Chain(1, 2, 3, 4)
@@ -86,6 +107,24 @@ object DemoDsl:
   given BrightEncoder[MermaidDiagram[Flowchart], DemoDsl] with
     def encodeBrightly(x: DemoDsl, isBright: Boolean): MermaidDiagram[Flowchart] =
       x match
+        case Lambda(name) =>
+          MermaidDiagram.of:
+            Flowchart:
+              Node.Simple(name, nodeClass = Option.when(isBright)("Lambda")) ::
+                skinMermaid(isBright)
+
+        case Service(name, instances) =>
+          MermaidDiagram.of:
+            Flowchart:
+              Node.Simple(name, nodeClass = Option.when(isBright)("Service")) ::
+                skinMermaid(isBright)
+
+        case Database(name, replicas) =>
+          MermaidDiagram.of:
+            Flowchart:
+              Node.WithShape(name, Node.Shape.Cylinder, nodeClass = Option.when(isBright)("Database")) ::
+                skinMermaid(isBright)
+
         case ClusterService(n, asCluster) =>
           if asCluster then
             val nodes =
