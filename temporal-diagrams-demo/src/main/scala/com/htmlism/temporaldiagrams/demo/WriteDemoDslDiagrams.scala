@@ -85,17 +85,29 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
       (n: Int) =>
         if n == 1 then
           Chain(
-            DemoDsl.Service("reader-service").r
+            DemoDsl.Service("reader-service").r,
+            WithMultiArrows.Source("readers", List("reader-service")),
+            WithMultiArrows.MultiArrow("readers", "database-read")
           )
         else
-          (1 to n)
-            .map(m => DemoDsl.Service(s"reader-service-$m").r)
-            .pipe(Chain.fromSeq)
+          val services =
+            (1 to n)
+              .map(m => DemoDsl.Service(s"reader-service-$m").r)
+              .toList
+
+          val srcs =
+            (1 to n)
+              .map(m => s"reader-service-$m")
+              .toList
+              .pipe(WithMultiArrows.Source("readers", _))
+
+          Chain.fromSeq(WithMultiArrows.MultiArrow("readers", "database-read") :: srcs :: services)
 
     val toDatabase =
       (n: Int) =>
         Chain(
-          DemoDsl.Database("database", n).tag("persistence")
+          DemoDsl.Database("database", n).tag("persistence"),
+          WithMultiArrows.Destination("database-read", List("database"))
         )
 
     val toTitle =

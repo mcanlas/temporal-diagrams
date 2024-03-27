@@ -50,7 +50,7 @@ object Renderable:
       * Defines a relationship between a source alias and a destination alias, representing a many-to-many relationship
       * between their underlying targets
       */
-    case class MultiArrow(sourceAlias: String, destinationAlias: String, tags: ListSet[String])
+    case class MultiArrow(sourceAlias: String, destinationAlias: String, tags: ListSet[String] = ListSet.empty)
         extends WithMultiArrows[Nothing, Nothing]
 
     /**
