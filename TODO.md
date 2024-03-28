@@ -2,6 +2,7 @@
 - https://ballerina.io
 - - diagram the framework itself
 - multi arrows in v2
+  - with callback; earlier bound evidence
 - encode heterogeneous payloads
 - highlight framework orthogonal to encoding; not a function of the target language
 - evolution narrative for payloads
