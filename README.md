@@ -1,6 +1,8 @@
 # temporal-diagrams
 A Scala DSL for generating diagram variants
 
+## In action
+
 Easily generate diagrams
 
 ```mermaid
