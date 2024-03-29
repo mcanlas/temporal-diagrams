@@ -1,6 +1,70 @@
 # temporal-diagrams
 A Scala DSL for generating diagram variants
 
+Easily generate diagrams
+
+```mermaid
+flowchart
+  reader-service:::Service
+
+  writer-lambda:::Lambda
+
+  classDef Lambda fill:#bc4f4f
+
+  classDef Service fill:#586ba4
+
+  subgraph persistence [Persistence]
+    database[(database)]:::Database
+
+    classDef Service fill:#586ba4
+  end
+
+  reader-service --> database
+
+  writer-lambda -- writes to --> database
+```
+
+Or variants of them
+
+```mermaid
+flowchart
+  reader-service:::Service
+
+  writer-lambda:::Lambda
+
+  classDef Lambda fill:#bc4f4f
+
+  classDef Service fill:#586ba4
+
+  subgraph persistence [Persistence]
+    database[(database)]:::Database
+
+    replica-1[(replica-1)]:::Database
+
+    replica-2[(replica-2)]:::Database
+
+    classDef Service fill:#586ba4
+  end
+
+  reader-service --> replica-1
+
+  reader-service --> replica-2
+
+  writer-lambda -- writes to --> database
+```
+
+Even to different diagram languages
+
+![](docs/demo-plantuml.png)
+
+With complex targeting
+
+![](docs/demo-plantuml-multiarrows.png)
+
+Or highlighting certain areas
+
+![](docs/demo-plantuml-highlighting.png)
+
 ## Supported target languages
 
 - :white_check_mark: [Mermaid](docs/mermaid.md)
