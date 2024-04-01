@@ -49,9 +49,23 @@ object Renderable:
     /**
       * Defines a relationship between a source alias and a destination alias, representing a many-to-many relationship
       * between their underlying targets
+      *
+      * @tparam A
+      *   The input domain language
+      * @tparam D
+      *   The target diagram language
+      * @tparam K
+      *   The identifier type for multi arrow sources and destinations
       */
-    case class MultiArrow(sourceAlias: String, destinationAlias: String, tags: ListSet[String] = ListSet.empty)
-        extends WithMultiArrows[Nothing, Nothing]
+    case class MultiArrow[A, D, K](
+        sourceAlias: String,
+        destinationAlias: String,
+        callback: (K, K) => A,
+        tags: ListSet[String] = ListSet.empty
+    )(using enc: HighlightEncoder[D, A])
+        extends WithMultiArrows[D, K]:
+      def encoder: HighlightEncoder[D, A] =
+        enc
 
     /**
       * Uses the "partially applied" pattern from Cats to elide needing to specify the target diagram language type and
@@ -62,23 +76,21 @@ object Renderable:
       * @tparam A
       *   The intermediate domain language to encode multi arrows to
       */
-    def renderArrows[A]: PartiallyApplied[A] =
-      new PartiallyApplied[A]
+    def renderArrows: PartiallyApplied =
+      new PartiallyApplied
 
     /**
       * @tparam A
       *   The intermediate domain language to encode multi arrows to
       */
-    class PartiallyApplied[A]:
+    class PartiallyApplied:
       /**
         * @tparam D
         *   The target diagram language
         * @tparam K
         *   The identifier type for multi arrow sources and destinations
         */
-      def apply[D, K: Eq](xs: Chain[Renderable.WithMultiArrows[D, K]])(using A: MultiArrowEncoder[K, A])(using
-          HighlightEncoder[D, A]
-      ): ValidatedNec[String, Chain[Renderable[D]]] =
+      def apply[D, K](xs: Chain[Renderable.WithMultiArrows[D, K]]): ValidatedNec[String, Chain[Renderable[D]]] =
         val (sources, destinations, arrows, renderables) =
           xs
             .map:
@@ -86,8 +98,8 @@ object Renderable:
                 (Chain(src.asInstanceOf[Source[K]]), Chain.empty, Chain.empty, Chain.empty)
               case dest: Destination[?] =>
                 (Chain.empty, Chain(dest.asInstanceOf[Destination[K]]), Chain.empty, Chain.empty)
-              case arrow: MultiArrow =>
-                (Chain.empty, Chain.empty, Chain(arrow), Chain.empty)
+              case arrow: MultiArrow[?, ?, ?] =>
+                (Chain.empty, Chain.empty, Chain(arrow.asInstanceOf[MultiArrow[?, D, K]]), Chain.empty)
               case x: Renderable[?] =>
                 (Chain.empty, Chain.empty, Chain.empty, Chain(x.asInstanceOf[Renderable[D]]))
             .combineAll
@@ -115,7 +127,7 @@ object Renderable:
                     for
                       src  <- mSrc.sources
                       dest <- mDest.destinations
-                    yield Renderable.OfA(A.encodeArrow(src, dest), ma.tags): Renderable.Of[D]
+                    yield Renderable.OfA(ma.callback(src, dest), ma.tags)(using ma.encoder): Renderable.Of[D]
 
         arrowRenderables
           .map(renderables |+| _)
@@ -155,10 +167,12 @@ object Renderable:
     def renderWithHighlight(tag: String): D
 
   /**
+    * Binds a diagram described in input domain language A with evidence that it is renderable to D
+    *
+    * @tparam A
+    *   The input domain language
     * @tparam D
     *   The target diagram language
-    * @tparam A
-    *   The source domain language
     */
   case class OfA[A, D](x: A, tags: ListSet[String])(using enc: HighlightEncoder[D, A]) extends Of[D]:
     def render: D =

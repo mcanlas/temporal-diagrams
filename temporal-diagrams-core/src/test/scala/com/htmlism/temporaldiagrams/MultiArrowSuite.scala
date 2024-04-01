@@ -8,6 +8,15 @@ import weaver.FunSuite
 import com.htmlism.temporaldiagrams.syntax.*
 
 object MultiArrowSuite extends FunSuite:
+  given HighlightEncoder[Chain[ToyDiagramLanguage], Unit] with
+    def encode(x: Unit): Chain[ToyDiagramLanguage] =
+      Chain:
+        ToyDiagramLanguage.Arrow("")
+
+    def encodeWithHighlights(x: Unit, highlighted: Boolean): Chain[ToyDiagramLanguage] =
+      Chain:
+        ToyDiagramLanguage.Arrow("")
+
   test("can add multi-arrow sources"):
     val domainWithArrows =
       Chain(
@@ -39,18 +48,22 @@ object MultiArrowSuite extends FunSuite:
     )
 
   test("can define multi-arrows"):
+    // because inline lambdas are anonymous and different
+    val constantCallback =
+      (_: Nothing, _: Nothing) => ()
+
     val domainWithArrows =
       Chain(
         Amazon.Ec2("").r,
         Google.Compute("").r,
-        Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)
+        Renderable.WithMultiArrows.MultiArrow("src", "dest", constantCallback, ListSet.empty)
       )
 
     expect.same(
-      Chain(Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)),
+      Chain(Renderable.WithMultiArrows.MultiArrow("src", "dest", constantCallback, ListSet.empty)),
       domainWithArrows
         .collect:
-          case x: Renderable.WithMultiArrows.MultiArrow => x
+          case x: Renderable.WithMultiArrows.MultiArrow[?, ?, ?] => x
     )
 
   test("rendering multi-arrows is fallible given an undefined source"):
@@ -59,11 +72,11 @@ object MultiArrowSuite extends FunSuite:
         Amazon.Ec2("").r,
         Google.Compute("").r,
         Renderable.WithMultiArrows.Destination("dest", List.empty[String]),
-        Renderable.WithMultiArrows.MultiArrow("invalid-src", "dest", ListSet.empty)
+        Renderable.WithMultiArrows.MultiArrow("invalid-src", "dest", (_, _) => (), ListSet.empty)
       )
 
     val res =
-      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](domainWithArrows)
+      Renderable.WithMultiArrows.renderArrows(domainWithArrows)
 
     matches(res):
       case Validated.Invalid(errs) =>
@@ -76,11 +89,11 @@ object MultiArrowSuite extends FunSuite:
         Amazon.Ec2("").r,
         Google.Compute("").r,
         Renderable.WithMultiArrows.Source("src", List.empty[String]),
-        Renderable.WithMultiArrows.MultiArrow("src", "invalid-dest", ListSet.empty)
+        Renderable.WithMultiArrows.MultiArrow("src", "invalid-dest", (_, _) => (), ListSet.empty)
       )
 
     val res =
-      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](domainWithArrows)
+      Renderable.WithMultiArrows.renderArrows(domainWithArrows)
 
     matches(res):
       case Validated.Invalid(errs) =>
@@ -96,7 +109,7 @@ object MultiArrowSuite extends FunSuite:
       )
 
     val res =
-      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](domainWithArrows)
+      Renderable.WithMultiArrows.renderArrows(domainWithArrows)
 
     whenSuccess(res): rs =>
       expect.eql(
@@ -114,11 +127,18 @@ object MultiArrowSuite extends FunSuite:
         Google.Compute("").r,
         Renderable.WithMultiArrows.Source("src", List("a", "b", "c")),
         Renderable.WithMultiArrows.Destination("dest", List("x", "y")),
-        Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)
+        Renderable
+          .WithMultiArrows
+          .MultiArrow(
+            "src",
+            "dest",
+            (src: String, dest: String) => Microsoft.Arrow(src, dest): Microsoft.Arrow,
+            ListSet.empty
+          )
       )
 
     val res =
-      Renderable.WithMultiArrows.renderArrows[Microsoft.Arrow](domainWithArrows)
+      Renderable.WithMultiArrows.renderArrows(domainWithArrows)
 
     whenSuccess(res): rs =>
       expect.eql(
@@ -145,7 +165,7 @@ object MultiArrowSuite extends FunSuite:
         Google.Compute("").r,
         Renderable.WithMultiArrows.Source("src", List("foo")),
         Renderable.WithMultiArrows.Destination("dest", List("foo")),
-        Renderable.WithMultiArrows.MultiArrow("src", "dest", ListSet.empty)
+        Renderable.WithMultiArrows.MultiArrow("src", "dest", (_, _) => (), ListSet.empty)
       )
 
     expect.same(

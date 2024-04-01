@@ -40,7 +40,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
           Chain(
             DemoDsl.Service("reader-service").r,
             WithMultiArrows.Source("readers", List("reader-service")),
-            WithMultiArrows.MultiArrow("readers", "database-read")
+            WithMultiArrows.MultiArrow("readers", "database-read", (src, dest) => DemoDsl.Arrow(src, dest))
           )
         else
           val services =
@@ -54,7 +54,13 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
               .toList
               .pipe(WithMultiArrows.Source("readers", _))
 
-          Chain.fromSeq(WithMultiArrows.MultiArrow("readers", "database-read") :: srcs :: services)
+          Chain.fromSeq(
+            WithMultiArrows.MultiArrow(
+              "readers",
+              "database-read",
+              (src, dest) => DemoDsl.Arrow(src, dest)
+            ) :: srcs :: services
+          )
 
     val toDatabase =
       (n: Int) =>
@@ -142,7 +148,7 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
           stackGivenCfg(cfg)
             .pipe: xs =>
               WithMultiArrows
-                .renderArrows[DemoDsl.Arrow](xs)
+                .renderArrows(xs)
                 .getOrElse(sys.error("expected flawless arrow render"))
 
         printNormalDiagram(renders, n) *>

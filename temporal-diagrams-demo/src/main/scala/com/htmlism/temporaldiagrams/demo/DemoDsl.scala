@@ -21,10 +21,6 @@ object DemoDsl:
   case class Arrow(src: String, dest: String)
 
   object Arrow:
-    given MultiArrowEncoder[String, Arrow] with
-      def encodeArrow(src: String, dest: String): Arrow =
-        Arrow(src, dest)
-
     given BrightEncoder[PlantUml.ComponentDiagram, Arrow] with
       def encodeBrightly(x: Arrow, isBright: Boolean): PlantUml.ComponentDiagram =
         val Arrow(src, dest) = x
