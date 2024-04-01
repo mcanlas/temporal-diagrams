@@ -6,6 +6,9 @@ A Scala DSL for generating diagram variants
 Easily generate diagrams
 
 ```mermaid
+---
+title: Component diagram
+---
 flowchart
   reader-service:::Service
 
@@ -29,6 +32,9 @@ flowchart
 Or variants of them
 
 ```mermaid
+---
+title: Component diagram
+---
 flowchart
   reader-service:::Service
 

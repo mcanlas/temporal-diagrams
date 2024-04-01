@@ -3,7 +3,7 @@ package demo
 
 import scala.util.chaining.*
 
-import cats.data.NonEmptyList
+import cats.data.*
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.mermaid.*
@@ -146,7 +146,7 @@ object DemoDsl:
                 links        = Set.empty
               )
         case Title(s) =>
-          MermaidDiagram.empty
+          MermaidDiagram(Chain(FrontMatterPair.StringPair("title", s)), Flowchart.empty)
 
   private def skinPlantUmlYellow(name: String, stereotype: String) =
     PlantUml
