@@ -30,10 +30,10 @@ object FlowchartDsl:
 
   case class Subgraph(
       id: String,
-      text: Option[String],
-      direction: Option[Subgraph.Direction],
-      declarations: Set[FlowchartDsl.Declaration],
-      links: Set[FlowchartDsl.Link]
+      text: Option[String]                        = None,
+      direction: Option[Subgraph.Direction]       = None,
+      declarations: Set[FlowchartDsl.Declaration] = Set.empty,
+      links: Set[FlowchartDsl.Link]               = Set.empty
   ) extends FlowchartCommon
       with Declaration
 

@@ -25,7 +25,11 @@ object PlantUml:
           DiagramEncoder[PlantUml.Directive].encode(x)
 
   // TODO test
-  case class ComponentDiagram(directives: Set[PlantUml.Directive], entities: Set[PlantUml.Entity], links: Set[Link]):
+  case class ComponentDiagram(
+      directives: Set[PlantUml.Directive] = Set.empty,
+      entities: Set[PlantUml.Entity]      = Set.empty,
+      links: Set[Link]                    = Set.empty
+  ):
     def add(x: PlantUml): ComponentDiagram =
       this |+| ComponentDiagram(x)
 
@@ -217,7 +221,12 @@ object PlantUml:
             Chain:
               entity("interface", name, oAlias, None)
 
-  private def entity(componentType: String, name: String, oAlias: Option[String], oStereotype: Option[String]): String =
+  private def entity(
+      componentType: String,
+      name: String,
+      oAlias: Option[String]      = None,
+      oStereotype: Option[String] = None
+  ): String =
     s"$componentType ${safeQuote(name)}"
       .applySome(oAlias)((s, a) => s + s" as ${id(a)}")
       .applySome(oStereotype)((s, st) => s + s" << $st >>")
@@ -233,19 +242,21 @@ object PlantUml:
     * @param stereotype
     *   Optional. A tag to share styling among components of the same stereotype
     */
-  case class Component(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+  case class Component(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
 
-  case class Actor(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+  case class Actor(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
 
-  case class BusinessActor(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+  case class BusinessActor(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
 
-  case class Queue(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+  case class Queue(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
 
-  case class UseCase(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+  case class UseCase(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
 
-  case class BusinessUseCase(name: String, alias: Option[String], stereotype: Option[String]) extends Entity
+  case class BusinessUseCase(name: String, alias: Option[String] = None, stereotype: Option[String] = None)
+      extends Entity
 
-  case class Database(name: String, alias: Option[String], stereotype: Option[String], xs: Set[Entity]) extends Entity
+  case class Database(name: String, alias: Option[String] = None, stereotype: Option[String], xs: Set[Entity])
+      extends Entity
 
   // TODO
   case class Interface(name: String, alias: Option[String]) extends Entity
@@ -286,8 +297,8 @@ object PlantUml:
       weight: Link.Weight,
       influencesRank: Boolean,
       isVisible: Boolean,
-      text: Option[String],
-      color: Option[String]
+      text: Option[String]  = None,
+      color: Option[String] = None
   ) extends PlantUml:
     def withText(s: String): Link =
       copy(text = Some(s))
@@ -379,7 +390,7 @@ object PlantUml:
   // TODO test
   case class SkinParam(key: String, value: String) extends Directive
 
-  case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String])
+  case class SkinParamGroup(base: String, parameters: List[SkinParamGroup.Parameter], stereotype: Option[String] = None)
       extends Directive:
     def and(key: String, value: String): SkinParamGroup =
       this.copy(parameters = parameters.appended(SkinParamGroup.Parameter(key, value)))
