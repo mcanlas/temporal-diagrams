@@ -18,19 +18,19 @@ object DemoDsl:
   case class Database(name: String, replicas: Int) extends DemoDsl
   case class Title(s: String)                      extends DemoDsl
 
-  case class Arrow(src: String, dest: String)
+  case class Arrow(src: String, dest: String, text: Option[String] = None)
 
   object Arrow:
     given BrightEncoder[PlantUml.ComponentDiagram, Arrow] with
       def encodeBrightly(x: Arrow, isBright: Boolean): PlantUml.ComponentDiagram =
-        val Arrow(src, dest) = x
+        val Arrow(src, dest, oText) = x
 
         PlantUml.ComponentDiagram:
-          PlantUml.Link(src, dest)
+          PlantUml.Link(src, dest).copy(text = oText)
 
     given BrightEncoder[MermaidDiagram[Flowchart], Arrow] with
       def encodeBrightly(x: Arrow, isBright: Boolean): MermaidDiagram[Flowchart] =
-        val Arrow(src, dest) = x
+        val Arrow(src, dest, oText) = x
 
         MermaidDiagram.of:
           Flowchart(
@@ -43,7 +43,8 @@ object DemoDsl:
                     1,
                     Link.Weight.Normal,
                     Link.Direction.Single(Link.Head.Arrow),
-                    NonEmptyList.one(dest)
+                    NonEmptyList.one(dest),
+                    text = oText
                   )
               )
             )

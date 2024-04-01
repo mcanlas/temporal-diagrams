@@ -24,7 +24,7 @@ flowchart
     classDef Service fill:#586ba4
   end
 
-  reader-service --> database
+  reader-service -- reads from --> database
 
   writer-lambda -- writes to --> database
 ```
@@ -54,9 +54,9 @@ flowchart
     classDef Service fill:#586ba4
   end
 
-  reader-service --> replica-1
+  reader-service -- reads from --> replica-1
 
-  reader-service --> replica-2
+  reader-service -- reads from --> replica-2
 
   writer-lambda -- writes to --> database
 ```

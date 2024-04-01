@@ -40,7 +40,8 @@ class WriteDemoDslDiagrams[F[_]: Applicative: Parallel](out: FilePrinter[F]):
           Chain(
             DemoDsl.Service("reader-service").r,
             WithMultiArrows.Source("readers", List("reader-service")),
-            WithMultiArrows.MultiArrow("readers", "database-read", (src, dest) => DemoDsl.Arrow(src, dest))
+            WithMultiArrows
+              .MultiArrow("readers", "database-read", (src, dest) => DemoDsl.Arrow(src, dest, "reads from".some))
           )
         else
           val services =
