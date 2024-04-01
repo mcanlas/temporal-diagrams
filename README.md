@@ -67,6 +67,13 @@ Or highlighting certain areas
 
 ![](docs/demo-plantuml-highlighting.png)
 
+## Features
+
+- Encode to one or more target diagram languages
+- Write in type safe DSLs for target diagram languages
+- Mix multiple domain languages in one diagram
+- Highlight certain areas of a diagram with highlighting
+
 ## Supported target languages
 
 - :white_check_mark: [Mermaid](docs/mermaid.md)
