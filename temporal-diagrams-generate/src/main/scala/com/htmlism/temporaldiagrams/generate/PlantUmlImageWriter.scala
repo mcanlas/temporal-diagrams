@@ -6,18 +6,18 @@ import cats.effect.*
 import cats.syntax.all.*
 import net.sourceforge.plantuml.SourceStringReader
 
-trait ImageWriter[F[_]]:
+trait PlantUmlImageWriter[F[_]]:
   def writeFile(body: String, destination: String): F[Unit]
 
-object ImageWriter:
+object PlantUmlImageWriter:
   private def fileOutputStream[F[_]: Sync](dest: String): Resource[F, FileOutputStream] =
     Resource
       .fromAutoCloseable:
         Sync[F].blocking:
           FileOutputStream(dest)
 
-  def sync[F[_]: Sync](using out: std.Console[F]): ImageWriter[F] =
-    new ImageWriter[F]:
+  def sync[F[_]: Sync](using out: std.Console[F]): PlantUmlImageWriter[F] =
+    new PlantUmlImageWriter[F]:
       def writeFile(body: String, destination: String): F[Unit] =
         fileOutputStream[F](destination)
           .use: os =>

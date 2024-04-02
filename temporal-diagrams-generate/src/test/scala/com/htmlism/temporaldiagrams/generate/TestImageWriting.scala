@@ -12,7 +12,7 @@ object TestImageWriting extends IOApp.Simple:
         "@enduml"
       )
 
-    ImageWriter
+    PlantUmlImageWriter
       .sync[IO]
       .writeFile(
         diagram.mkString("\n"),
