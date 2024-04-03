@@ -94,10 +94,20 @@ object FlowchartDsl:
             summon[DiagramEncoder[ClassAttachment]].encode(ca)
 
   object Node:
-    case class Simple(id: String, text: Option[String] = None, nodeClass: Option[String] = None) extends Node
+    case class Simple(id: String, text: Option[String] = None, nodeClass: Option[String] = None) extends Node:
+      def withText(s: String): Node =
+        copy(text = s.some)
+
+      def withClass(s: String): Node =
+        copy(nodeClass = s.some)
 
     case class WithShape(id: String, shape: Shape, text: Option[String] = None, nodeClass: Option[String] = None)
-        extends Node
+        extends Node:
+      def withText(s: String): WithShape =
+        copy(text = s.some)
+
+      def withClass(s: String): WithShape =
+        copy(nodeClass = s.some)
 
     sealed abstract class Shape(val left: String, val right: String)
 
