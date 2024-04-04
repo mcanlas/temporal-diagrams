@@ -159,6 +159,23 @@ object PlantUml:
   sealed trait Entity extends PlantUml
 
   object Entity:
+    sealed trait HasAlias[A <: HasAlias[A]] extends Entity:
+      /**
+        * Optional. If specified, arrows can refer to this component by this alias. If not provided, the alias will be
+        * the value of `name`
+        */
+      def alias: Option[String]
+
+      def withAlias(s: String): A
+
+    sealed trait HasStereotype[A <: HasStereotype[A]] extends Entity:
+      /**
+        * Optional. A tag to share styling among components of the same stereotype
+        */
+      def stereotype: Option[String]
+
+      def withStereotype(s: String): A
+
     given entityEncoder: DiagramEncoder[Entity] with
       def encode(x: Entity): Chain[String] =
         x match
@@ -242,24 +259,148 @@ object PlantUml:
     * @param stereotype
     *   Optional. A tag to share styling among components of the same stereotype
     */
-  case class Component(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
+  case class Component(name: String, alias: Option[String] = None, stereotype: Option[String] = None)
+      extends Entity.HasAlias[Component],
+        Entity.HasStereotype[Component]:
+    def withAlias(s: String): Component =
+      copy(alias = s.some)
 
-  case class Actor(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
+    def withStereotype(s: String): Component =
+      copy(stereotype = s.some)
 
-  case class BusinessActor(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
+  /**
+    * A building block in component diagrams
+    *
+    * @param name
+    *   This text is visible in the diagram
+    * @param alias
+    *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
+    *   value of `name`
+    * @param stereotype
+    *   Optional. A tag to share styling among components of the same stereotype
+    */
+  case class Actor(name: String, alias: Option[String] = None, stereotype: Option[String] = None)
+      extends Entity.HasAlias[Actor],
+        Entity.HasStereotype[Actor]:
+    def withAlias(s: String): Actor =
+      copy(alias = s.some)
 
-  case class Queue(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
+    def withStereotype(s: String): Actor =
+      copy(stereotype = s.some)
 
-  case class UseCase(name: String, alias: Option[String] = None, stereotype: Option[String] = None) extends Entity
+  /**
+    * A building block in component diagrams
+    *
+    * @param name
+    *   This text is visible in the diagram
+    * @param alias
+    *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
+    *   value of `name`
+    * @param stereotype
+    *   Optional. A tag to share styling among components of the same stereotype
+    */
+  case class BusinessActor(name: String, alias: Option[String] = None, stereotype: Option[String] = None)
+      extends Entity.HasAlias[BusinessActor],
+        Entity.HasStereotype[BusinessActor]:
+    def withAlias(s: String): BusinessActor =
+      copy(alias = s.some)
 
+    def withStereotype(s: String): BusinessActor =
+      copy(stereotype = s.some)
+
+  /**
+    * A building block in component diagrams
+    *
+    * @param name
+    *   This text is visible in the diagram
+    * @param alias
+    *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
+    *   value of `name`
+    * @param stereotype
+    *   Optional. A tag to share styling among components of the same stereotype
+    */
+  case class Queue(name: String, alias: Option[String] = None, stereotype: Option[String] = None)
+      extends Entity.HasAlias[Queue],
+        Entity.HasStereotype[Queue]:
+    def withAlias(s: String): Queue =
+      copy(alias = s.some)
+
+    def withStereotype(s: String): Queue =
+      copy(stereotype = s.some)
+
+  /**
+    * A building block in component diagrams
+    *
+    * @param name
+    *   This text is visible in the diagram
+    * @param alias
+    *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
+    *   value of `name`
+    * @param stereotype
+    *   Optional. A tag to share styling among components of the same stereotype
+    */
+  case class UseCase(name: String, alias: Option[String] = None, stereotype: Option[String] = None)
+      extends Entity.HasAlias[UseCase],
+        Entity.HasStereotype[UseCase]:
+    def withAlias(s: String): UseCase =
+      copy(alias = s.some)
+
+    def withStereotype(s: String): UseCase =
+      copy(stereotype = s.some)
+
+  /**
+    * A building block in component diagrams
+    *
+    * @param name
+    *   This text is visible in the diagram
+    * @param alias
+    *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
+    *   value of `name`
+    * @param stereotype
+    *   Optional. A tag to share styling among components of the same stereotype
+    */
   case class BusinessUseCase(name: String, alias: Option[String] = None, stereotype: Option[String] = None)
-      extends Entity
+      extends Entity.HasAlias[BusinessUseCase],
+        Entity.HasStereotype[BusinessUseCase]:
+    def withAlias(s: String): BusinessUseCase =
+      copy(alias = s.some)
 
+    def withStereotype(s: String): BusinessUseCase =
+      copy(stereotype = s.some)
+
+  /**
+    * A building block in component diagrams
+    *
+    * @param name
+    *   This text is visible in the diagram
+    * @param alias
+    *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
+    *   value of `name`
+    * @param stereotype
+    *   Optional. A tag to share styling among components of the same stereotype
+    */
   case class Database(name: String, alias: Option[String] = None, stereotype: Option[String], xs: Set[Entity])
-      extends Entity
+      extends Entity.HasAlias[Database],
+        Entity.HasStereotype[Database]:
+    def withAlias(s: String): Database =
+      copy(alias = s.some)
 
+    def withStereotype(s: String): Database =
+      copy(stereotype = s.some)
+
+  /**
+    * A building block in component diagrams
+    *
+    * @param name
+    *   This text is visible in the diagram
+    * @param alias
+    *   Optional. If provided, arrows can refer to this component by this alias. If not provided, the alias will be the
+    *   value of `name`
+    */
   // TODO
-  case class Interface(name: String, alias: Option[String]) extends Entity
+  case class Interface(name: String, alias: Option[String]) extends Entity.HasAlias[Interface]:
+    def withAlias(s: String): Interface =
+      copy(alias = s.some)
 
   /**
     * A link from the source to the destination
