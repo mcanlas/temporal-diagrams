@@ -193,13 +193,13 @@ object DemoDsl:
   private def skinMermaidBlue(isBright: Boolean) =
     Option
       .when(isBright):
-        ClassDef(NonEmptyList.one("Service"), NonEmptyList.of("fill" -> "#586ba4"))
+        ClassDef(NonEmptyList.one("Service"), NonEmptyList.of("fill" -> "#a1add1"))
       .toList
 
   private def skinMermaidRed(isBright: Boolean) =
     Option
       .when(isBright):
-        ClassDef(NonEmptyList.one("Lambda"), NonEmptyList.of("fill" -> "#bc4f4f"))
+        ClassDef(NonEmptyList.one("Lambda"), NonEmptyList.of("fill" -> "#d49090"))
       .toList
 
   case class Config(

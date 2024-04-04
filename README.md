@@ -14,9 +14,9 @@ flowchart
 
   writer-lambda:::Lambda
 
-  classDef Lambda fill:#bc4f4f
+  classDef Lambda fill:#d49090
 
-  classDef Service fill:#586ba4
+  classDef Service fill:#a1add1
 
   subgraph persistence [Persistence]
     database[(database)]:::Database
@@ -40,9 +40,9 @@ flowchart
 
   writer-lambda:::Lambda
 
-  classDef Lambda fill:#bc4f4f
+  classDef Lambda fill:#d49090
 
-  classDef Service fill:#586ba4
+  classDef Service fill:#a1add1
 
   subgraph persistence [Persistence]
     database[(database)]:::Database
