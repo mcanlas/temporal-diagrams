@@ -2,7 +2,7 @@ lazy val root =
   Project("temporal-diagrams", file("."))
     .withCats
     .withTesting
-    .aggregate(core, demo, server, plantUml, mermaid, generate)
+    .aggregate(core, demo, server, plantUml, mermaid, generate, generatePlantUml)
 
 lazy val core =
   module("core")
@@ -41,4 +41,10 @@ lazy val generate =
   module("generate")
     .settings(description := "Tools for generating diagram code to disk")
     .withEffectMonad
+    .enablePublishing
+
+lazy val generatePlantUml =
+  module("generate-plantuml")
+    .settings(description := "Tools for generating PlantUML to disk")
+    .dependsOn(generate)
     .enablePublishing
