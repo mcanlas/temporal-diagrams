@@ -379,8 +379,12 @@ object PlantUml:
     * @param stereotype
     *   Optional. A tag to share styling among components of the same stereotype
     */
-  case class Database(name: String, alias: Option[String] = None, stereotype: Option[String], xs: Set[Entity])
-      extends Entity.HasAlias[Database],
+  case class Database(
+      name: String,
+      alias: Option[String]      = None,
+      stereotype: Option[String] = None,
+      xs: Set[Entity]            = Set.empty
+  ) extends Entity.HasAlias[Database],
         Entity.HasStereotype[Database]:
     def withAlias(s: String): Database =
       copy(alias = s.some)
