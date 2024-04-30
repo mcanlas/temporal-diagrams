@@ -1,6 +1,12 @@
 package com.htmlism.temporaldiagrams.plantuml.sequence
 
-case class Message()
+case class Message(
+    source: String,
+    destination: String,
+    direction: Message.Direction = Message.Direction.Forwards,
+    style: Message.Style         = Message.Style.Solid,
+    text: Option[String]         = None
+)
 
 object Message:
   enum Direction:
