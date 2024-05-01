@@ -5,5 +5,5 @@ import scala.collection.immutable.ListSet
 case class SequenceDiagram(
     directives: Set[String],
     participants: ListSet[Participant],
-    messages: Set[Message]
+    messages: List[Message]
 )
