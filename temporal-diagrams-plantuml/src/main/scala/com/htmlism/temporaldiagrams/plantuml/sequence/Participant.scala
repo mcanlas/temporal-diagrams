@@ -1,13 +1,22 @@
 package com.htmlism.temporaldiagrams.plantuml.sequence
 
-sealed trait Participant
+case class Participant(
+    id: String,
+    shape: Participant.Shape = Participant.Shape.Default,
+    name: Option[String]     = None,
+    order: Option[Int]       = None,
+    color: Option[String]    = None
+)
 
 object Participant:
-  case class Basic(name: String)       extends Participant
-  case class Actor(name: String)       extends Participant
-  case class Boundary(name: String)    extends Participant
-  case class Control(name: String)     extends Participant
-  case class Entity(name: String)      extends Participant
-  case class Database(name: String)    extends Participant
-  case class Collections(name: String) extends Participant
-  case class Queue(name: String)       extends Participant
+  enum Shape:
+    case Default
+    case Actor
+    case Boundary
+    case Control
+    case Entity
+    case Database
+    case Collections
+    case Queue
+
+  case class MultiLine(id: String, xs: List[String], order: Option[Int] = None)
