@@ -1,4 +1,5 @@
-package com.htmlism.temporaldiagrams.plantuml.sequence
+package com.htmlism.temporaldiagrams
+package plantuml.sequence
 
 import scala.collection.immutable.ListSet
 
@@ -7,3 +8,6 @@ case class SequenceDiagram(
     participants: ListSet[Participant] = ListSet.empty,
     messages: List[Message]            = Nil
 )
+
+object SequenceDiagram:
+  given DiagramEncoder[SequenceDiagram] = ???

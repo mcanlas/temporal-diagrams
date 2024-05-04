@@ -1,4 +1,5 @@
-package com.htmlism.temporaldiagrams.plantuml.sequence
+package com.htmlism.temporaldiagrams
+package plantuml.sequence
 
 case class Participant(
     id: String,
@@ -9,6 +10,8 @@ case class Participant(
 )
 
 object Participant:
+  given DiagramEncoder[Participant] = ???
+
   enum Shape:
     case Default
     case Actor

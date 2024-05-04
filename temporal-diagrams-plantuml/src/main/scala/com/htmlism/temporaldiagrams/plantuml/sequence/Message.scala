@@ -1,4 +1,5 @@
-package com.htmlism.temporaldiagrams.plantuml.sequence
+package com.htmlism.temporaldiagrams
+package plantuml.sequence
 
 case class Message(
     source: String,
@@ -9,6 +10,8 @@ case class Message(
 )
 
 object Message:
+  given DiagramEncoder[Message] = ???
+
   enum Direction:
     case Forwards, Backwards
 
