@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams
 package plantuml.sequence
 
+import cats.data.Chain
+
 case class Participant(
     id: String,
     shape: Participant.Shape = Participant.Shape.Default,
@@ -10,7 +12,9 @@ case class Participant(
 )
 
 object Participant:
-  given DiagramEncoder[Participant] = ???
+  given DiagramEncoder[Participant] with
+    def encode(x: Participant): Chain[String] =
+      ???
 
   enum Shape:
     case Default

@@ -1,6 +1,8 @@
 package com.htmlism.temporaldiagrams
 package plantuml.sequence
 
+import cats.data.Chain
+
 case class Message(
     source: String,
     destination: String,
@@ -10,7 +12,9 @@ case class Message(
 )
 
 object Message:
-  given DiagramEncoder[Message] = ???
+  given DiagramEncoder[Message] with
+    def encode(x: Message): Chain[String] =
+      ???
 
   enum Direction:
     case Forwards, Backwards
