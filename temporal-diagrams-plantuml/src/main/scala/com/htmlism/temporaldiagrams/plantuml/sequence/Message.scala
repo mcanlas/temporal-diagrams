@@ -14,7 +14,10 @@ case class Message(
 object Message:
   given DiagramEncoder[Message] with
     def encode(x: Message): Chain[String] =
-      ???
+      val Message(src, dest, dir, style, oText) = x
+
+      Chain.one:
+        s"$src $dest"
 
   enum Direction:
     case Forwards, Backwards
