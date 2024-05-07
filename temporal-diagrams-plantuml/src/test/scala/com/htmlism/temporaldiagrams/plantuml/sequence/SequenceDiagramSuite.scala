@@ -13,8 +13,8 @@ object SequenceDiagramSuite extends FunSuite:
           Participant("Bob")
         ),
         messages = List(
-          Message("Alice", "Bob"),
-          Message("Bob", "Alice")
+          Message("Alice", "Bob").withText("Authentication Request"),
+          Message("Bob", "Alice", style = Message.Style.Dotted).withText("Authentication Response")
         )
       )
 
