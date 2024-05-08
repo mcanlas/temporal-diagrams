@@ -8,6 +8,7 @@ import cats.data.*
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.*
+import com.htmlism.temporaldiagrams.syntax.*
 
 sealed trait PlantUml
 
@@ -16,13 +17,13 @@ object PlantUml:
     def encode(x: PlantUml): Chain[String] =
       x match
         case x: Entity =>
-          DiagramEncoder[PlantUml.Entity].encode(x)
+          x.encode
 
         case x: Link =>
-          DiagramEncoder[PlantUml.Link].encode(x)
+          x.encode
 
         case x: Directive =>
-          DiagramEncoder[PlantUml.Directive].encode(x)
+          x.encode
 
   // TODO test
   case class ComponentDiagram(

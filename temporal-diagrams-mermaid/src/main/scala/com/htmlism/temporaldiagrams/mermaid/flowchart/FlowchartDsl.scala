@@ -7,6 +7,7 @@ import cats.data.*
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.mermaid.flowchart
+import com.htmlism.temporaldiagrams.syntax.*
 
 // https://mermaid.js.org/syntax/flowchart.html
 sealed trait FlowchartDsl
@@ -82,16 +83,16 @@ object FlowchartDsl:
               .append("end")
 
           case n: Node =>
-            summon[DiagramEncoder[Node]].encode(n)
+            n.encode
 
           case s: Style =>
-            summon[DiagramEncoder[Style]].encode(s)
+            s.encode
 
           case cd: ClassDef =>
-            summon[DiagramEncoder[ClassDef]].encode(cd)
+            cd.encode
 
           case ca: ClassAttachment =>
-            summon[DiagramEncoder[ClassAttachment]].encode(ca)
+            ca.encode
 
   object Node:
     case class Simple(id: String, text: Option[String] = None, nodeClass: Option[String] = None) extends Node:

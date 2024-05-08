@@ -3,6 +3,8 @@ package syntax
 
 import scala.collection.immutable.ListSet
 
+import cats.data.Chain
+
 /**
   * Postfix syntax enhancement for marking an expression as renderable
   *
@@ -35,3 +37,7 @@ extension [A](x: A)
     */
   def tag[D](t: String, ts: String*)(using enc: HighlightEncoder[D, A]): Renderable.OfA[A, D] =
     Renderable.OfA(x, ListSet.from(t +: ts))
+
+extension [A](x: A)
+  def encode(using enc: DiagramEncoder[A]): Chain[String] =
+    enc.encode(x)
