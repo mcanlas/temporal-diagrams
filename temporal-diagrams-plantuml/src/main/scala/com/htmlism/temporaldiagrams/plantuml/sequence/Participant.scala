@@ -14,16 +14,23 @@ case class Participant(
 object Participant:
   given DiagramEncoder[Participant] with
     def encode(x: Participant): Chain[String] =
-      ???
+      val aliasStr =
+        x
+          .name
+          .map(" as " + _)
+          .fold("")
 
-  enum Shape:
-    case Default
-    case Actor
-    case Boundary
-    case Control
-    case Entity
-    case Database
-    case Collections
-    case Queue
+      Chain.one:
+        s"${x.shape.s} ${x.id}$aliasStr"
+
+  enum Shape(val s: String):
+    case Default     extends Shape("participant")
+    case Actor       extends Shape("actor")
+    case Boundary    extends Shape("boundary")
+    case Control     extends Shape("control")
+    case Entity      extends Shape("entity")
+    case Database    extends Shape("database")
+    case Collections extends Shape("collections")
+    case Queue       extends Shape("queue")
 
   case class MultiLine(id: String, xs: List[String], order: Option[Int] = None)
