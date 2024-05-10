@@ -18,7 +18,7 @@ object Participant:
         x
           .name
           .map(" as " + _)
-          .fold("")
+          .getOrElse("")
 
       Chain.one:
         s"${x.shape.s} ${x.id}$aliasStr"
