@@ -16,7 +16,9 @@ object SequenceDiagramSuite extends FunSuite:
         ),
         messages = List(
           Message("Alice", "Bob").withText("Authentication Request"),
-          Message("Bob", "Alice", style = Message.Style.Dotted).withText("Authentication Response")
+          Message("Bob", "Alice", style = Message.Style.Dotted).withText("Authentication Response"),
+          Message("Alice", "Bob").withText("Another authentication Request"),
+          Message("Bob", "Alice", style = Message.Style.Dotted).withText("Another authentication Response")
         )
       )
 

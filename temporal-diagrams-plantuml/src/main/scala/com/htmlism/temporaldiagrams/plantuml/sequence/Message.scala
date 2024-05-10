@@ -34,8 +34,13 @@ object Message:
           case Direction.Backwards =>
             "<" + styleStr
 
+      val textStr =
+        oText
+          .map(": " + _)
+          .getOrElse("")
+
       Chain.one:
-        s"$src $arrow $dest"
+        s"$src $arrow $dest$textStr"
 
   enum Direction:
     case Forwards, Backwards
