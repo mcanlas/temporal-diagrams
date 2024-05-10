@@ -4,9 +4,11 @@ import scala.collection.immutable.ListSet
 
 import weaver.*
 
+import com.htmlism.temporaldiagrams.syntax.*
+
 object SequenceDiagramSuite extends FunSuite:
-  test("PlantUML.com basic examples".ignore):
-    val _ =
+  test("PlantUML.com basic examples"):
+    val d =
       SequenceDiagram(
         participants = ListSet(
           Participant("Alice"),
@@ -17,5 +19,7 @@ object SequenceDiagramSuite extends FunSuite:
           Message("Bob", "Alice", style = Message.Style.Dotted).withText("Authentication Response")
         )
       )
+
+    println(d.encode)
 
     expect.eql(1, 1)

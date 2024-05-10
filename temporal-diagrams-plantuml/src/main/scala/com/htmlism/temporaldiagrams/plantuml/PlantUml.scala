@@ -556,7 +556,7 @@ object PlantUml:
     def apply(name: String, xs: Entity*): Package =
       Package(name, xs.toSet)
 
-  private def asDocument(xs: Chain[String]) =
+  private[plantuml] def asDocument(xs: Chain[String]) =
     Chain("@startuml", "") ++
       xs ++
       Chain("", "@enduml")
