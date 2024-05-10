@@ -23,5 +23,11 @@ object SequenceDiagram:
             x.participants.toList
           .flatMap(_.encode)
 
+      val messages =
+        Chain
+          .fromSeq:
+            x.messages
+          .flatMap(_.encode)
+
       PlantUml.asDocument:
-        participants
+        participants ++ messages
