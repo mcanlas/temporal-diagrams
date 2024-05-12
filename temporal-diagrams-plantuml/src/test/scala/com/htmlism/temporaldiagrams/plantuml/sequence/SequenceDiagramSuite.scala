@@ -2,13 +2,26 @@ package com.htmlism.temporaldiagrams.plantuml.sequence
 
 import scala.collection.immutable.ListSet
 
+import cats.syntax.all.*
 import weaver.*
 
 import com.htmlism.temporaldiagrams.syntax.*
 
 object SequenceDiagramSuite extends FunSuite:
   test("PlantUML.com basic examples"):
-    val d =
+    val expected =
+      """@startuml
+        |
+        |participant Alice
+        |participant Bob
+        |Alice -> Bob: Authentication Request
+        |Bob --> Alice: Authentication Response
+        |Alice -> Bob: Another authentication Request
+        |Bob --> Alice: Another authentication Response
+        |
+        |@enduml""".stripMargin
+
+    val encoded =
       SequenceDiagram(
         participants = ListSet(
           Participant("Alice"),
@@ -21,7 +34,7 @@ object SequenceDiagramSuite extends FunSuite:
           Message("Bob", "Alice", style = Message.Style.Dotted).withText("Another authentication Response")
         )
       )
+        .encode
+        .mkString_("\n")
 
-    println(d.encode)
-
-    expect.eql(1, 1)
+    expect.eql(expected, encoded)
