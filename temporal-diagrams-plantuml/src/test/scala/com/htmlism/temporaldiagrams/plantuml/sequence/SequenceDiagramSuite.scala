@@ -38,3 +38,6 @@ object SequenceDiagramSuite extends FunSuite:
         .mkString_("\n")
 
     expect.eql(expected, encoded)
+
+  test("PlantUML.com participants example"):
+    expect.eql(1, 1)
