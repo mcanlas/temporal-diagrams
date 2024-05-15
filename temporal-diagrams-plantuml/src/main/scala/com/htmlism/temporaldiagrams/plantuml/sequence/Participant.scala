@@ -9,7 +9,9 @@ case class Participant(
     name: Option[String]     = None,
     order: Option[Int]       = None,
     color: Option[String]    = None
-)
+):
+  def withName(s: String): Participant =
+    copy(name = Some(s))
 
 object Participant:
   given DiagramEncoder[Participant] with

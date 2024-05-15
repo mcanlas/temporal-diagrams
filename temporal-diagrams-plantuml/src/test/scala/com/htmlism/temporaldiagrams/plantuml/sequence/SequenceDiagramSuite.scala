@@ -39,6 +39,7 @@ object SequenceDiagramSuite extends FunSuite:
 
     expect.eql(expected, encoded)
 
+  // TODO vertical formatting for participants
   test("PlantUML.com participants example".ignore):
     val expected =
       """@startuml
@@ -61,4 +62,29 @@ object SequenceDiagramSuite extends FunSuite:
         |
         |@enduml""".stripMargin
 
-    expect.eql(expected, "")
+    val encoded =
+      SequenceDiagram(
+        participants = ListSet(
+          Participant("Participant").withName("Foo"),
+          Participant("Actor", Participant.Shape.Actor).withName("Foo1"),
+          Participant("Boundary", Participant.Shape.Boundary).withName("Foo2"),
+          Participant("Control", Participant.Shape.Control).withName("Foo3"),
+          Participant("Entity", Participant.Shape.Entity).withName("Foo4"),
+          Participant("Database", Participant.Shape.Database).withName("Foo5"),
+          Participant("Collections", Participant.Shape.Collections).withName("Foo6"),
+          Participant("Queue", Participant.Shape.Queue).withName("Foo7")
+        ),
+        messages = List(
+          Message("Foo", "Foo1").withText("To actor"),
+          Message("Foo", "Foo2").withText("To boundary"),
+          Message("Foo", "Foo3").withText("To control"),
+          Message("Foo", "Foo4").withText("To entity"),
+          Message("Foo", "Foo5").withText("To database"),
+          Message("Foo", "Foo6").withText("To collections"),
+          Message("Foo", "Foo7").withText("To queue")
+        )
+      )
+        .encode
+        .mkString_("\n")
+
+    expect.eql(expected, encoded)
