@@ -39,8 +39,7 @@ object SequenceDiagramSuite extends FunSuite:
 
     expect.eql(expected, encoded)
 
-  // TODO vertical formatting for participants
-  test("PlantUML.com participants example".ignore):
+  test("PlantUML.com participants example"):
     val expected =
       """@startuml
         |
