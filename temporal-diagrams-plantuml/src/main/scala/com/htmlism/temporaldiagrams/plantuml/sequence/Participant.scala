@@ -11,6 +11,12 @@ case class Participant(
   def withName(s: String): Participant =
     copy(name = Some(s))
 
+  def withOrder(n: Int): Participant =
+    copy(order = Some(n))
+
+  def withColor(s: String): Participant =
+    copy(color = Some(s))
+
 object Participant:
   enum Shape(val s: String):
     case Default     extends Shape("participant")

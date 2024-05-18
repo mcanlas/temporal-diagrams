@@ -87,3 +87,30 @@ object SequenceDiagramSuite extends FunSuite:
         .mkString_("\n")
 
     expect.eql(expected, encoded)
+
+  test("PlantUML.com participant color example".ignore):
+    val expected =
+      ""
+
+    val encoded =
+      SequenceDiagram(
+        participants = ListSet(
+          Participant("Bob", Participant.Shape.Actor)
+            .withColor("#red"),
+          Participant("Alice"),
+          Participant("\"I have a really\\nlong name\"")
+            .withName("L")
+            .withColor("#99FF99")
+        ),
+        messages = List(
+          Message("Alice", "Bob").withText("Authentication Request"),
+          Message("Bob", "Alice").withText("Authentication Response"),
+          Message("Bob", "L").withText("Log transaction")
+        )
+      )
+        .encode
+        .mkString_("\n")
+
+    println(encoded)
+
+    expect.eql(expected, encoded)
