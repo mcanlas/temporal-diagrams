@@ -88,9 +88,18 @@ object SequenceDiagramSuite extends FunSuite:
 
     expect.eql(expected, encoded)
 
-  test("PlantUML.com participant color example".ignore):
+  test("PlantUML.com participant color example"):
     val expected =
-      ""
+      """@startuml
+        |
+        |actor       Bob                               #red
+        |participant Alice
+        |participant "I have a really\nlong name" as L #99FF99
+        |Alice -> Bob: Authentication Request
+        |Bob -> Alice: Authentication Response
+        |Bob -> L: Log transaction
+        |
+        |@enduml""".stripMargin
 
     val encoded =
       SequenceDiagram(
@@ -110,7 +119,5 @@ object SequenceDiagramSuite extends FunSuite:
       )
         .encode
         .mkString_("\n")
-
-    println(encoded)
 
     expect.eql(expected, encoded)
