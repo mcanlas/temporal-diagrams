@@ -121,3 +121,29 @@ object SequenceDiagramSuite extends FunSuite:
         .mkString_("\n")
 
     expect.eql(expected, encoded)
+
+  test("PlantUML.com order example"):
+    val expected =
+      """@startuml
+        |
+        |participant Last   order 30
+        |participant Middle order 20
+        |participant First  order 10
+        |
+        |@enduml""".stripMargin
+
+    val encoded =
+      SequenceDiagram(
+        participants = ListSet(
+          Participant("Last")
+            .withOrder(30),
+          Participant("Middle")
+            .withOrder(20),
+          Participant("First")
+            .withOrder(10)
+        )
+      )
+        .encode
+        .mkString_("\n")
+
+    expect.eql(expected, encoded)

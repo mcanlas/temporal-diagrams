@@ -36,10 +36,13 @@ object SequenceDiagram:
         val aliasStr =
           p.name.map(" as " + _).getOrElse("")
 
+        val orderStr =
+          p.order.map(" order " + _.toString).getOrElse("")
+
         val colorStr =
           p.color.map(" " + _).getOrElse("")
 
-        (p.shape.s, p.id, aliasStr, colorStr)
+        (p.shape.s, p.id, aliasStr, orderStr, colorStr)
 
     val shapeWidth =
       parts.map(_._1.length).max
@@ -50,12 +53,16 @@ object SequenceDiagram:
     val aliasWidth =
       parts.map(_._3.length).max
 
+    val orderWidth =
+      parts.map(_._4.length).max
+
     Chain
       .fromSeq:
         parts
-          .map: (shape, id, alias, color) =>
+          .map: (shape, id, alias, order, color) =>
             List(
               s"%-${shapeWidth}s %-${idWidth}s".formatted(shape, id),
               if aliasWidth > 0 then s"%-${aliasWidth}s".formatted(alias) else "",
+              if orderWidth > 0 then s"%-${orderWidth}s".formatted(order) else "",
               color
             ).mkString("").trim
