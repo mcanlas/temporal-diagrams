@@ -34,7 +34,7 @@ object SequenceDiagram:
     val parts =
       xs.map: p =>
         val aliasStr =
-          p.name.map(" as " + _).getOrElse("")
+          p.alias.map(" as " + _).getOrElse("")
 
         val orderStr =
           p.order.map(" order " + _.toString).getOrElse("")
@@ -42,7 +42,7 @@ object SequenceDiagram:
         val colorStr =
           p.color.map(" " + _).getOrElse("")
 
-        (p.shape.s, p.id, aliasStr, orderStr, colorStr)
+        (p.shape.s, p.name, aliasStr, orderStr, colorStr)
 
     val shapeWidth =
       parts.map(_._1.length).max

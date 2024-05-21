@@ -2,14 +2,14 @@ package com.htmlism.temporaldiagrams
 package plantuml.sequence
 
 case class Participant(
-    id: String,
+    name: String,
     shape: Participant.Shape = Participant.Shape.Default,
-    name: Option[String]     = None,
+    alias: Option[String]    = None,
     order: Option[Int]       = None,
     color: Option[String]    = None
 ):
-  def withName(s: String): Participant =
-    copy(name = Some(s))
+  def withAlias(s: String): Participant =
+    copy(alias = Some(s))
 
   def withOrder(n: Int): Participant =
     copy(order = Some(n))

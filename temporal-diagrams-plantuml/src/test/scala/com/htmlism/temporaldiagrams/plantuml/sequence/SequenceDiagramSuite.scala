@@ -64,14 +64,14 @@ object SequenceDiagramSuite extends FunSuite:
     val encoded =
       SequenceDiagram(
         participants = ListSet(
-          Participant("Participant").withName("Foo"),
-          Participant("Actor", Participant.Shape.Actor).withName("Foo1"),
-          Participant("Boundary", Participant.Shape.Boundary).withName("Foo2"),
-          Participant("Control", Participant.Shape.Control).withName("Foo3"),
-          Participant("Entity", Participant.Shape.Entity).withName("Foo4"),
-          Participant("Database", Participant.Shape.Database).withName("Foo5"),
-          Participant("Collections", Participant.Shape.Collections).withName("Foo6"),
-          Participant("Queue", Participant.Shape.Queue).withName("Foo7")
+          Participant("Participant").withAlias("Foo"),
+          Participant("Actor", Participant.Shape.Actor).withAlias("Foo1"),
+          Participant("Boundary", Participant.Shape.Boundary).withAlias("Foo2"),
+          Participant("Control", Participant.Shape.Control).withAlias("Foo3"),
+          Participant("Entity", Participant.Shape.Entity).withAlias("Foo4"),
+          Participant("Database", Participant.Shape.Database).withAlias("Foo5"),
+          Participant("Collections", Participant.Shape.Collections).withAlias("Foo6"),
+          Participant("Queue", Participant.Shape.Queue).withAlias("Foo7")
         ),
         messages = List(
           Message("Foo", "Foo1").withText("To actor"),
@@ -108,7 +108,7 @@ object SequenceDiagramSuite extends FunSuite:
             .withColor("#red"),
           Participant("Alice"),
           Participant("\"I have a really\\nlong name\"")
-            .withName("L")
+            .withAlias("L")
             .withColor("#99FF99")
         ),
         messages = List(
