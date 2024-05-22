@@ -30,6 +30,7 @@ object SequenceDiagram:
       PlantUml.asDocument:
         participants ++ messages
 
+  // TODO need to merge multiline participant into hierarchy and then split out...
   private def encodeParticipants(xs: List[Participant]): Chain[String] =
     val parts =
       xs.map: p =>
