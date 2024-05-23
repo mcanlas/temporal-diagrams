@@ -1,21 +1,7 @@
 package com.htmlism.temporaldiagrams
 package plantuml.sequence
 
-case class Participant(
-    name: String,
-    shape: Participant.Shape = Participant.Shape.Default,
-    alias: Option[String]    = None,
-    order: Option[Int]       = None,
-    color: Option[String]    = None
-):
-  def withAlias(s: String): Participant =
-    copy(alias = Some(s))
-
-  def withOrder(n: Int): Participant =
-    copy(order = Some(n))
-
-  def withColor(s: String): Participant =
-    copy(color = Some(s))
+sealed trait Participant
 
 object Participant:
   enum Shape(val s: String):
@@ -27,5 +13,21 @@ object Participant:
     case Database    extends Shape("database")
     case Collections extends Shape("collections")
     case Queue       extends Shape("queue")
+
+  case class Basic(
+      name: String,
+      shape: Participant.Shape = Participant.Shape.Default,
+      alias: Option[String]    = None,
+      order: Option[Int]       = None,
+      color: Option[String]    = None
+  ):
+    def withAlias(s: String): Participant.Basic =
+      copy(alias = Some(s))
+
+    def withOrder(n: Int): Participant.Basic =
+      copy(order = Some(n))
+
+    def withColor(s: String): Participant.Basic =
+      copy(color = Some(s))
 
   case class MultiLine(id: String, xs: List[String], order: Option[Int] = None)

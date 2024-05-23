@@ -24,8 +24,8 @@ object SequenceDiagramSuite extends FunSuite:
     val encoded =
       SequenceDiagram(
         participants = ListSet(
-          Participant("Alice"),
-          Participant("Bob")
+          Participant.Basic("Alice"),
+          Participant.Basic("Bob")
         ),
         messages = List(
           Message("Alice", "Bob").withText("Authentication Request"),
@@ -64,14 +64,14 @@ object SequenceDiagramSuite extends FunSuite:
     val encoded =
       SequenceDiagram(
         participants = ListSet(
-          Participant("Participant").withAlias("Foo"),
-          Participant("Actor", Participant.Shape.Actor).withAlias("Foo1"),
-          Participant("Boundary", Participant.Shape.Boundary).withAlias("Foo2"),
-          Participant("Control", Participant.Shape.Control).withAlias("Foo3"),
-          Participant("Entity", Participant.Shape.Entity).withAlias("Foo4"),
-          Participant("Database", Participant.Shape.Database).withAlias("Foo5"),
-          Participant("Collections", Participant.Shape.Collections).withAlias("Foo6"),
-          Participant("Queue", Participant.Shape.Queue).withAlias("Foo7")
+          Participant.Basic("Participant").withAlias("Foo"),
+          Participant.Basic("Actor", Participant.Shape.Actor).withAlias("Foo1"),
+          Participant.Basic("Boundary", Participant.Shape.Boundary).withAlias("Foo2"),
+          Participant.Basic("Control", Participant.Shape.Control).withAlias("Foo3"),
+          Participant.Basic("Entity", Participant.Shape.Entity).withAlias("Foo4"),
+          Participant.Basic("Database", Participant.Shape.Database).withAlias("Foo5"),
+          Participant.Basic("Collections", Participant.Shape.Collections).withAlias("Foo6"),
+          Participant.Basic("Queue", Participant.Shape.Queue).withAlias("Foo7")
         ),
         messages = List(
           Message("Foo", "Foo1").withText("To actor"),
@@ -104,10 +104,12 @@ object SequenceDiagramSuite extends FunSuite:
     val encoded =
       SequenceDiagram(
         participants = ListSet(
-          Participant("Bob", Participant.Shape.Actor)
+          Participant
+            .Basic("Bob", Participant.Shape.Actor)
             .withColor("#red"),
-          Participant("Alice"),
-          Participant("\"I have a really\\nlong name\"")
+          Participant.Basic("Alice"),
+          Participant
+            .Basic("\"I have a really\\nlong name\"")
             .withAlias("L")
             .withColor("#99FF99")
         ),
@@ -135,11 +137,14 @@ object SequenceDiagramSuite extends FunSuite:
     val encoded =
       SequenceDiagram(
         participants = ListSet(
-          Participant("Last")
+          Participant
+            .Basic("Last")
             .withOrder(30),
-          Participant("Middle")
+          Participant
+            .Basic("Middle")
             .withOrder(20),
-          Participant("First")
+          Participant
+            .Basic("First")
             .withOrder(10)
         )
       )

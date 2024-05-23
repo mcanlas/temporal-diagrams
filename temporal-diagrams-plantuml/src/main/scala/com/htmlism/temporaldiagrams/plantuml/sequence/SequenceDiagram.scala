@@ -9,9 +9,9 @@ import cats.data.Chain
 import com.htmlism.temporaldiagrams.syntax.*
 
 case class SequenceDiagram(
-    directives: Set[String]            = Set.empty,
-    participants: ListSet[Participant] = ListSet.empty,
-    messages: List[Message]            = Nil
+    directives: Set[String]                  = Set.empty,
+    participants: ListSet[Participant.Basic] = ListSet.empty,
+    messages: List[Message]                  = Nil
 )
 
 object SequenceDiagram:
@@ -31,7 +31,7 @@ object SequenceDiagram:
         participants ++ messages
 
   // TODO need to merge multiline participant into hierarchy and then split out...
-  private def encodeParticipants(xs: List[Participant]): Chain[String] =
+  private def encodeParticipants(xs: List[Participant.Basic]): Chain[String] =
     val parts =
       xs.map: p =>
         val aliasStr =
