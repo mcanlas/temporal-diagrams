@@ -5,6 +5,9 @@
 ## Supported diagram types
 
 - :white_check_mark: [Sequence diagram](https://plantuml.com/sequence-diagram) 
+  - :white_check_mark: Participants with shapes
+  - :white_check_mark: Participants with color
+  - :white_check_mark: Participants with order
 
 ## Viewing PlantUML
 
