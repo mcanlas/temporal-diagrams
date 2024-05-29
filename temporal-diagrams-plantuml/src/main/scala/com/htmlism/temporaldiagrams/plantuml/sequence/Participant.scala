@@ -20,7 +20,7 @@ object Participant:
       alias: Option[String]    = None,
       order: Option[Int]       = None,
       color: Option[String]    = None
-  ):
+  ) extends Participant:
     def withAlias(s: String): Participant.Basic =
       copy(alias = Some(s))
 
@@ -30,4 +30,4 @@ object Participant:
     def withColor(s: String): Participant.Basic =
       copy(color = Some(s))
 
-  case class MultiLine(id: String, xs: List[String], order: Option[Int] = None)
+  case class MultiLine(id: String, xs: List[String], order: Option[Int] = None) extends Participant
