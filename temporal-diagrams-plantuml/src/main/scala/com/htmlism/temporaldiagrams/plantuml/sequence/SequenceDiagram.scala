@@ -18,8 +18,14 @@ object SequenceDiagram:
   given DiagramEncoder[SequenceDiagram] with
     def encode(x: SequenceDiagram): Chain[String] =
       val participants =
-        encodeParticipants:
-          x.participants.toList
+        val basicParticipants =
+          x.participants
+            .toList
+            .collect:
+              case p: Participant.Basic => p
+
+        if basicParticipants.length == x.participants.size then encodeBasicParticipantsVertically(basicParticipants)
+        else Chain.empty
 
       val messages =
         Chain
@@ -30,8 +36,7 @@ object SequenceDiagram:
       PlantUml.asDocument:
         participants ++ messages
 
-  // TODO need to merge multiline participant into hierarchy and then split out...
-  private def encodeParticipants(xs: List[Participant.Basic]): Chain[String] =
+  private def encodeBasicParticipantsVertically(xs: List[Participant.Basic]): Chain[String] =
     val parts =
       xs.map: p =>
         val aliasStr =
