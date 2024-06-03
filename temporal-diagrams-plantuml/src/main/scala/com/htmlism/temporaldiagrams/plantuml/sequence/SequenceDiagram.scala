@@ -3,6 +3,7 @@ package plantuml
 package sequence
 
 import scala.collection.immutable.ListSet
+import scala.util.chaining.*
 
 import cats.data.Chain
 
@@ -17,7 +18,7 @@ case class SequenceDiagram(
 object SequenceDiagram:
   given DiagramEncoder[SequenceDiagram] with
     def encode(x: SequenceDiagram): Chain[String] =
-      val participants =
+      val participantsLines =
         val basicParticipants =
           x.participants
             .toList
@@ -25,16 +26,28 @@ object SequenceDiagram:
               case p: Participant.Basic => p
 
         if basicParticipants.length == x.participants.size then encodeBasicParticipantsVertically(basicParticipants)
-        else Chain.empty
+        else
+          x.participants
+            .toList
+            .pipe(Chain.fromSeq)
+            .flatMap(encodeParticipant)
 
-      val messages =
+      val messagesLines =
         Chain
           .fromSeq:
             x.messages
           .flatMap(_.encode)
 
       PlantUml.asDocument:
-        participants ++ messages
+        participantsLines ++ messagesLines
+
+  private def encodeParticipant(p: Participant) =
+    p match
+      case Participant.Basic(_, _, _, _, _) =>
+        Chain.empty
+
+      case Participant.MultiLine(_, _, _) =>
+        Chain.empty
 
   private def encodeBasicParticipantsVertically(xs: List[Participant.Basic]): Chain[String] =
     val parts =
