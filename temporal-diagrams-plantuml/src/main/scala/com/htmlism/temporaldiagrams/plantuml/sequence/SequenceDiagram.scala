@@ -43,11 +43,16 @@ object SequenceDiagram:
 
   private def encodeParticipant(p: Participant) =
     p match
-      case Participant.Basic(_, _, _, _, _) =>
-        Chain.empty
+      case Participant.Basic(name, shape, _, _, _) =>
+        Chain
+          .one:
+            s"${shape.s} $name"
 
       case Participant.MultiLine(_, _, _) =>
-        Chain.empty
+        Chain(
+          "",
+          ""
+        )
 
   private def encodeBasicParticipantsVertically(xs: List[Participant.Basic]): Chain[String] =
     val parts =
