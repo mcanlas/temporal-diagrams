@@ -43,10 +43,19 @@ object SequenceDiagram:
 
   private def encodeParticipant(p: Participant) =
     p match
-      case Participant.Basic(name, shape, _, _, _) =>
+      case Participant.Basic(name, shape, oAlias, oOrder, oColor) =>
+        val aliasStr =
+          oAlias.map(" as " + _).getOrElse("")
+
+        val orderStr =
+          oOrder.map(" order " + _.toString).getOrElse("")
+
+        val colorStr =
+          oColor.map(" " + _).getOrElse("")
+
         Chain
           .one:
-            s"${shape.s} $name"
+            s"${shape.s} $name" + aliasStr + orderStr + colorStr
 
       case Participant.MultiLine(_, _, _) =>
         Chain(
