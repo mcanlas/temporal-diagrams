@@ -57,11 +57,11 @@ object SequenceDiagram:
           .one:
             s"${shape.s} $name" + aliasStr + orderStr + colorStr
 
-      case Participant.MultiLine(_, _, _) =>
-        Chain(
-          "",
-          ""
-        )
+      case Participant.MultiLine(id, xs, _) =>
+        Chain
+          .fromSeq(xs)
+          .prepend(s"participant $id [")
+          .append("]")
 
   private def encodeBasicParticipantsVertically(xs: List[Participant.Basic]): Chain[String] =
     val parts =
