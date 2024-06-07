@@ -157,9 +157,9 @@ object SequenceDiagramSuite extends FunSuite:
     val expected =
       """@startuml
         |participant Participant [
-        |    =Title
-        |    ----
-        |    ""SubTitle""
+        |  =Title
+        |  ----
+        |  ""SubTitle""
         |]
         |
         |participant Bob

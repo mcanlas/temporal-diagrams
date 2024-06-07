@@ -60,6 +60,7 @@ object SequenceDiagram:
       case Participant.MultiLine(id, xs, _) =>
         Chain
           .fromSeq(xs)
+          .map("  " + _)
           .prepend(s"participant $id [")
           .append("]")
 
