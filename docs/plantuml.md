@@ -8,6 +8,7 @@
   - :white_check_mark: Participants with shapes
   - :white_check_mark: Participants with color
   - :white_check_mark: Participants with order
+  - :white_check_mark: Multi-line participants
 
 ## Viewing PlantUML
 

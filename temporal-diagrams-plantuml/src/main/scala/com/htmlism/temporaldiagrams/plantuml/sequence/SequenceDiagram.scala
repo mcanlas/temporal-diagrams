@@ -10,9 +10,9 @@ import cats.data.Chain
 import com.htmlism.temporaldiagrams.syntax.*
 
 case class SequenceDiagram(
-    directives: Set[String]                  = Set.empty,
-    participants: ListSet[Participant.Basic] = ListSet.empty,
-    messages: List[Message]                  = Nil
+    directives: Set[String]            = Set.empty,
+    participants: ListSet[Participant] = ListSet.empty,
+    messages: List[Message]            = Nil
 )
 
 object SequenceDiagram:

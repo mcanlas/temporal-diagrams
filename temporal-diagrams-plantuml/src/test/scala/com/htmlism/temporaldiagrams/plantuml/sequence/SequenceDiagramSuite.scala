@@ -153,23 +153,33 @@ object SequenceDiagramSuite extends FunSuite:
 
     expect.eql(expected, encoded)
 
-  test("PlantUML.com multiline example".ignore):
+  test("PlantUML.com multiline example"):
     val expected =
       """@startuml
+        |
         |participant Participant [
         |  =Title
         |  ----
         |  ""SubTitle""
         |]
-        |
         |participant Bob
-        |
         |Participant -> Bob
+        |
         |@enduml""".stripMargin
 
     val encoded =
-      SequenceDiagram()
+      SequenceDiagram(
+        participants = ListSet(
+          Participant.MultiLine("Participant", List("=Title", "----", "\"\"SubTitle\"\"")),
+          Participant.Basic("Bob")
+        ),
+        messages = List(
+          Message("Participant", "Bob")
+        )
+      )
         .encode
         .mkString_("\n")
 
     expect.eql(expected, encoded)
+
+  // TODO test multi line with order
