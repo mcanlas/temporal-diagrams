@@ -182,4 +182,25 @@ object SequenceDiagramSuite extends FunSuite:
 
     expect.eql(expected, encoded)
 
-  // TODO test multi line with order
+  test("Multiline participant with order".ignore):
+    val expected =
+      """@startuml
+        |
+        |participant Participant [
+        |  =Title
+        |  ----
+        |  ""SubTitle""
+        |]
+        |
+        |@enduml""".stripMargin
+
+    val encoded =
+      SequenceDiagram(
+        participants = ListSet(
+          Participant.MultiLine("Participant", List("=Title", "----", "\"\"SubTitle\"\""))
+        )
+      )
+        .encode
+        .mkString_("\n")
+
+    expect.eql(expected, encoded)
