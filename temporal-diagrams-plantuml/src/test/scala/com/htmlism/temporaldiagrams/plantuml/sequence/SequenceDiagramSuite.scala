@@ -182,11 +182,16 @@ object SequenceDiagramSuite extends FunSuite:
 
     expect.eql(expected, encoded)
 
-  test("Multiline participant with order".ignore):
+  test("Multiline participant with order"):
     val expected =
       """@startuml
         |
-        |participant Participant [
+        |participant High order 50 [
+        |  =Title
+        |  ----
+        |  ""SubTitle""
+        |]
+        |participant Low order 10 [
         |  =Title
         |  ----
         |  ""SubTitle""
@@ -197,7 +202,8 @@ object SequenceDiagramSuite extends FunSuite:
     val encoded =
       SequenceDiagram(
         participants = ListSet(
-          Participant.MultiLine("Participant", List("=Title", "----", "\"\"SubTitle\"\""))
+          Participant.MultiLine("High", List("=Title", "----", "\"\"SubTitle\"\""), 50.some),
+          Participant.MultiLine("Low", List("=Title", "----", "\"\"SubTitle\"\""), 10.some)
         )
       )
         .encode
