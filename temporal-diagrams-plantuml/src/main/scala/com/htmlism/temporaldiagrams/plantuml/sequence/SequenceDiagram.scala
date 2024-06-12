@@ -9,6 +9,13 @@ import cats.data.Chain
 
 import com.htmlism.temporaldiagrams.syntax.*
 
+/**
+  * @param directives
+  * @param participants
+  *   An ordered, unique sequence of participants. Rendered in order of (empty sort order; sort order lowest value;
+  *   definition order)
+  * @param messages
+  */
 case class SequenceDiagram(
     directives: Set[String]            = Set.empty,
     participants: ListSet[Participant] = ListSet.empty,

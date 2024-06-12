@@ -14,6 +14,21 @@ object Participant:
     case Collections extends Shape("collections")
     case Queue       extends Shape("queue")
 
+  /**
+    * A diagram participant with a shape, defined on a single line
+    *
+    * @param name
+    *   The text that will display inside the shape; may be used to identify the participant in messages if an alias is
+    *   not defined
+    * @param shape
+    *   The rendered shape of the participant
+    * @param alias
+    *   An optional value that will be used to identify the participant in messages, instead of the name value
+    * @param order
+    *   An optional integer that dictates the relative ordering of participants
+    * @param color
+    *   An optional value for the participant's background color
+    */
   case class Basic(
       name: String,
       shape: Participant.Shape = Participant.Shape.Default,
