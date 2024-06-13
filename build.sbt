@@ -1,7 +1,5 @@
 lazy val root =
   Project("temporal-diagrams", file("."))
-    .withCats
-    .withTesting
     .aggregate(core, demo, server, plantUml, mermaid, generate, generatePlantUml)
 
 lazy val core =
