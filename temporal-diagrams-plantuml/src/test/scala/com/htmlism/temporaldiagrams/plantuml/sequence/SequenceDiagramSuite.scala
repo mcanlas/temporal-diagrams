@@ -210,3 +210,6 @@ object SequenceDiagramSuite extends FunSuite:
         .mkString_("\n")
 
     expect.eql(expected, encoded)
+
+  test("Quoting".ignore):
+    expect.eql("", "")
