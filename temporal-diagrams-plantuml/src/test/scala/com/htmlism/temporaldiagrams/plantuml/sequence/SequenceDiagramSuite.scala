@@ -109,7 +109,7 @@ object SequenceDiagramSuite extends FunSuite:
             .withColor("#red"),
           Participant.Basic("Alice"),
           Participant
-            .Basic("\"I have a really\\nlong name\"")
+            .Basic("I have a really\\nlong name")
             .withAlias("L")
             .withColor("#99FF99")
         ),
@@ -211,5 +211,22 @@ object SequenceDiagramSuite extends FunSuite:
 
     expect.eql(expected, encoded)
 
-  test("Quoting".ignore):
-    expect.eql("", "")
+  // TODO test message escaping
+  test("Quoting"):
+    val expected =
+      """@startuml
+        |
+        |participant "Bob ()"
+        |
+        |@enduml""".stripMargin
+
+    val encoded =
+      SequenceDiagram(
+        participants = ListSet(
+          Participant.Basic("Bob ()")
+        )
+      )
+        .encode
+        .mkString_("\n")
+
+    expect.eql(expected, encoded)
