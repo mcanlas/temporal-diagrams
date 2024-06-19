@@ -211,19 +211,24 @@ object SequenceDiagramSuite extends FunSuite:
 
     expect.eql(expected, encoded)
 
-  // TODO test message escaping
-  test("Quoting"):
+  test("Participant and message quoting"):
     val expected =
       """@startuml
         |
-        |participant "Bob ()"
+        |participant "With space"
+        |participant "Parens()"
+        |"With space" -> "Parens()"
         |
         |@enduml""".stripMargin
 
     val encoded =
       SequenceDiagram(
         participants = ListSet(
-          Participant.Basic("Bob ()")
+          Participant.Basic("With space"),
+          Participant.Basic("Parens()")
+        ),
+        messages = List(
+          Message("With space", "Parens()")
         )
       )
         .encode

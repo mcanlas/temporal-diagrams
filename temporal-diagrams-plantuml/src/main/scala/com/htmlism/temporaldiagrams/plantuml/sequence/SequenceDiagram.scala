@@ -48,7 +48,7 @@ object SequenceDiagram:
       PlantUml.asDocument:
         participantsLines ++ messagesLines
 
-  private def escape(s: String) =
+  def escapeText(s: String) =
     if Set(" ", "(", ")").exists(s.contains) then s"\"$s\""
     else s
 
@@ -66,7 +66,7 @@ object SequenceDiagram:
 
         Chain
           .one:
-            s"${shape.s} ${escape(name)}" + aliasStr + orderStr + colorStr
+            s"${shape.s} ${escapeText(name)}" + aliasStr + orderStr + colorStr
 
       case Participant.MultiLine(id, xs, oOrder) =>
         val orderStr =
@@ -96,7 +96,7 @@ object SequenceDiagram:
       parts.map(_._1.length).max
 
     val idWidth =
-      parts.map(t => escape(t._2).length).max
+      parts.map(t => escapeText(t._2).length).max
 
     val aliasWidth =
       parts.map(_._3.length).max
@@ -109,7 +109,7 @@ object SequenceDiagram:
         parts
           .map: (shape, id, alias, order, color) =>
             List(
-              s"%-${shapeWidth}s %-${idWidth}s".formatted(shape, escape(id)),
+              s"%-${shapeWidth}s %-${idWidth}s".formatted(shape, escapeText(id)),
               if aliasWidth > 0 then s"%-${aliasWidth}s".formatted(alias) else "",
               if orderWidth > 0 then s"%-${orderWidth}s".formatted(order) else "",
               color

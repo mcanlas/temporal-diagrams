@@ -39,8 +39,14 @@ object Message:
           .map(": " + _)
           .getOrElse("")
 
+      val escapedSrc =
+        SequenceDiagram.escapeText(src)
+
+      val escapedDest =
+        SequenceDiagram.escapeText(dest)
+
       Chain.one:
-        s"$src $arrow $dest$textStr"
+        s"$escapedSrc $arrow $escapedDest$textStr"
 
   enum Direction:
     case Forwards, Backwards
