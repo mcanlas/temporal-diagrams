@@ -19,15 +19,18 @@ jobs:
           java-version: '22'
           cache: sbt
 
-      - run: sbt 'scalafixAll --check' scalafmtSbtCheck scalafmtCheck
+      - name: Check linting and formatting
+        run: sbt 'scalafixAll --check' scalafmtSbtCheck scalafmtCheck
         env:
           GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
-      - run: sbt +test
+      - name: Unit test
+        run: sbt +test
         env:
           GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
-      - run: sbt +publish
+      - name: Publish artifacts
+        run: sbt +publish
         env:
           GITHUB_TOKEN: ${{ secrets.WRITE_PACKAGES_TOKEN }}
           GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
