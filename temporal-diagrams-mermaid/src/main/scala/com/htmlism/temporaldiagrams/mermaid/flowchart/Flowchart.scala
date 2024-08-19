@@ -2,8 +2,6 @@ package com.htmlism.temporaldiagrams
 package mermaid
 package flowchart
 
-import scala.util.chaining.*
-
 import cats.*
 import cats.data.Chain
 import cats.syntax.all.*

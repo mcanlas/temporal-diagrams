@@ -5,7 +5,6 @@ import cats.data.*
 import cats.syntax.all.*
 import weaver.FunSuite
 
-import com.htmlism.temporaldiagrams.mermaid.flowchart.Flowchart.*
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.*
 
 object StyleSuite extends FunSuite:

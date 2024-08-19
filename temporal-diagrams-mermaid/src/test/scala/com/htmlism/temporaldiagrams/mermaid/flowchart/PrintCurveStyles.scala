@@ -6,9 +6,7 @@ import cats.effect.*
 import cats.syntax.all.*
 
 import com.htmlism.temporaldiagrams.mermaid.*
-import com.htmlism.temporaldiagrams.mermaid.flowchart.*
 import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.Head
-import com.htmlism.temporaldiagrams.mermaid.flowchart.FlowchartDsl.Link.Head.Arrow
 
 object PrintCurveStyles extends IOApp.Simple:
   val styles = List(

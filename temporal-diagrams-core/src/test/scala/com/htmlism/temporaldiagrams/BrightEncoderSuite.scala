@@ -2,8 +2,6 @@ package com.htmlism.temporaldiagrams
 
 import weaver.*
 
-import com.htmlism.temporaldiagrams.ToyDiagramLanguage.*
-
 object BrightEncoderSuite extends FunSuite:
   test("A bright encoder's default encoding is equal to its bright encoding"):
     val enc =

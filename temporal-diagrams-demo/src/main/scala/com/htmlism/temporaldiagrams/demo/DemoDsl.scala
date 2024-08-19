@@ -1,8 +1,6 @@
 package com.htmlism.temporaldiagrams
 package demo
 
-import scala.util.chaining.*
-
 import cats.data.*
 import cats.syntax.all.*
 
