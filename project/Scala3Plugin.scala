@@ -12,7 +12,7 @@ object Scala3Plugin extends AutoPlugin {
   override def trigger: PluginTrigger = AllRequirements
 
   override val buildSettings: Seq[Setting[?]] = Seq(
-    scalaVersion := "3.4.2"
+    scalaVersion := "3.5.0"
   )
 
   override val projectSettings: Seq[Setting[?]] = Seq(
