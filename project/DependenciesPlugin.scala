@@ -15,7 +15,7 @@ object DependenciesPlugin extends AutoPlugin {
 
       def withEffectMonad: Project =
         p
-          .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.7")
+          .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.6.0-RC2")
 
       def withHttpServer: Project =
         p
