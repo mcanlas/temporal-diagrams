@@ -18,7 +18,7 @@ lazy val server =
 
 lazy val demo =
   module("demo")
-    .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.6.0")
+    .settings(libraryDependencies += "org.typelevel" %% "cats-effect" % "3.6.1")
     .dependsOn(core, mermaid, plantUml, generate)
 
 lazy val plantUml =
