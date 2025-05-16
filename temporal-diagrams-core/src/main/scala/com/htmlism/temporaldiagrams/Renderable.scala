@@ -28,6 +28,7 @@ object Renderable:
     */
   sealed trait WithMultiArrows[+D, +K]
 
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   object WithMultiArrows:
     /**
       * Defines an alias that can be used to define the source side of arrows representing a many-to-many relationship
@@ -73,6 +74,7 @@ object Renderable:
       * @tparam K
       *   The identifier type for multi arrow sources and destinations
       */
+    @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
     def renderArrows[D, K](xs: Chain[Renderable.WithMultiArrows[D, K]]): ValidatedNec[String, Chain[Renderable[D]]] =
       val (sources, destinations, arrows, renderables) =
         xs
@@ -115,7 +117,8 @@ object Renderable:
       arrowRenderables
         .map(renderables |+| _)
 
-    def dropArrows[D: Monoid, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
+    @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
+    def dropArrows[D, A](xs: Chain[Renderable.WithMultiArrows[D, A]]): Chain[Renderable[D]] =
       xs
         .collect:
           case x: Renderable[?] => x.asInstanceOf[Renderable[D]]
