@@ -14,7 +14,7 @@ object LintingPlugin extends AutoPlugin {
 
   override val buildSettings =
     Seq(
-      wartremoverErrors ++= Warts.unsafe diff List(Wart.Any),
+      wartremoverErrors ++= Warts.unsafe diff List(Wart.Any, Wart.DefaultArguments),
       semanticdbEnabled := true,
       semanticdbVersion := scalafixSemanticdb.revision
     )

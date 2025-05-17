@@ -28,7 +28,6 @@ object Renderable:
     */
   sealed trait WithMultiArrows[+D, +K]
 
-  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   object WithMultiArrows:
     /**
       * Defines an alias that can be used to define the source side of arrows representing a many-to-many relationship

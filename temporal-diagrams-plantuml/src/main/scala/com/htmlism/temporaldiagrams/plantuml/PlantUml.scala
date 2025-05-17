@@ -12,7 +12,6 @@ import com.htmlism.temporaldiagrams.syntax.*
 
 sealed trait PlantUml
 
-@SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
 object PlantUml:
   given DiagramEncoder[PlantUml] with
     def encode(x: PlantUml): Chain[String] =

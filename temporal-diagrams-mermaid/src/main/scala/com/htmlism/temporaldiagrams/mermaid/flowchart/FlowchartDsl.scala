@@ -12,7 +12,6 @@ import com.htmlism.temporaldiagrams.syntax.*
 // https://mermaid.js.org/syntax/flowchart.html
 sealed trait FlowchartDsl
 
-@SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
 object FlowchartDsl:
   sealed trait Declaration extends FlowchartDsl
 
