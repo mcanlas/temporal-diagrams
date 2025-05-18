@@ -118,7 +118,7 @@ object QueryParamsDecoderSuite extends FunSuite:
     }
 
   private def all(xs: Expectations*) =
-    xs.reduce(_ && _)
+    xs.foldLeft(success)(_ && _)
 
 case class Person(name: String, age: Int)
 
