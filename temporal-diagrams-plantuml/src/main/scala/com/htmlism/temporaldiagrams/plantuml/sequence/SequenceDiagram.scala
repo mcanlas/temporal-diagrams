@@ -93,16 +93,28 @@ object SequenceDiagram:
         (p.shape.s, p.name, aliasStr, orderStr, colorStr)
 
     val shapeWidth =
-      parts.map(_._1.length).max
+      parts
+        .map(_._1.length)
+        .maxOption
+        .getOrElse(0)
 
     val idWidth =
-      parts.map(t => escapeText(t._2).length).max
+      parts
+        .map(t => escapeText(t._2).length)
+        .maxOption
+        .getOrElse(0)
 
     val aliasWidth =
-      parts.map(_._3.length).max
+      parts
+        .map(_._3.length)
+        .maxOption
+        .getOrElse(0)
 
     val orderWidth =
-      parts.map(_._4.length).max
+      parts
+        .map(_._4.length)
+        .maxOption
+        .getOrElse(0)
 
     Chain
       .fromSeq:
