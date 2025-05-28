@@ -48,7 +48,7 @@ object SequenceDiagram:
       PlantUml.asDocument:
         participantsLines ++ messagesLines
 
-  def escapeText(s: String) =
+  def escapeText(s: String): String =
     if Set(" ", "(", ")").exists(s.contains) then s"\"$s\""
     else s
 
