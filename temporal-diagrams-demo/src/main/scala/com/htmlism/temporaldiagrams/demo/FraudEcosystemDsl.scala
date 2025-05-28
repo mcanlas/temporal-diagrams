@@ -1,7 +1,5 @@
 package com.htmlism.temporaldiagrams.demo
 
-import cats.syntax.all.*
-
 import com.htmlism.temporaldiagrams.BrightEncoder
 import com.htmlism.temporaldiagrams.plantuml.*
 
