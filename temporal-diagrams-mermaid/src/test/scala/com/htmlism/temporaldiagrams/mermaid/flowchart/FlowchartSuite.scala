@@ -490,7 +490,7 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Single(Link.Head.Arrow),
                     NonEmptyList.one("two"),
-                    text = Some("this has style"),
+                    text  = Some("this has style"),
                     style = NonEmptyList
                       .of(
                         StyleDeclaration("stroke", "#ff3"),
@@ -534,7 +534,7 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Single(Link.Head.Arrow),
                     NonEmptyList.one("three"),
-                    text = Some("bar"),
+                    text  = Some("bar"),
                     style = NonEmptyList
                       .of(
                         StyleDeclaration("stroke", "#3ff"),
@@ -594,7 +594,7 @@ object FlowchartSuite extends FunSuite:
                     Link.Weight.Normal,
                     Link.Direction.Single(Link.Head.Arrow),
                     NonEmptyList.one("styledEnd"),
-                    text = None,
+                    text  = None,
                     style = NonEmptyList
                       .of(
                         StyleDeclaration("stroke", "#3ff"),
