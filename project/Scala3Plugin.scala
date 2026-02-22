@@ -16,6 +16,6 @@ object Scala3Plugin extends AutoPlugin {
   )
 
   override val projectSettings: Seq[Setting[?]] = Seq(
-    scalacOptions ++= Seq("-indent", "-rewrite", "-source:3.7")
+    scalacOptions ++= Seq("-indent", "-rewrite")
   )
 }
