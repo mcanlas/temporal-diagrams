@@ -22,7 +22,7 @@ object DependenciesPlugin extends AutoPlugin {
           .settings(
             libraryDependencies ++= Seq(
               "org.http4s" %% "http4s-dsl"          % http4sVersion,
-              "org.http4s" %% "http4s-blaze-server" % "0.23.16"
+              "org.http4s" %% "http4s-blaze-server" % "0.23.17"
             )
           )
 
