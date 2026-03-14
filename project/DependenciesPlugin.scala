@@ -7,7 +7,7 @@ object DependenciesPlugin extends AutoPlugin {
   object autoImport {
     implicit class DependencyOps(p: Project) {
       val http4sVersion =
-        "0.23.26"
+        "0.23.32"
 
       def withCats: Project =
         p
