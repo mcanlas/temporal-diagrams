@@ -1,5 +1,6 @@
 package com.htmlism.temporaldiagrams.plantuml
 
+import scala.annotation.nowarn
 import scala.util.chaining.*
 
 import cats.*
@@ -239,6 +240,7 @@ object PlantUml:
             Chain:
               entity("interface", name, oAlias, None)
 
+  @nowarn("id=E198") // scala 3.8.2
   private def entity(
       componentType: String,
       name: String,
