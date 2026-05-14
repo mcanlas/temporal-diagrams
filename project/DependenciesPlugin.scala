@@ -6,12 +6,9 @@ object DependenciesPlugin extends AutoPlugin {
 
   object autoImport {
     implicit class DependencyOps(p: Project) {
-      val http4sVersion =
-        "0.23.33"
-
       def withCats: Project =
         p
-          .settings(libraryDependencies += "org.typelevel" %% "cats-core" % "2.13.0")
+          .settings(libraryDependencies += "org.typelevel" %% "cats-core" % Versions.catsCore)
 
       def withEffectMonad: Project =
         p
@@ -21,22 +18,18 @@ object DependenciesPlugin extends AutoPlugin {
         p
           .settings(
             libraryDependencies ++= Seq(
-              "org.http4s" %% "http4s-dsl"          % http4sVersion,
-              "org.http4s" %% "http4s-ember-server" % http4sVersion
+              "org.http4s" %% "http4s-dsl"          % Versions.http4s,
+              "org.http4s" %% "http4s-ember-server" % Versions.http4s
             )
           )
 
-      def withTesting: Project = {
-        val weaverVersion =
-          "0.10.1"
-
+      def withTesting: Project =
         p.settings(
           libraryDependencies ++= Seq(
-            "org.typelevel" %% "weaver-cats"       % weaverVersion % Test,
-            "org.typelevel" %% "weaver-scalacheck" % weaverVersion % Test
+            "org.typelevel" %% "weaver-cats"       % Versions.weaver % Test,
+            "org.typelevel" %% "weaver-scalacheck" % Versions.weaver % Test
           )
         )
-      }
     }
   }
 }
