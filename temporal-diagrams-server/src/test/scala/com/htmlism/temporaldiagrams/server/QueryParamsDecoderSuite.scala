@@ -57,10 +57,10 @@ object QueryParamsDecoderSuite extends FunSuite:
         expect.eql("bar", _)
       },
       matches(QueryStringDecoder[String].decode(Map("" -> Nil))) { case Validated.Invalid(xs) =>
-        exists(xs)(x => verify(x.contains("foo did not exist"), "requires key"))
+        exists(xs)(x => expect(x.contains("foo did not exist")))
       },
       matches(QueryStringDecoder[String].decode(Map("foo" -> Nil))) { case Validated.Invalid(xs) =>
-        exists(xs)(x => verify(x.contains("foo had no values"), "values must be non-empty"))
+        exists(xs)(x => expect(x.contains("foo had no values")))
       }
     )
 
@@ -106,7 +106,7 @@ object QueryParamsDecoderSuite extends FunSuite:
       ).mapN((a, b) => a -> b)
 
     matches(QueryStringDecoder[(Int, Int)].decode(params)) { case Validated.Invalid(xs) =>
-      verify(xs.length == 2)
+      expect(xs.length == 2)
     }
 
   test("int parse failure shows exception type"):
@@ -114,7 +114,7 @@ object QueryParamsDecoderSuite extends FunSuite:
       "foo".as[Int].decode(Map("foo" -> List("abc")), Chain.empty)
 
     matches(res) { case Validated.Invalid(xs) =>
-      forEach(xs)(x => verify(x.contains("java.lang.NumberFormatException")))
+      forEach(xs)(x => expect(x.contains("java.lang.NumberFormatException")))
     }
 
   private def all(xs: Expectations*) =
